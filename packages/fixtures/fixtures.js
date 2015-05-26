@@ -1,11 +1,10 @@
 // Write your package code here!
 // Fixture data, used for test only
-console.log('in fixtures package');
-if (true || Meteor.isServer) {
+if (Meteor.isServer) {
   Meteor.startup(function () {
     //var Posts = new Mongo.Collection('posts');
     //var Comments = new Mongo.Collection('comments');
-    console.log('准备测试数据');
+    console.log('\n\n准备测试数据...');
     if (Posts.find().count() === 0) {
       console.log('正在向数据库中插入测试数据');
       var now = new Date().getTime();
@@ -78,5 +77,9 @@ if (true || Meteor.isServer) {
         });
       }
     }
+
+    Meteor.setTimeout(function() {
+      console.log('测试数据准备就绪。');
+    }, 1000);
   });
 }

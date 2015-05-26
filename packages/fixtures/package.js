@@ -17,8 +17,8 @@ Package.onUse(function(api) {
   // meteor的最低支持版本
   api.versionsFrom('1.1.0.2');
   // 指定依赖的包列表，及代码执行的位置（client还是server）
-  api.use('mongo');
-  //api.use(['mongo', 'ddp', 'meteor', 'deps', 'livedata', 'underscore'], 'server');
+  //api.use('mongo');
+  //api.use(['ddp', 'deps', 'livedata'], 'server');
   // 定义包的源代码所在文件
   api.addFiles('fixtures.js', 'server');
 });
