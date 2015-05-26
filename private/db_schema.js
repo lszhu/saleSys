@@ -111,7 +111,7 @@ station = {
 };
 
 // 订单处理流程每步存储格式
-process = {
+disposal = {
   // 本步流程操作员
   operator: String,
   // 流程类型。询价，发货，收货，退货，付款，收款，退款，维修，报废
@@ -120,7 +120,7 @@ process = {
   comment: String,
   // 涉及到的现金流Id，为集合capital文档条目的数据库内部ObjectId
   capitalId: String,
-  // 产品出入库记录Id，为集合warehousing文档条目的数据库内部ObjectId
+  // 产品出入库记录Id，为集合delivery文档条目的数据库内部ObjectId
   deliveryId: String,
   // 本步流程涉及到的单据文件（如发票、收据、快递单等）的地址
   voucher: Array,
@@ -148,7 +148,7 @@ order = {
   // 所隶属的父/母订单Id，为本order集合文档条目的数据库内部ObjectId
   parentId: String,
   // 订单流程步骤记录
-  procedure: [process],
+  procedure: [disposal],
   // 订单状态，ongoing进行，finished为完成，canceled为取消
   status: String,
   // 订单创建时间
@@ -310,7 +310,7 @@ permission = {
     // 订单创建及变更
     order: {c: Number, r: Number, u: Number, d: Number},
     // 流程处理权限
-    process: {c: Number, r: Number, u: Number, d: Number},
+    disposal: {c: Number, r: Number, u: Number, d: Number},
     // 销售分部创建于维护
     //station: {c: Number, r: Number, u: Number, d: Number},
     // 产品型号维护权限
