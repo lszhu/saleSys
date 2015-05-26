@@ -4,9 +4,9 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     //var Posts = new Mongo.Collection('posts');
     //var Comments = new Mongo.Collection('comments');
-    console.log('\n\n准备测试数据...');
+    console.log('\n\nPreparing test data...');
     if (Posts.find().count() === 0) {
-      console.log('正在向数据库中插入测试数据');
+      console.log('inserting test data to database');
       var now = new Date().getTime();
 
       // create two users
@@ -79,7 +79,7 @@ if (Meteor.isServer) {
     }
 
     Meteor.setTimeout(function() {
-      console.log('测试数据准备就绪。');
+      console.log('test data is ready!');
     }, 1000);
   });
 }
