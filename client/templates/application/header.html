@@ -13,6 +13,7 @@
 
     <div class="collapse navbar-collapse" id="navigation">
       <ul class="nav navbar-nav">
+
         <li class="{{activeRouteClass 'home' 'newPosts'}}">
           <a href="{{pathFor 'newPosts'}}">New</a>
         </li>
@@ -28,40 +29,14 @@
           </li>
         {{/if}}
 
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-             role="button" aria-expanded="false">
-            订单 <span class="caret"></span>
-          </a>
+        {{#with menuInfo}}
+          {{> menu order}}
+          {{> menu base}}
+          {{> menu message}}
+          {{> menu report}}
+          {{> menu admin}}
+        {{/with}}
 
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">创建</a></li>
-            <li><a href="#">查看</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-             role="button" aria-expanded="false">
-            报表 <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">报表1</a></li>
-            <li><a href="#">报表2</a></li>
-            <li><a href="#">报表3</a></li>
-            <li><a href="#">报表4</a></li>
-            <li><a href="#">报表5</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-             role="button" aria-expanded="false">
-            客户信息 <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu" role="false">
-            <li><a href="#">添加客户信息</a></li>
-            <li><a href="#">查看客户信息</a></li>
-          </ul>
-        </li>
       </ul>
 
       {{! 登录按钮，来自accout-ui }}
@@ -70,4 +45,19 @@
       </ul>
     </div>
   </nav>
+</template>
+
+<!-- 用于弹出菜单的生成，name为菜单名，operation为数组，包含菜单操作列表 -->
+<template name="menu">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+       role="button" aria-expanded="false">
+      {{name}} <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+      {{#each operation}}
+        <li><a href="{{template}}">{{name}}</a></li>
+      {{/each}}
+    </ul>
+  </li>
 </template>
