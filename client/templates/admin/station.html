@@ -1,7 +1,7 @@
 <template name="station">
   <div class="col-sm-12">
     <h2>销售分部列表
-      <button class="btn btn-primary add-station">增加新部门</button>
+      <button class="btn btn-primary edit-station">增加新部门</button>
     </h2>
     <div id="add-station" class="hidden">
       {{> addStation }}
@@ -13,16 +13,16 @@
 
 <template name="addStation">
   <strong>新增销售部门</strong>
-
+<form class="add-station">
   <div class="input-group">
     <span class="input-group-addon" id="station-code-label">编号</span>
-    <input type="text" class="form-control" placeholder="编号"
+    <input type="text" name="code" class="form-control" placeholder="编号"
            aria-describedby="station-code-label">
     <span class="input-group-addon" id="station-name-label">名称</span>
-    <input type="text" class="form-control" placeholder="名称"
+    <input type="text" name="name" class="form-control" placeholder="名称"
            aria-describedby="station-name-label">
     <span class="input-group-addon" id="station-manager-label">负责人</span>
-    <input type="text" class="form-control" placeholder="负责人"
+    <input type="text" name="manager" class="form-control" placeholder="负责人"
            aria-describedby="station-manager-label">
   </div>
   <div class="input-group">
@@ -32,17 +32,23 @@
   </div>
   <div class="input-group">
     <span class="input-group-addon" id="station-comment-label">简介</span>
-    <input type="text" name="address" class="form-control"
+    <input type="text" name="comment" class="form-control"
            placeholder="简介" aria-describedby="station-comment-label"/>
   </div>
   <div class="input-group">
     <span class="input-group-addon" id="station-memo-label">备注</span>
-    <input type="text" name="address" class="form-control"
+    <input type="text" name="memo" class="form-control"
            placeholder="备注" aria-describedby="station-memo-label"/>
   </div>
-  <div class="col-sm-4 col-sm-offset-4">
-    <button class="btn btn-primary btn-block">提交新部门</button>
+  <div class="hidden">
+    <input type="checkbox" name="overlap"/>
   </div>
+  <div class="col-sm-4 col-sm-offset-4">
+    <button type="submit" class="btn btn-primary btn-block">
+      提交新部门
+    </button>
+  </div>
+</form>
 </template>
 
 <template name="stationItem">
