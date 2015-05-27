@@ -96,7 +96,7 @@ product = {
 station = {
   // 编号
   code: String,
-  // 名称
+  // 名称，不允许重复
   name: String,
   // 所处位置
   address: String,
@@ -107,7 +107,9 @@ station = {
   // 仓库情况简介
   comment: String,
   // 备忘信息
-  memo: String
+  memo: String,
+  // 创建时间
+  timestamp: Date
 };
 
 // 订单处理流程每步存储格式

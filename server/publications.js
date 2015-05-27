@@ -1,3 +1,10 @@
+Meteor.publish('stations', function() {
+  return Stations.find({});
+});
+
+///////////////////////////////////////////////////
+// 一下内容共参考，正式版将删除
+
 Meteor.publish('posts', function(options) {
   check(options, {
     sort: Object,

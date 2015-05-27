@@ -1,15 +1,17 @@
 Template.header.helpers({
+  // 为当前选中的菜单DOM添加'active'类
   activeRouteClass: function (/* route names */) {
     var args = Array.prototype.slice.call(arguments, 0);
     args.pop();
 
     var active = _.any(args, function (name) {
-      return Router.current() && Router.current().route.getName() === name
+      return Router.current() && Router.current().route.getName() === name;
     });
 
     return active && 'active';
   },
 
+  // 为模板注入生成菜单需要的信息
   menuInfo: function () {
     return {
       message: {
@@ -53,7 +55,7 @@ Template.header.helpers({
           {name: '用户管理', template: 'userAdmin'},
           {name: '权限管理', template: 'privilegeAdmin'},
           {name: '消息设置', template: 'messageAdmin'},
-          {name: '销售部管理', template: 'stationCreate'}
+          {name: '销售部管理', template: 'stationAdmin'}
         ]
       }
     };
