@@ -7,8 +7,19 @@ Template.station.events({
     // 绑定回车键
     if (e.keyCode == '13') {
       e.preventDefault();
-      alert('contents: ' + $('.station-keyword').val());
+      var keyword = $('.station-keyword').val();
+      keyword = keyword ? '?keyword=' + keyword : '';
+      //console.log('keyword: ' + keyword);
+      //alert('contents: ' + $('.station-keyword').val());
+      Router.go(location.pathname + keyword);
     }
+  },
+
+  'click .filter-station': function(e) {
+    e.preventDefault();
+    var keyword = $('.station-keyword').val();
+    keyword = keyword ? '?keyword=' + keyword : '';
+    Router.go(location.pathname + keyword);
   },
 
   'click .edit-station': function(e) {
