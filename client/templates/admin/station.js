@@ -3,6 +3,14 @@ Template.station.helpers({
 });
 
 Template.station.events({
+  'keypress .station-keyword': function(e) {
+    // 绑定回车键
+    if (e.keyCode == '13') {
+      e.preventDefault();
+      alert('contents: ' + $('.station-keyword').val());
+    }
+  },
+
   'click .edit-station': function(e) {
     e.preventDefault();
     $('#add-station').removeClass('hidden');
