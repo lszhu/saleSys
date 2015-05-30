@@ -26,7 +26,7 @@ Template.header.helpers({
         operation: [
           {name: '客户信息', template: 'customerBase'},
           {name: '员工信息', template: 'employeeBase'},
-          {name: '产品型号信息', template: 'customerBase'}
+          {name: '产品型号信息', template: 'productBase'}
         ]
       },
       order: {

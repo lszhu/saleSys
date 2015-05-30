@@ -1,3 +1,49 @@
+// 发布产品型号信息
+Meteor.publish('products', function (filterKey, options) {
+  check(filterKey, String);
+  check(options, Object);
+  var selector = {};
+  if (filterKey) {
+    var key = new RegExp(filterKey);
+    selector = {
+      $or: [{code: key}, {name: key}, {manager: key},
+        {address: key}, {comment: key}, {memo: key}]
+    };
+  }
+  return Products.find(selector, options);
+});
+
+// 发布内部员工信息
+Meteor.publish('employees', function (filterKey, options) {
+  check(filterKey, String);
+  check(options, Object);
+  var selector = {};
+  if (filterKey) {
+    var key = new RegExp(filterKey);
+    selector = {
+      $or: [{code: key}, {name: key}, {manager: key},
+        {address: key}, {comment: key}, {memo: key}]
+    };
+  }
+  return Employees.find(selector, options);
+});
+
+// 发布客户名单信息
+Meteor.publish('customers', function (filterKey, options) {
+  check(filterKey, String);
+  check(options, Object);
+  var selector = {};
+  if (filterKey) {
+    var key = new RegExp(filterKey);
+    selector = {
+      $or: [{code: key}, {name: key}, {company: key}, {title: key},
+        {phone: key}, {email: key}, {address: key}, {memo: key}]
+    };
+  }
+  return Customers.find(selector, options);
+});
+
+// 发布销售分部信息
 Meteor.publish('stations', function (filterKey, options) {
   check(filterKey, String);
   check(options, Object);
