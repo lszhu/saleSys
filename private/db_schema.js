@@ -71,6 +71,22 @@ employee = {
   timestamp: Date
 };
 
+// 货币类型格式
+currency = {
+    // 标准货币符号
+    symbol: String,
+    // 货币名称
+    name: String,
+    // 所属国别
+    country: String,
+    // 与美元的汇率
+    rate: Number,
+    // 备注
+    memo: String,
+    // 最近修改时间
+    timestamp: Date
+}
+
 // 产品或货物格式
 product = {
   // 编号，同款产品对应的唯一产品号
@@ -81,13 +97,15 @@ product = {
   model: String,
   // 对应数量
   quantity: Number,
-  // 本批入库总价格，不一定等于销售价，包含价格数值和国际货币单位
+  // 参考价格，不一定等于销售价，包含价格数值和国际货币单位
   price: {
     // 价格数值
     value: Number,
     // 计价货币类型，比如CNY为人民币元，USD为美元，EUR为欧元，等等
     currency: String
   },
+  // 产品描述
+  comment: String,
   // 入库时间
   timestamp: Date
 };

@@ -1,3 +1,18 @@
+// 发布各国货币信息
+Meteor.publish('currencies', function (filterKey, options) {
+  check(filterKey, String);
+  check(options, Object);
+  var selector = {};
+  if (filterKey) {
+    var key = new RegExp(filterKey);
+    selector = {
+      $or: [{symbol: key}, {name: key}, {country: key},
+        {rate: key}, {memo: key}]
+    };
+  }
+  return Currencies.find(selector, options);
+});
+
 // 发布产品型号信息
 Meteor.publish('products', function (filterKey, options) {
   check(filterKey, String);
