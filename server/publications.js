@@ -4,7 +4,10 @@ Meteor.publish('stations', function (filterKey, options) {
   var selector = {};
   if (filterKey) {
     var key = new RegExp(filterKey);
-    selector = {$or: [{code: key}, {name: key}]};
+    selector = {
+      $or: [{code: key}, {name: key}, {manager: key},
+        {address: key}, {comment: key}, {memo: key}]
+    };
   }
   return Stations.find(selector, options);
 });

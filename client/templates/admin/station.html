@@ -1,38 +1,40 @@
 <template name="station">
-  <h2>销售分部列表
-    <button class="btn btn-primary edit-station">增加新部门</button>
-  </h2>
-  <div id="add-station" class="hidden">
-    {{> addStation }}
-    <div class="col-sm-12"><br></div>
-  </div>
-  <div class="input-group col-sm-6">
-    <span class="input-group-addon" id="station-code-label">搜索</span>
-    <input type="text" name="keyword" class="form-control station-keyword"
-           placeholder="搜索关键词" aria-describedby="station-code-label">
+  <div>
+    <h2>销售分部列表
+      <button class="btn btn-primary edit-station">增加新部门</button>
+    </h2>
+    <div id="add-station" class="hidden">
+      {{> addStation }}
+      <div class="col-sm-12"><br></div>
+    </div>
+    <div class="input-group col-sm-6">
+      <span class="input-group-addon" id="station-code-label">搜索</span>
+      <input type="text" name="keyword" class="form-control station-keyword"
+             placeholder="搜索关键词" aria-describedby="station-code-label">
     <span class="btn input-group-addon filter-station">
         查询
     </span>
-  </div>
-  {{> stationItem }}
-
-  <div class="col-sm-4">
-    <a class="btn btn-default disabled" href="#">当前共显示 {{itemCount}}
-      条信息</a>
-  </div>
-  {{#if nextPath}}
-    <div class="col-sm-6 col-sm-offset-2">
-      <a class="btn btn-default btn-block" href="{{nextPath}}">显示更多</a>
     </div>
-  {{else}}
-    {{#unless ready}}
-      {{> spinner}}
-    {{/unless}}
-  {{/if}}
+    {{> stationItem }}
+
+    <div class="col-xs-4">
+      <a class="btn btn-default disabled" href="#">当前共显示 {{itemCount}}
+        条信息</a>
+    </div>
+    {{#if nextPath}}
+      <div class="col-xs-4 col-xs-offset-4">
+        <a class="btn btn-default btn-block" href="{{nextPath}}">显示更多</a>
+      </div>
+    {{else}}
+      {{#unless ready}}
+        {{> loading}}
+      {{/unless}}
+    {{/if}}
+  </div>
 </template>
 
 <template name="addStation">
-  <strong>新增销售部门</strong>
+  <strong>编辑销售部门信息</strong>
 
   <form class="add-station">
     <div class="input-group">
@@ -61,11 +63,11 @@
       <input type="text" name="memo" class="form-control"
              placeholder="备注" aria-describedby="station-memo-label"/>
     </div>
-    {{! 下面的checkbox是强制覆盖标志，选中（true）表示强制覆盖 }}
-    <div class="checkbox hidden">
-      <label>
-        <input type="checkbox" name="overlap"> 强制覆盖
-      </label>
+    {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
+    <div class="input-group hidden">
+      <span class="input-group-addon" id="station-id-label">Id</span>
+      <input type="text" name="overlap" class="form-control"
+             aria-describedby="station-id-label">
     </div>
     <div class="col-sm-4 col-sm-offset-4">
       <button type="submit" class="btn btn-primary btn-block">
@@ -85,6 +87,7 @@
       <th>地址</th>
       <th>简介</th>
       <th>备注</th>
+      <th class="danger text-center">变更</th>
     </tr>
     </thead>
     <tbody>
@@ -96,6 +99,14 @@
         <td>{{address}}</td>
         <td>{{comment}}</td>
         <td>{{memo}}</td>
+        <td class="text-center">
+          <a href="{{_id}}" class="update-station">
+            <i class="fa fa-pencil-square-o fa-lg"></i>
+          </a>
+          <a href="{{_id}}" class="remove-station">
+            <i class="fa fa-times fa-lg danger"></i>
+          </a>
+        </td>
       </tr>
     {{/each}}
     </tbody>

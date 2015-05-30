@@ -5,6 +5,10 @@ if (Meteor.isServer) {
     //var Posts = new Mongo.Collection('posts');
     //var Comments = new Mongo.Collection('comments');
     console.log('\n\nPreparing test data...');
+
+    // 添加测试使用的销售分部（station）数据库条目，
+    stationTestDataAdd();
+
     if (Posts.find().count() === 0) {
       console.log('inserting test data to database');
       var now = new Date().getTime();
