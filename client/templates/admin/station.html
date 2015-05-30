@@ -71,7 +71,7 @@
     </div>
     <div class="col-sm-4 col-sm-offset-4">
       <button type="submit" class="btn btn-primary btn-block">
-        提交新部门
+        提交新信息
       </button>
     </div>
   </form>
@@ -87,7 +87,7 @@
       <th>地址</th>
       <th>简介</th>
       <th>备注</th>
-      <th class="danger text-center">变更</th>
+      <th class="danger text-center width60">变更</th>
     </tr>
     </thead>
     <tbody>
@@ -100,10 +100,10 @@
         <td>{{comment}}</td>
         <td>{{memo}}</td>
         <td class="text-center">
-          <a href="{{_id}}" class="update-station">
+          <a href="{{_id}}" class="update-station" title="修改">
             <i class="fa fa-pencil-square-o fa-lg"></i>
           </a>
-          <a href="{{_id}}" class="remove-station">
+          <a href="{{_id}}" class="remove-station" title="删除">
             <i class="fa fa-times fa-lg danger"></i>
           </a>
         </td>
