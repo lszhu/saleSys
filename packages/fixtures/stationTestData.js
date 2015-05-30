@@ -108,4 +108,4 @@ stationTestDataAdd = function() {
     comment: 'gsdfgasd',
     memo: 'g2'
   });
-}
+};

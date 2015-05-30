@@ -6,8 +6,10 @@ if (Meteor.isServer) {
     //var Comments = new Mongo.Collection('comments');
     console.log('\n\nPreparing test data...');
 
-    // 添加测试使用的销售分部（station）数据库条目，
+    // 添加测试使用的销售分部（station）数据库条目
     stationTestDataAdd();
+    // 添加世界常见货币信息
+    currencyTestDataAdd();
 
     if (Posts.find().count() === 0) {
       console.log('inserting test data to database');

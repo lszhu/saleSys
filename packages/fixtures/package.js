@@ -20,7 +20,7 @@ Package.onUse(function(api) {
   //api.use('mongo');
   //api.use(['ddp', 'deps', 'livedata'], 'server');
   // 定义包的源代码所在文件
-  //api.addFiles(['fixtures.js'], 'server');
+  api.addFiles('currencyTestData.js', 'server');
   api.addFiles(['fixtures.js', 'stationTestData.js'], 'server');
 });
 
