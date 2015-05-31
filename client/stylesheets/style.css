@@ -222,6 +222,8 @@ body {
     pointer-events: auto;
 }
 
+/* 注意保留以下样式类 */
+
 .width60 {
     width: 60px;
 }
@@ -236,4 +238,9 @@ body {
 
 table.min60 th {
     min-width: 60px;
+}
+
+.attach {
+    padding: 1px;
+    margin: 0;
 }

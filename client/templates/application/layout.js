@@ -1,13 +1,14 @@
-Template.layout.onRendered(function() {
+Template.layout.onRendered(function () {
   this.find('#main')._uihooks = {
-    insertElement: function(node, next) {
+    insertElement: function (node, next) {
       $(node)
-        .hide()
-        .insertBefore(next)
-        .fadeIn();
+          .hide()
+          .insertBefore(next)
+        //.fadeIn();
+          .slideDown();
     },
-    removeElement: function(node) {
-      $(node).fadeOut(function() {
+    removeElement: function (node) {
+      $(node).slideUp(function () {
         $(this).remove();
       });
     }

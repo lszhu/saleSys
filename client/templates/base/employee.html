@@ -7,13 +7,13 @@
       {{> addEmployee }}
       <div class="col-sm-12"><br></div>
     </div>
-    <div class="input-group col-sm-6">
+    <div class="input-group col-sm-6 attach">
       <span class="input-group-addon" id="employee-code-label">搜索</span>
       <input type="text" name="keyword" class="form-control employee-keyword"
              placeholder="搜索关键词" aria-describedby="employee-code-label">
-    <span class="btn input-group-addon filter-employee">
+      <span class="btn btn-primary input-group-addon filter-employee">
         查询
-    </span>
+      </span>
     </div>
     {{> employeeItem }}
 
@@ -37,38 +37,72 @@
   <strong>编辑销售部门信息</strong>
 
   <form class="add-employee">
-    <div class="input-group">
-      <span class="input-group-addon" id="employee-code-label">编号</span>
-      <input type="text" name="code" class="form-control" placeholder="编号"
-             aria-describedby="employee-code-label">
-      <span class="input-group-addon" id="employee-name-label">名称</span>
-      <input type="text" name="name" class="form-control" placeholder="名称"
-             aria-describedby="employee-name-label">
-      <span class="input-group-addon" id="employee-stationId-label">部门</span>
-      <input type="text" name="stationId" class="form-control" placeholder="部门"
-             aria-describedby="employee-title-label">
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="employee-code-label">编号</span>
+        <input type="text" name="code" class="form-control" placeholder="编号"
+               aria-describedby="employee-code-label">
+      </div>
     </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="employee-title-label">职务</span>
-      <input type="text" name="title" class="form-control"
-             placeholder="职务" aria-describedby="employee-title-label"/>
-      <span class="input-group-addon" id="employee-phone-label">电话</span>
-      <input type="text" name="phone" class="form-control"
-             placeholder="电话" aria-describedby="employee-address-label"/>
-      <span class="input-group-addon" id="employee-email-label">邮箱</span>
-      <input type="text" name="email" class="form-control"
-             placeholder="邮箱" aria-describedby="employee-email-label"/>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="employee-name-label">名称</span>
+        <input type="text" name="name" class="form-control" placeholder="名称"
+               aria-describedby="employee-name-label">
+      </div>
     </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="employee-salary-label">工资</span>
-      <input type="text" name="salary" class="form-control"
-             placeholder="简介" aria-describedby="employee-salary-label"/>
-      <span class="input-group-addon btn btn-primary" title="单击选择币种">人民币元（CNY）</span>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="employee-sex-label">性别</span>
+        <input type="text" name="sex" class="form-control"
+               placeholder="性别" aria-describedby="employee-sex-label"/>
+      </div>
     </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="employee-memo-label">备注</span>
-      <input type="text" name="memo" class="form-control"
-             placeholder="备注" aria-describedby="employee-memo-label"/>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="employee-stationId-label">部门</span>
+        <input type="text" name="stationId" class="form-control"
+               placeholder="部门"
+               aria-describedby="employee-title-label">
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="employee-phone-label">电话</span>
+        <input type="text" name="phone" class="form-control"
+               placeholder="电话" aria-describedby="employee-address-label"/>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="employee-email-label">邮箱</span>
+        <input type="text" name="email" class="form-control"
+               placeholder="邮箱" aria-describedby="employee-email-label"/>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="employee-title-label">职务</span>
+        <input type="text" name="title" class="form-control"
+               placeholder="职务" aria-describedby="employee-title-label"/>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="employee-salary-label">工资</span>
+        <input type="text" name="salary" class="form-control"
+               placeholder="简介" aria-describedby="employee-salary-label"/>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      {{> currencySelect}}
+    </div>
+    <div class="col-xs-12 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="employee-memo-label">备注</span>
+        <input type="text" name="memo" class="form-control"
+               placeholder="备注" aria-describedby="employee-memo-label"/>
+      </div>
     </div>
     {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
     <div class="input-group hidden">
@@ -76,6 +110,7 @@
       <input type="text" name="overlap" class="form-control"
              placeholder="空" aria-describedby="employee-id-label">
     </div>
+    <div class="col-xs-12"></div>
     <div class="col-sm-4 col-sm-offset-4">
       <button type="submit" class="btn btn-primary btn-block">
         提交新信息
