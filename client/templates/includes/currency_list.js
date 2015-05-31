@@ -5,7 +5,13 @@ Template.currencySelect.helpers({
 });
 
 Template.currencySelectItem.helpers({
+  // 判断是否为人民币
   isCNY: function() {
     return this.symbol == 'CNY';
+  },
+
+  // todo 需要根据登录用户的偏好设置来确定
+  isDefaultCurrency: function() {
+    return this.isCNY();
   }
 });

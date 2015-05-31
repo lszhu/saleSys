@@ -46,25 +46,24 @@
     </div>
     <div class="col-xs-4 attach">
       <div class="input-group">
-        <span class="input-group-addon" id="employee-name-label">名称</span>
-        <input type="text" name="name" class="form-control" placeholder="名称"
+        <span class="input-group-addon" id="employee-name-label">姓名</span>
+        <input type="text" name="name" class="form-control" placeholder="姓名"
                aria-describedby="employee-name-label">
       </div>
     </div>
     <div class="col-xs-4 attach">
       <div class="input-group">
         <span class="input-group-addon" id="employee-sex-label">性别</span>
-        <input type="text" name="sex" class="form-control"
-               placeholder="性别" aria-describedby="employee-sex-label"/>
+        <select name="sex" class="form-control"
+                aria-describedby="employee-sex-label">
+          <option></option>
+          <option>男</option>
+          <option>女</option>
+        </select>
       </div>
     </div>
     <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="employee-stationId-label">部门</span>
-        <input type="text" name="stationId" class="form-control"
-               placeholder="部门"
-               aria-describedby="employee-title-label">
-      </div>
+      {{> stationSelect }}
     </div>
     <div class="col-xs-4 attach">
       <div class="input-group">
@@ -95,7 +94,7 @@
       </div>
     </div>
     <div class="col-xs-4 attach">
-      {{> currencySelect}}
+      {{> currencySelect }}
     </div>
     <div class="col-xs-12 attach">
       <div class="input-group">

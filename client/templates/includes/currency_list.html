@@ -1,8 +1,8 @@
 <template name="currencySelect">
   <div class="input-group">
-    <span class="input-group-addon" id="employee-currency-label">币种</span>
-    <select name="jobType" class="form-control"
-            aria-describedby="employee-currency-label">
+    <span class="input-group-addon" id="includes-currency-label">币种</span>
+    <select name="currency" class="form-control"
+            aria-describedby="includes-currency-label">
       {{#each currencies}}
         {{> currencySelectItem}}
       {{/each}}
@@ -11,7 +11,7 @@
 </template>
 
 <template name="currencySelectItem">
-  {{#if isCNY}}
+  {{#if isDefaultCurrency}}
     <option value="{{symbol}}" selected>{{name}}（{{symbol}}）</option>
   {{else}}
     <option value="{{symbol}}">{{name}}（{{symbol}}）</option>

@@ -1,0 +1,19 @@
+<template name="stationSelect">
+  <div class="input-group">
+    <span class="input-group-addon" id="includes-station-label">部门</span>
+    <select name="station" class="form-control"
+            aria-describedby="includes-station-label">
+      {{#each stations}}
+        {{> stationSelectItem }}
+      {{/each}}
+    </select>
+  </div>
+</template>
+
+<template name="stationSelectItem">
+  {{#if isDefaultStation}}
+    <option value="{{_id}}" selected>{{name}}</option>
+  {{else}}
+    <option value="{{_id}}">{{name}}</option>
+  {{/if}}
+</template>

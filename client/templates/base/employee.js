@@ -42,11 +42,12 @@ Template.employee.events({
     e.preventDefault();
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
+    var form = $('#add-employee');
     //console.log('_id: ' + _id);
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
-    $('#add-employee').find('[name=overlap]').val(_id);
+    form.find('[name=overlap]').val(_id);
     // 显示编辑框
-    $('#add-employee').removeClass('hidden');
+    form.removeClass('hidden');
     fillForm(_id);
   },
 
