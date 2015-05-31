@@ -1,5 +1,7 @@
-Template.employee.helpers({
-  temp: function () {
+Template.employeeListItem.helpers({
+  stationName: function () {
+    var station = Stations.findOne(this.stationId);
+    return station && station.name;
   }
 });
 
@@ -38,7 +40,7 @@ Template.employee.events({
     //target.removeClass('hidden');
   },
 
-  'click .update-employee': function(e) {
+  'click .update-employee': function (e) {
     e.preventDefault();
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
@@ -51,9 +53,9 @@ Template.employee.events({
     fillForm(_id);
   },
 
-  'click .remove-employee': function(e) {
+  'click .remove-employee': function (e) {
     e.preventDefault();
-    if (!confirm('你确实要删除该销售分部的信息吗？')) {
+    if (!confirm('你确实要删除该员工的信息吗？')) {
       return;
     }
     // 获取对应数据库条目Id
@@ -71,12 +73,18 @@ Template.employee.events({
     var employee = {
       code: form.find('[name=code]').val(),
       name: form.find('[name=name]').val(),
-      manager: form.find('[name=manager]').val(),
-      address: form.find('[name=address]').val(),
-      comment: form.find('[name=comment]').val(),
+      sex: form.find('[name=sex]').val(),
+      title: form.find('[name=title]').val(),
+      phone: form.find('[name=phone]').val(),
+      email: form.find('[name=email]').val(),
+      stationId: form.find('[name=stationId]').val(),
+      salary: {
+        value: parseFloat(form.find('[name=salaryValue]').val()),
+        currency: form.find('[name=currency]').val()
+      },
       memo: form.find('[name=memo]').val()
     };
-    console.log('employee: ' + JSON.stringify(employee));
+    //console.log('employee: ' + JSON.stringify(employee));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
     Meteor.call('employeeInsert', {employee: employee, overlap: overlap});
@@ -89,11 +97,15 @@ function clearForm(target) {
   var form = $(target);
   form.find('[name=code]').val('');
   form.find('[name=name]').val('');
-  form.find('[name=manager]').val('');
-  form.find('[name=address]').val('');
-  form.find('[name=comment]').val('');
+  form.find('[name=sex]').val('');
+  form.find('[name=title]').val('');
+  form.find('[name=phone]').val('');
+  form.find('[name=email]').val('');
+  //form.find('[name=stationId]').val('');
+  form.find('[name=salaryValue]').val('');
+  //form.find('[name=currency]').val('');
   form.find('[name=memo]').val('');
-  // 清空隐藏文本框中保存的数据库条目Id，即清空覆盖标识
+// 清空隐藏文本框中保存的数据库条目Id，即清空覆盖标识
   form.find('[name=overlap]').val('');
 }
 
@@ -103,8 +115,12 @@ function fillForm(_id) {
   var form = $('#add-employee');
   form.find('[name=code]').val(data.code);
   form.find('[name=name]').val(data.name);
-  form.find('[name=manager]').val(data.manager);
-  form.find('[name=address]').val(data.address);
-  form.find('[name=comment]').val(data.comment);
+  form.find('[name=sex]').val(data.sex);
+  form.find('[name=title]').val(data.title);
+  form.find('[name=phone]').val(data.phone);
+  form.find('[name=email]').val(data.email);
+  form.find('[name=stationId]').val(data.stationId);
+  form.find('[name=salaryValue]').val(data.salary.value);
+  form.find('[name=currency]').val(data.salary.currency);
   form.find('[name=memo]').val(data.memo);
 }

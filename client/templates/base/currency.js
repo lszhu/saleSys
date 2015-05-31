@@ -53,7 +53,7 @@ Template.currency.events({
 
   'click .remove-currency': function(e) {
     e.preventDefault();
-    if (!confirm('你确实要删除该客户的信息吗？')) {
+    if (!confirm('你确实要删除该货币信息吗？')) {
       return;
     }
     // 获取对应数据库条目Id

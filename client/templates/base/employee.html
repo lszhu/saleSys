@@ -15,7 +15,7 @@
         查询
       </span>
     </div>
-    {{> employeeItem }}
+    {{> employeeList }}
 
     <div class="col-xs-4">
       <a class="btn btn-default disabled" href="#">当前共显示 {{itemCount}}
@@ -88,9 +88,10 @@
     </div>
     <div class="col-xs-4 attach">
       <div class="input-group">
-        <span class="input-group-addon" id="employee-salary-label">工资</span>
-        <input type="text" name="salary" class="form-control"
-               placeholder="简介" aria-describedby="employee-salary-label"/>
+        <span class="input-group-addon"
+              id="employee-salary-value-label">工资</span>
+        <input type="text" name="salaryValue" class="form-control"
+               placeholder="简介" aria-describedby="employee-salary-value-label"/>
       </div>
     </div>
     <div class="col-xs-4 attach">
@@ -118,38 +119,48 @@
   </form>
 </template>
 
-<template name="employeeItem">
+<template name="employeeList">
   <table class="table table-striped table-bordered min60">
     <thead>
     <tr>
       <th>编号</th>
-      <th>名称</th>
-      <th>负责人</th>
-      <th>地址</th>
-      <th>简介</th>
+      <th>姓名</th>
+      <th>性别</th>
+      <th>部门</th>
+      <th>职务</th>
+      <th>电话</th>
+      <th>邮箱</th>
+      <th>工资</th>
       <th>备注</th>
       <th class="danger text-center width60">变更</th>
     </tr>
     </thead>
     <tbody>
     {{#each employees }}
-      <tr>
-        <td>{{code}}</td>
-        <td>{{name}}</td>
-        <td>{{manager}}</td>
-        <td>{{address}}</td>
-        <td>{{comment}}</td>
-        <td>{{memo}}</td>
-        <td class="text-center">
-          <a href="{{_id}}" class="update-employee" title="修改">
-            <i class="fa fa-pencil-square-o fa-lg"></i>
-          </a>
-          <a href="{{_id}}" class="remove-employee" title="删除">
-            <i class="fa fa-times fa-lg danger"></i>
-          </a>
-        </td>
-      </tr>
+      {{> employeeListItem }}
     {{/each}}
     </tbody>
   </table>
+</template>
+
+<template name="employeeListItem">
+  <tr>
+    <td>{{code}}</td>
+    <td>{{name}}</td>
+    <td>{{sex}}</td>
+    <td>{{stationName}}</td>
+    <td>{{title}}</td>
+    <td>{{phone}}</td>
+    <td>{{email}}</td>
+    <td>{{salary.currency}}{{salary.value}}</td>
+    <td>{{memo}}</td>
+    <td class="text-center">
+      <a href="{{_id}}" class="update-employee" title="修改">
+        <i class="fa fa-pencil-square-o fa-lg"></i>
+      </a>
+      <a href="{{_id}}" class="remove-employee" title="删除">
+        <i class="fa fa-times fa-lg danger"></i>
+      </a>
+    </td>
+  </tr>
 </template>
