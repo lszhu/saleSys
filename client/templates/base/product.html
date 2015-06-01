@@ -7,15 +7,15 @@
       {{> addProduct }}
       <div class="col-sm-12"><br></div>
     </div>
-    <div class="input-group col-sm-6">
+    <div class="input-group col-sm-6 attach">
       <span class="input-group-addon" id="product-code-label">搜索</span>
       <input type="text" name="keyword" class="form-control product-keyword"
              placeholder="搜索关键词" aria-describedby="product-code-label">
-    <span class="btn input-group-addon filter-product">
+      <span class="btn btn-primary input-group-addon filter-product">
         查询
-    </span>
+      </span>
     </div>
-    {{> productItem }}
+    {{> productList }}
 
     <div class="col-xs-4">
       <a class="btn btn-default disabled" href="#">当前共显示 {{itemCount}}
@@ -34,34 +34,61 @@
 </template>
 
 <template name="addProduct">
-  <strong>编辑销售部门信息</strong>
+  <strong>编辑产品型号信息</strong>
 
   <form class="add-product">
-    <div class="input-group">
-      <span class="input-group-addon" id="product-code-label">编号</span>
-      <input type="text" name="code" class="form-control" placeholder="编号"
-             aria-describedby="product-code-label">
-      <span class="input-group-addon" id="product-name-label">名称</span>
-      <input type="text" name="name" class="form-control" placeholder="名称"
-             aria-describedby="product-name-label">
-      <span class="input-group-addon" id="product-manager-label">负责人</span>
-      <input type="text" name="manager" class="form-control" placeholder="负责人"
-             aria-describedby="product-manager-label">
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="product-code-label">编号</span>
+        <input type="text" name="code" class="form-control" placeholder="编号"
+               aria-describedby="product-code-label">
+      </div>
     </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="product-address-label">地址</span>
-      <input type="text" name="address" class="form-control"
-             placeholder="办公地址" aria-describedby="product-address-label"/>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="product-name-label">名称</span>
+        <input type="text" name="name" class="form-control" placeholder="名称"
+               aria-describedby="product-name-label">
+      </div>
     </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="product-comment-label">简介</span>
-      <input type="text" name="comment" class="form-control"
-             placeholder="简介" aria-describedby="product-comment-label"/>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="product-model-label">型号</span>
+        <input type="text" name="model" class="form-control" placeholder="型号"
+               aria-describedby="product-model-label">
+      </div>
     </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="product-memo-label">备注</span>
-      <input type="text" name="memo" class="form-control"
-             placeholder="备注" aria-describedby="product-memo-label"/>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="product-batch-label">批次</span>
+        <input type="text" name="batch" class="form-control"
+               placeholder="批次" aria-describedby="product-batch-label"/>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon"
+              id="product-price-value-label">价格</span>
+        <input type="text" name="priceValue" class="form-control"
+               placeholder="价格" aria-describedby="product-price-value-label"/>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      {{> currencySelect }}
+    </div>
+    <div class="col-xs-12 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="product-comment-label">描述</span>
+        <input type="text" name="comment" class="form-control"
+               placeholder="描述" aria-describedby="product-comment-label"/>
+      </div>
+    </div>
+    <div class="col-xs-12 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="product-memo-label">备注</span>
+        <input type="text" name="memo" class="form-control"
+               placeholder="备注" aria-describedby="product-memo-label"/>
+      </div>
     </div>
     {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
     <div class="input-group hidden">
@@ -69,6 +96,7 @@
       <input type="text" name="overlap" class="form-control"
              placeholder="空" aria-describedby="product-id-label">
     </div>
+    <div class="col-xs-12"></div>
     <div class="col-sm-4 col-sm-offset-4">
       <button type="submit" class="btn btn-primary btn-block">
         提交新信息
@@ -77,38 +105,44 @@
   </form>
 </template>
 
-<template name="productItem">
+<template name="productList">
   <table class="table table-striped table-bordered min60">
     <thead>
     <tr>
       <th>编号</th>
       <th>名称</th>
-      <th>负责人</th>
-      <th>地址</th>
-      <th>简介</th>
+      <th>型号</th>
+      <th>批次</th>
+      <th>价格</th>
+      <th>说明</th>
       <th>备注</th>
       <th class="danger text-center width60">变更</th>
     </tr>
     </thead>
     <tbody>
     {{#each products }}
-      <tr>
-        <td>{{code}}</td>
-        <td>{{name}}</td>
-        <td>{{manager}}</td>
-        <td>{{address}}</td>
-        <td>{{comment}}</td>
-        <td>{{memo}}</td>
-        <td class="text-center">
-          <a href="{{_id}}" class="update-product" title="修改">
-            <i class="fa fa-pencil-square-o fa-lg"></i>
-          </a>
-          <a href="{{_id}}" class="remove-product" title="删除">
-            <i class="fa fa-times fa-lg danger"></i>
-          </a>
-        </td>
-      </tr>
+      {{> productListItem }}
     {{/each}}
     </tbody>
   </table>
+</template>
+
+<template name="productListItem">
+  <tr>
+    <td>{{code}}</td>
+    <td>{{name}}</td>
+    <td>{{model}}</td>
+    <td>{{batch}}</td>
+    <td>{{price.currency}}{{price.value}}</td>
+    <td>{{comment}}</td>
+    <td>{{memo}}</td>
+    <td class="text-center">
+      <a href="{{_id}}" class="update-product" title="修改">
+        <i class="fa fa-pencil-square-o fa-lg"></i>
+      </a>
+      <a href="{{_id}}" class="remove-product" title="删除">
+        <i class="fa fa-times fa-lg danger"></i>
+      </a>
+    </td>
+  </tr>
 </template>

@@ -3,7 +3,7 @@ Template.product.helpers({
   }
 });
 
-Template.product.onRendered(function() {
+Template.product.onRendered(function () {
   var key = this.data.filterKey;
   //console.log('key: ' + key);
   this.$('.product-keyword').val(key);
@@ -44,7 +44,7 @@ Template.product.events({
     //target.removeClass('hidden');
   },
 
-  'click .update-product': function(e) {
+  'click .update-product': function (e) {
     e.preventDefault();
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
@@ -57,7 +57,7 @@ Template.product.events({
     fillForm(_id);
   },
 
-  'click .remove-product': function(e) {
+  'click .remove-product': function (e) {
     e.preventDefault();
     if (!confirm('你确实要删除该销售分部的信息吗？')) {
       return;
@@ -77,8 +77,12 @@ Template.product.events({
     var product = {
       code: form.find('[name=code]').val(),
       name: form.find('[name=name]').val(),
-      manager: form.find('[name=manager]').val(),
-      address: form.find('[name=address]').val(),
+      model: form.find('[name=model]').val(),
+      batch: form.find('[name=batch]').val(),
+      price: {
+        value: parseFloat(form.find('[name=priceValue]').val()),
+        currency: form.find('[name=currency]').val()
+      },
       comment: form.find('[name=comment]').val(),
       memo: form.find('[name=memo]').val()
     };
@@ -95,8 +99,9 @@ function clearForm(target) {
   var form = $(target);
   form.find('[name=code]').val('');
   form.find('[name=name]').val('');
-  form.find('[name=manager]').val('');
-  form.find('[name=address]').val('');
+  form.find('[name=model]').val('');
+  form.find('[name=batch]').val('');
+	form.find('[name=priceValue]').val('');
   form.find('[name=comment]').val('');
   form.find('[name=memo]').val('');
   // 清空隐藏文本框中保存的数据库条目Id，即清空覆盖标识
@@ -109,8 +114,10 @@ function fillForm(_id) {
   var form = $('#add-product');
   form.find('[name=code]').val(data.code);
   form.find('[name=name]').val(data.name);
-  form.find('[name=manager]').val(data.manager);
-  form.find('[name=address]').val(data.address);
+  form.find('[name=model]').val(data.model);
+  form.find('[name=batch]').val(data.batch);
+  form.find('[name=priceValue]').val(data.price.value);
+  form.find('[name=currency]').val(data.price.currency);
   form.find('[name=comment]').val(data.comment);
   form.find('[name=memo]').val(data.memo);
 }

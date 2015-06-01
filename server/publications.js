@@ -6,8 +6,10 @@ Meteor.publish('currencies', function (filterKey, options) {
   if (filterKey) {
     var key = new RegExp(filterKey, 'i');
     selector = {
-      $or: [{symbol: key}, {name: key}, {country: key},
-        {rate: filterKey}, {memo: key}]
+      $or: [
+        {symbol: key}, {name: key}, {country: key},
+        {rate: filterKey}, {memo: key}
+      ]
     };
   }
   return Currencies.find(selector, options);
@@ -21,8 +23,11 @@ Meteor.publish('products', function (filterKey, options) {
   if (filterKey) {
     var key = new RegExp(filterKey, 'i');
     selector = {
-      $or: [{code: key}, {name: key}, {manager: key},
-        {address: key}, {comment: key}, {memo: key}]
+      $or: [
+        {code: key}, {name: key}, {model: key}, {batch: key},
+        {'price.value': parseFloat(filterKey)}, {'price.currency': key},
+        {comment: key}, {memo: key}
+      ]
     };
   }
   return Products.find(selector, options);
@@ -43,9 +48,11 @@ Meteor.publish('employees', function (filterKey, options) {
       return e._id;
     });
     selector = {
-      $or: [{code: key}, {name: key}, {sex: key}, {title: key}, {phone: key},
+      $or: [
+        {code: key}, {name: key}, {sex: key}, {title: key}, {phone: key},
         {email: key}, {'salary.value': parseFloat(filterKey)},
-        {'salary.currency': key}, {stationId: {$in: station}}, {memo: key}]
+        {'salary.currency': key}, {stationId: {$in: station}}, {memo: key}
+      ]
     };
   }
   return Employees.find(selector, options);
@@ -59,8 +66,10 @@ Meteor.publish('customers', function (filterKey, options) {
   if (filterKey) {
     var key = new RegExp(filterKey, 'i');
     selector = {
-      $or: [{code: key}, {name: key}, {company: key}, {title: key},
-        {phone: key}, {email: key}, {address: key}, {memo: key}]
+      $or: [
+        {code: key}, {name: key}, {company: key}, {title: key},
+        {phone: key}, {email: key}, {address: key}, {memo: key}
+      ]
     };
   }
   return Customers.find(selector, options);
@@ -74,8 +83,10 @@ Meteor.publish('stations', function (filterKey, options) {
   if (filterKey) {
     var key = new RegExp(filterKey, 'i');
     selector = {
-      $or: [{code: key}, {name: key}, {manager: key},
-        {address: key}, {comment: key}, {memo: key}]
+      $or: [
+        {code: key}, {name: key}, {manager: key},
+        {address: key}, {comment: key}, {memo: key}
+      ]
     };
   }
   return Stations.find(selector, options);

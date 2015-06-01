@@ -96,7 +96,7 @@ product = {
   // 型号
   model: String,
   // 对应数量
-  quantity: Number,
+  batch: String,
   // 参考价格，不一定等于销售价，包含价格数值和国际货币单位
   price: {
     // 价格数值
@@ -106,6 +106,8 @@ product = {
   },
   // 产品描述
   comment: String,
+  // 备注
+  memo: String,
   // 入库时间
   timestamp: Date
 };
@@ -182,8 +184,10 @@ stock = {
   stationId: String,
   // 对应产品Id，为product集合的文档条目的数据库内部的ObjectId
   productId: String,
-  // 该型号产品数量
+  // 该型号产品存货数量
   amount: Number,
+  // 累计入库总数
+  accumulation: Number,
   // 产品良好状态，good良好，repaired修复，defective次品，scrap报废
   status: String,
   // 最近修改时间
