@@ -54,8 +54,6 @@ employee = {
   title: String,
   // 联系电话
   phone: String,
-  // 通讯地址
-  address: String,
   // 电子邮箱
   email: String,
   // 所属销售分部Id，对应station集合的文档条目的数据库内部ObjectId

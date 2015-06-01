@@ -10,6 +10,8 @@ if (Meteor.isServer) {
     stationTestDataAdd();
     // 添加世界常见货币信息
     currencyTestDataAdd();
+    // 添加内部员工信息
+    employeeTestDataAdd();
 
     if (Posts.find().count() === 0) {
       console.log('inserting test data to database');
