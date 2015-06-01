@@ -3,6 +3,12 @@ Template.currency.helpers({
   }
 });
 
+Template.currency.onRendered(function() {
+  var key = this.data.filterKey;
+  //console.log('key: ' + key);
+  this.$('.currency-keyword').val(key);
+});
+
 Template.currency.events({
   'keypress .currency-keyword': function (e) {
     // 绑定回车键

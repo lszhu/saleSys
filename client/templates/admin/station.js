@@ -3,6 +3,12 @@ Template.station.helpers({
   }
 });
 
+Template.station.onRendered(function() {
+  var key = this.data.filterKey;
+  //console.log('key: ' + key);
+  this.$('.station-keyword').val(key);
+});
+
 Template.station.events({
   'keypress .station-keyword': function (e) {
     // 绑定回车键

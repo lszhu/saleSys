@@ -3,6 +3,12 @@ Template.customer.helpers({
   }
 });
 
+Template.customer.onRendered(function() {
+  var key = this.data.filterKey;
+  //console.log('key: ' + key);
+  this.$('.customer-keyword').val(key);
+});
+
 Template.customer.events({
   'keypress .customer-keyword': function (e) {
     // 绑定回车键

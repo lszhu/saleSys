@@ -5,6 +5,12 @@ Template.employeeListItem.helpers({
   }
 });
 
+Template.employee.onRendered(function() {
+  var key = this.data.filterKey;
+  //console.log('key: ' + key);
+  this.$('.employee-keyword').val(key);
+});
+
 Template.employee.events({
   'keypress .employee-keyword': function (e) {
     // 绑定回车键
