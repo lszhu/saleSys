@@ -107,9 +107,9 @@ function clearForm(target) {
   form.find('[name=title]').val('');
   form.find('[name=phone]').val('');
   form.find('[name=email]').val('');
-  //form.find('[name=stationId]').val('');
+  form.find('[name=stationId]').val(defaultStationId());
   form.find('[name=salaryValue]').val('');
-  //form.find('[name=currency]').val('');
+  form.find('[name=currency]').val(defaultCurrency());
   form.find('[name=memo]').val('');
 // 清空隐藏文本框中保存的数据库条目Id，即清空覆盖标识
   form.find('[name=overlap]').val('');

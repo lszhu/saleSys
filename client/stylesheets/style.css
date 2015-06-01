@@ -247,4 +247,5 @@ table.min60 th {
 
 table td {
     word-break: break-all;
+    word-wrap: break-word;
 }

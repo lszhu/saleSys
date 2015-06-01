@@ -100,5 +100,4 @@ customerTestDataAdd = function () {
     data[i].timestamp = new Date(2015, 4, 31 * Math.random());
     Customers.insert(data[i]);
   }
-}
-;
+};

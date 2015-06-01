@@ -5,8 +5,8 @@ Template.currencySelect.helpers({
 });
 
 Template.currencySelectItem.helpers({
-  // todo 需要根据登录用户的偏好设置来确定
+  // 确定是否为当前默认的货币类型
   isDefaultCurrency: function() {
-    return this.symbol == 'CNY';
+    return this.symbol == defaultCurrency();
   }
 });

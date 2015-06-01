@@ -102,6 +102,9 @@ function clearForm(target) {
   form.find('[name=model]').val('');
   form.find('[name=batch]').val('');
 	form.find('[name=priceValue]').val('');
+  // 货币类型设置为默认货币
+  console.log('default currency: ' + defaultCurrency());
+  form.find('[name=currency]').val(defaultCurrency());
   form.find('[name=comment]').val('');
   form.find('[name=memo]').val('');
   // 清空隐藏文本框中保存的数据库条目Id，即清空覆盖标识

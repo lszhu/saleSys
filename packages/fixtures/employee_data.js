@@ -104,5 +104,4 @@ employeeTestDataAdd = function () {
     data[i].timestamp = new Date(2015, 3, 31 * Math.random());
     Employees.insert(data[i]);
   }
-}
-;
+};

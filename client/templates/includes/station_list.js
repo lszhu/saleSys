@@ -5,8 +5,7 @@ Template.stationSelect.helpers({
 });
 
 Template.stationSelectItem.helpers({
-  // todo 需要根据登录用户的偏好设置来确定
   isDefaultStation: function() {
-    return this.name == '广州店';
+    return this._id == defaultStationId();
   }
 });

@@ -14,6 +14,8 @@ if (Meteor.isServer) {
     employeeTestDataAdd();
     // 添加测试用的客户信息
     customerTestDataAdd();
+    // 添加测试用的产品型号信息
+    productTestDataAdd();
 
     if (Posts.find().count() === 0) {
       console.log('inserting test data to database');
