@@ -244,3 +244,7 @@ table.min60 th {
     padding: 1px;
     margin: 0;
 }
+
+table td {
+    word-break: break-all;
+}
