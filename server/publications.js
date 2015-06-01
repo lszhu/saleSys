@@ -4,10 +4,10 @@ Meteor.publish('currencies', function (filterKey, options) {
   check(options, Object);
   var selector = {};
   if (filterKey) {
-    var key = new RegExp(filterKey);
+    var key = new RegExp(filterKey, 'i');
     selector = {
       $or: [{symbol: key}, {name: key}, {country: key},
-        {rate: key}, {memo: key}]
+        {rate: filterKey}, {memo: key}]
     };
   }
   return Currencies.find(selector, options);
@@ -19,7 +19,7 @@ Meteor.publish('products', function (filterKey, options) {
   check(options, Object);
   var selector = {};
   if (filterKey) {
-    var key = new RegExp(filterKey);
+    var key = new RegExp(filterKey, 'i');
     selector = {
       $or: [{code: key}, {name: key}, {manager: key},
         {address: key}, {comment: key}, {memo: key}]
@@ -34,10 +34,10 @@ Meteor.publish('employees', function (filterKey, options) {
   check(options, Object);
   var selector = {};
   if (filterKey) {
-    var key = new RegExp(filterKey);
+    var key = new RegExp(filterKey, 'i');
     selector = {
-      $or: [{code: key}, {name: key}, {manager: key},
-        {address: key}, {comment: key}, {memo: key}]
+      $or: [{code: key}, {name: key}, {sex: key}, {title: key}, {phone: key},
+      {email: key}, {'salary.value': parseFloat(filterKey)}, {'salary.currency': key}, {memo: key}]
     };
   }
   return Employees.find(selector, options);
@@ -49,7 +49,7 @@ Meteor.publish('customers', function (filterKey, options) {
   check(options, Object);
   var selector = {};
   if (filterKey) {
-    var key = new RegExp(filterKey);
+    var key = new RegExp(filterKey, 'i');
     selector = {
       $or: [{code: key}, {name: key}, {company: key}, {title: key},
         {phone: key}, {email: key}, {address: key}, {memo: key}]
@@ -64,7 +64,7 @@ Meteor.publish('stations', function (filterKey, options) {
   check(options, Object);
   var selector = {};
   if (filterKey) {
-    var key = new RegExp(filterKey);
+    var key = new RegExp(filterKey, 'i');
     selector = {
       $or: [{code: key}, {name: key}, {manager: key},
         {address: key}, {comment: key}, {memo: key}]
