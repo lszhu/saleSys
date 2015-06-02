@@ -36,7 +36,7 @@ Template.login.events({
 
     Meteor.loginWithPassword(username, password, function(err) {
       if (err) {
-        return Session.set(error_key, {none: err.reason});
+        return Session.set(error_key, {none: '不正确的用户名或密码'});
       }
       Router.go('/');
     });

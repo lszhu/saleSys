@@ -15,6 +15,15 @@
 
       </div>
       <div class="row"><br></div>
+      <div>
+        {{#if errorMessage }}
+          <div>
+            {{#each errorMessage }}
+              <div class="text-center">{{this}}</div>
+            {{/each}}
+          </div>
+        {{/if}}
+      </div>
       <div class="attach">
         <button type="submit" class="btn btn-primary btn-block">确 定</button>
       </div>
