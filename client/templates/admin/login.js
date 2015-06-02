@@ -38,7 +38,7 @@ Template.login.events({
       if (err) {
         return Session.set(error_key, {none: err.reason});
       }
-      Router.go('/home')
+      Router.go('/');
     });
   }
 });

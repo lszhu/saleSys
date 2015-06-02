@@ -1,18 +1,23 @@
 <template name="login">
   <div class="col-sm-4 col-sm-offset-4">
-    <h2 class="text-center">登 录</h2>
+    <form>
+      <h2 class="text-center">登 录</h2>
 
-    <div class="attach">
-      <input type="text" name="username" placeholder="账号名称"
-             required="required" class="form-control">
-    </div>
-    <div class="attach">
-      <input type="password" name="password" placeholder="登录密码"
-             required="required" class="form-control">
+      <div class="row"><br></div>
+      <div class="attach">
+        <input type="text" name="username" placeholder="账号名称"
+               required="required" class="form-control" autofocus>
+      </div>
+      <div class="row attach"></div>
+      <div class="attach">
+        <input type="password" name="password" placeholder="登录密码"
+               required="required" class="form-control">
 
-    </div>
-    <div class="attach">
-      <button type="submit" class="btn btn-primary btn-block">确 定</button>
-    </div>
+      </div>
+      <div class="row"><br></div>
+      <div class="attach">
+        <button type="submit" class="btn btn-primary btn-block">确 定</button>
+      </div>
+    </form>
   </div>
 </template>
