@@ -14,7 +14,7 @@ Template.login.helpers({
 });
 
 Template.login.events({
-  'submit': function(e, t) {
+  'submit .login': function(e, t) {
     event.preventDefault();
 
     var username = t.$('[name=username]').val();

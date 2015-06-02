@@ -211,11 +211,11 @@ body {
     pointer-events: none;
 }
 
-.alert {
+.alert-private {
     animation: fadeOut 2700ms ease-in 0s 1 forwards;
     -webkit-animation: fadeOut 2700ms ease-in 0s 1 forwards;
     -moz-animation: fadeOut 2700ms ease-in 0s 1 forwards;
-    width: 250px;
+/*    width: 250px;*/
     float: right;
     clear: both;
     margin-bottom: 5px;
@@ -248,4 +248,16 @@ table.min60 th {
 table td {
     word-break: break-all;
     word-wrap: break-word;
+}
+
+form.login input {
+    font-size: 18px;
+    padding: 10px;
+    height: auto;
+}
+
+.fade-out {
+    animation: fadeOut 2700ms ease-in 0s 1 forwards;
+    -webkit-animation: fadeOut 2700ms ease-in 0s 1 forwards;
+    -moz-animation: fadeOut 2700ms ease-in 0s 1 forwards;
 }

@@ -1,32 +1,31 @@
 <template name="login">
   <div class="col-sm-4 col-sm-offset-4">
-    <form>
+    <form class="login">
       <h2 class="text-center">登 录</h2>
 
       <div class="row"><br></div>
-      <div class="attach">
+      <div class="">
         <input type="text" name="username" placeholder="账号名称"
                required="required" class="form-control" autofocus>
       </div>
-      <div class="row attach"></div>
-      <div class="attach">
+      <div class="">
         <input type="password" name="password" placeholder="登录密码"
-               required="required" class="form-control">
-
+               required="required" class="form-control" style="border-top: 0">
       </div>
       <div class="row"><br></div>
-      <div>
-        {{#if errorMessage }}
-          <div>
-            {{#each errorMessage }}
-              <div class="text-center">{{this}}</div>
-            {{/each}}
-          </div>
-        {{/if}}
-      </div>
       <div class="attach">
-        <button type="submit" class="btn btn-primary btn-block">确 定</button>
+        <button type="submit" class="btn btn-lg btn-primary btn-block">确 定</button>
       </div>
     </form>
+    <div class="row"><br></div>
+    <div class="text-center">
+      {{#if errorMessage }}
+        <div>
+          {{#each errorMessage }}
+            <span class="alert alert-danger fade-out">{{this}}</span>
+          {{/each}}
+        </div>
+      {{/if}}
+    </div>
   </div>
 </template>
