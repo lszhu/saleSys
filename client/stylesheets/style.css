@@ -10,6 +10,7 @@
 
 body {
     background: #eee;
+/*    background: #D1ECF3;*/
     color: #666666;
 }
 
@@ -254,6 +255,10 @@ form.login input {
     font-size: 18px;
     padding: 10px;
     height: auto;
+}
+
+h2.login {
+    padding: 30px;
 }
 
 .fade-out {

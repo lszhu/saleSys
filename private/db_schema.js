@@ -304,6 +304,11 @@ exchange = {
   timestamp: Date
 };
 
+// 用户账号信息格式
+account = {
+
+};
+
 // 账号权限分配存储格式
 permission = {
   // 用户账号Id，对应账号的数据库内部ObjectId

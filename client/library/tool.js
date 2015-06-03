@@ -18,5 +18,6 @@ defaultStationId = function() {
   if (stationId) {
     return stationId;
   }
-  return Stations && Stations.findOne()._id;
+  var item = Stations && Stations.findOne();
+  return item && item._id;
 };

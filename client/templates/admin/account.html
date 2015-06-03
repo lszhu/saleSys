@@ -1,0 +1,148 @@
+<template name="account">
+  <div>
+    <h2>登录账号列表
+      <button class="btn btn-primary edit-account">增加新账号</button>
+    </h2>
+    <div id="add-account" class="hidden">
+      {{> addAccount }}
+      <div class="col-sm-12"><br></div>
+    </div>
+    <div class="input-group col-sm-6 attach">
+      <span class="input-group-addon" id="account-code-label">搜索</span>
+      <input type="text" name="keyword" class="form-control account-keyword"
+             placeholder="搜索关键词" aria-describedby="account-code-label">
+      <span class="btn btn-primary input-group-addon filter-account">
+        查询
+      </span>
+    </div>
+    {{> accountList }}
+
+    <div class="col-xs-4">
+      <a class="btn btn-default disabled" href="#">当前共显示 {{itemCount}}
+        条信息</a>
+    </div>
+    {{#if nextPath}}
+      <div class="col-xs-4 col-xs-offset-4">
+        <a class="btn btn-default btn-block" href="{{nextPath}}">显示更多</a>
+      </div>
+    {{else}}
+      {{#unless ready}}
+        {{> loading}}
+      {{/unless}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="addAccount">
+  <strong>设置账号信息</strong>
+
+  <form class="add-account">
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="account-code-label">编号</span>
+        <input type="text" name="code" class="form-control" placeholder="编号"
+               aria-describedby="account-code-label">
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="account-name-label">名称</span>
+        <input type="text" name="name" class="form-control" placeholder="名称"
+               aria-describedby="account-name-label">
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="account-model-label">型号</span>
+        <input type="text" name="model" class="form-control" placeholder="型号"
+               aria-describedby="account-model-label">
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="account-batch-label">批次</span>
+        <input type="text" name="batch" class="form-control"
+               placeholder="批次" aria-describedby="account-batch-label"/>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon"
+              id="account-price-value-label">价格</span>
+        <input type="text" name="priceValue" class="form-control"
+               placeholder="价格" aria-describedby="account-price-value-label"/>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      {{> currencySelect }}
+    </div>
+    <div class="col-xs-12 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="account-comment-label">描述</span>
+        <input type="text" name="comment" class="form-control"
+               placeholder="描述" aria-describedby="account-comment-label"/>
+      </div>
+    </div>
+    <div class="col-xs-12 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="account-memo-label">备注</span>
+        <input type="text" name="memo" class="form-control"
+               placeholder="备注" aria-describedby="account-memo-label"/>
+      </div>
+    </div>
+    {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
+    <div class="input-group hidden">
+      <span class="input-group-addon" id="account-id-label">Id</span>
+      <input type="text" name="overlap" class="form-control"
+             placeholder="空" aria-describedby="account-id-label">
+    </div>
+    <div class="col-xs-12"></div>
+    <div class="col-sm-4 col-sm-offset-4">
+      <button type="submit" class="btn btn-primary btn-block">
+        提交新信息
+      </button>
+    </div>
+  </form>
+</template>
+
+<template name="accountList">
+  <table class="table table-striped table-bordered min60">
+    <thead>
+    <tr>
+      <th>编号</th>
+      <th>名称</th>
+      <th>型号</th>
+      <th>批次</th>
+      <th>价格</th>
+      <th>说明</th>
+      <th>备注</th>
+      <th class="danger text-center width60">变更</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each accounts }}
+      {{> accountListItem }}
+    {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="accountListItem">
+  <tr>
+    <td>{{code}}</td>
+    <td>{{name}}</td>
+    <td>{{model}}</td>
+    <td>{{batch}}</td>
+    <td>{{price.currency}}{{price.value}}</td>
+    <td>{{comment}}</td>
+    <td>{{memo}}</td>
+    <td class="text-center">
+      <a href="{{_id}}" class="update-account" title="修改">
+        <i class="fa fa-pencil-square-o fa-lg"></i>
+      </a>
+      <a href="{{_id}}" class="remove-account" title="删除">
+        <i class="fa fa-times fa-lg danger"></i>
+      </a>
+    </td>
+  </tr>
+</template>

@@ -1,3 +1,20 @@
+// 发布账号信息
+Meteor.publish('accounts', function(filterKey, options) {
+  check(filterKey, String);
+  check(options, Object);
+  var selector = {};
+  if (filterKey) {
+    var key = new RegExp(filterKey, 'i');
+    selector = {
+      $or: [
+        {symbol: key}, {name: key}, {country: key},
+        {rate: filterKey}, {memo: key}
+      ]
+    };
+  }
+  return Users.find(selector, options);
+});
+
 // 发布各国货币信息
 Meteor.publish('currencies', function (filterKey, options) {
   check(filterKey, String);
