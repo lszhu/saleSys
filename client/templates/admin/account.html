@@ -8,9 +8,9 @@
       <div class="col-sm-12"><br></div>
     </div>
     <div class="input-group col-sm-6 attach">
-      <span class="input-group-addon" id="account-code-label">搜索</span>
+      <span class="input-group-addon" id="account-admin-label">搜索</span>
       <input type="text" name="keyword" class="form-control account-keyword"
-             placeholder="搜索关键词" aria-describedby="account-code-label">
+             placeholder="搜索关键词" aria-describedby="account-admin-label">
       <span class="btn btn-primary input-group-addon filter-account">
         查询
       </span>
@@ -39,55 +39,79 @@
   <form class="add-account">
     <div class="col-xs-4 attach">
       <div class="input-group">
-        <span class="input-group-addon" id="account-code-label">编号</span>
-        <input type="text" name="code" class="form-control" placeholder="编号"
-               aria-describedby="account-code-label">
+        <span class="input-group-addon" id="account-username-label">账号名称</span>
+        <input type="text" name="username" class="form-control" placeholder="账号名称"
+               aria-describedby="account-username-label">
       </div>
     </div>
     <div class="col-xs-4 attach">
       <div class="input-group">
-        <span class="input-group-addon" id="account-name-label">名称</span>
-        <input type="text" name="name" class="form-control" placeholder="名称"
-               aria-describedby="account-name-label">
+        <span class="input-group-addon" id="account-nickname-label">实际名称</span>
+        <input type="text" name="nickname" class="form-control" placeholder="实际名称"
+               aria-describedby="account-nickname-label">
       </div>
     </div>
     <div class="col-xs-4 attach">
       <div class="input-group">
-        <span class="input-group-addon" id="account-model-label">型号</span>
-        <input type="text" name="model" class="form-control" placeholder="型号"
-               aria-describedby="account-model-label">
+        <span class="input-group-addon" id="account-email-label">电子邮箱</span>
+        <input type="text" name="email" class="form-control" placeholder="电子邮箱"
+               aria-describedby="account-email-label">
       </div>
     </div>
     <div class="col-xs-4 attach">
       <div class="input-group">
-        <span class="input-group-addon" id="account-batch-label">批次</span>
-        <input type="text" name="batch" class="form-control"
-               placeholder="批次" aria-describedby="account-batch-label"/>
+        <span class="input-group-addon" id="account-password-label">登录密码</span>
+        <input type="text" name="password" class="form-control"
+               placeholder="登录密码" aria-describedby="account-password-label"/>
       </div>
     </div>
     <div class="col-xs-4 attach">
       <div class="input-group">
-        <span class="input-group-addon"
-              id="account-price-value-label">价格</span>
-        <input type="text" name="priceValue" class="form-control"
-               placeholder="价格" aria-describedby="account-price-value-label"/>
+        <span class="input-group-addon" id="account-password-again-label">确认密码</span>
+        <input type="text" name="password-again" class="form-control"
+               placeholder="确认登录密码" aria-describedby="account-password-again-label"/>
       </div>
     </div>
     <div class="col-xs-4 attach">
-      {{> currencySelect }}
+      <div class="input-group">
+        <span class="input-group-addon" id="includes-type-label">账号类型</span>
+        <select name="type" class="form-control"
+                aria-describedby="includes-type-label">
+          <option value="0">系统管理账号</option>
+          <option value="1">特权账号</option>
+          <option value="2" selected>普通账号</option>
+          <option value="3">受限只读账号</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="includes-station-label">所属部门</span>
+        <select name="disabled" class="form-control"
+                aria-describedby="includes-disabled-label">
+          <option value="0">启用</option>
+          <option value="1">禁用</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="includes-disabled-label">可用状态</span>
+        <select name="disabled" class="form-control"
+                aria-describedby="includes-disabled-label">
+          <option value="0">启用</option>
+          <option value="1">禁用</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <button class="btn btn-default btn-block">权限设置</button>
     </div>
     <div class="col-xs-12 attach">
       <div class="input-group">
-        <span class="input-group-addon" id="account-comment-label">描述</span>
+        <span class="input-group-addon" id="account-comment-label">账号描述</span>
         <input type="text" name="comment" class="form-control"
                placeholder="描述" aria-describedby="account-comment-label"/>
-      </div>
-    </div>
-    <div class="col-xs-12 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="account-memo-label">备注</span>
-        <input type="text" name="memo" class="form-control"
-               placeholder="备注" aria-describedby="account-memo-label"/>
       </div>
     </div>
     {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
@@ -145,4 +169,17 @@
       </a>
     </td>
   </tr>
+</template>
+
+<template name="accountType">
+  <div class="input-group">
+    <span class="input-group-addon" id="includes-type-label">账号类型</span>
+    <select name="type" class="form-control"
+            aria-describedby="includes-type-label">
+      <option value="0">系统管理账号</option>
+      <option value="1">特权账号</option>
+      <option value="2" selected>普通账号</option>
+      <option value="3">受限只读账号</option>
+    </select>
+  </div>
 </template>
