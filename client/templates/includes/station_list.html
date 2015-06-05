@@ -1,6 +1,9 @@
+<!-- 必须在使用本模板时设置localTitle变量 -->
 <template name="stationSelect">
   <div class="input-group">
-    <span class="input-group-addon" id="includes-station-label">部门</span>
+    <span class="input-group-addon" id="includes-station-label">
+      {{localTitle}}
+    </span>
     <select name="stationId" class="form-control"
             aria-describedby="includes-station-label">
       {{#each stations}}

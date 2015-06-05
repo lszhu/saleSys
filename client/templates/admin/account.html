@@ -1,26 +1,34 @@
 <template name="account">
   <div>
-    <h2>登录账号列表
-      <button class="btn btn-primary edit-account">增加新账号</button>
+    <h2>用户账号列表
+      {{#if isAdmin }}
+        <button class="btn btn-primary edit-account">增加新账号</button>
+      {{/if}}
     </h2>
     <div id="add-account" class="hidden">
       {{> addAccount }}
       <div class="col-sm-12"><br></div>
     </div>
-    <div class="input-group col-sm-6 attach">
-      <span class="input-group-addon" id="account-admin-label">搜索</span>
-      <input type="text" name="keyword" class="form-control account-keyword"
-             placeholder="搜索关键词" aria-describedby="account-admin-label">
+    {{#if isAdmin }}
+      <div class="input-group col-sm-6 attach">
+        <span class="input-group-addon" id="account-admin-label">搜索</span>
+        <input type="text" name="keyword" class="form-control account-keyword"
+               placeholder="搜索关键词" aria-describedby="account-admin-label">
       <span class="btn btn-primary input-group-addon filter-account">
         查询
       </span>
-    </div>
+      </div>
+    {{/if }}
+
     {{> accountList }}
 
-    <div class="col-xs-4">
-      <a class="btn btn-default disabled" href="#">当前共显示 {{itemCount}}
-        条信息</a>
-    </div>
+    {{#if isAdmin }}
+      <div class="col-xs-4">
+        <a class="btn btn-default disabled" href="#">当前共显示 {{itemCount}}
+          条信息</a>
+      </div>
+    {{/if }}
+
     {{#if nextPath}}
       <div class="col-xs-4 col-xs-offset-4">
         <a class="btn btn-default btn-block" href="{{nextPath}}">显示更多</a>
@@ -40,14 +48,16 @@
     <div class="col-xs-4 attach">
       <div class="input-group">
         <span class="input-group-addon" id="account-username-label">账号名称</span>
-        <input type="text" name="username" class="form-control" placeholder="账号名称"
+        <input type="text" name="username" class="form-control"
+               placeholder="账号名称"
                aria-describedby="account-username-label">
       </div>
     </div>
     <div class="col-xs-4 attach">
       <div class="input-group">
-        <span class="input-group-addon" id="account-nickname-label">实际名称</span>
-        <input type="text" name="nickname" class="form-control" placeholder="实际名称"
+        <span class="input-group-addon" id="account-nickname-label">用户姓名</span>
+        <input type="text" name="nickname" class="form-control"
+               placeholder="用户姓名"
                aria-describedby="account-nickname-label">
       </div>
     </div>
@@ -67,31 +77,11 @@
     </div>
     <div class="col-xs-4 attach">
       <div class="input-group">
-        <span class="input-group-addon" id="account-password-again-label">确认密码</span>
+        <span class="input-group-addon"
+              id="account-password-again-label">确认密码</span>
         <input type="text" name="password-again" class="form-control"
-               placeholder="确认登录密码" aria-describedby="account-password-again-label"/>
-      </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="includes-type-label">账号类型</span>
-        <select name="type" class="form-control"
-                aria-describedby="includes-type-label">
-          <option value="0">系统管理账号</option>
-          <option value="1">特权账号</option>
-          <option value="2" selected>普通账号</option>
-          <option value="3">受限只读账号</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="includes-station-label">所属部门</span>
-        <select name="disabled" class="form-control"
-                aria-describedby="includes-disabled-label">
-          <option value="0">启用</option>
-          <option value="1">禁用</option>
-        </select>
+               placeholder="确认登录密码"
+               aria-describedby="account-password-again-label"/>
       </div>
     </div>
     <div class="col-xs-4 attach">
@@ -105,13 +95,28 @@
       </div>
     </div>
     <div class="col-xs-4 attach">
-      <button class="btn btn-default btn-block">权限设置</button>
+      {{> stationSelect localTitle = '所属部门' }}
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="includes-type-label">账号类型</span>
+        <select name="type" class="form-control"
+                aria-describedby="includes-type-label">
+          <option value="0">受限只读账号</option>
+          <option value="1" selected>普通账号</option>
+          <option value="2">特权账号</option>
+          <option value="3">系统管理账号</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <button class="btn btn-warning btn-block">权 限 设 置</button>
     </div>
     <div class="col-xs-12 attach">
       <div class="input-group">
         <span class="input-group-addon" id="account-comment-label">账号描述</span>
         <input type="text" name="comment" class="form-control"
-               placeholder="描述" aria-describedby="account-comment-label"/>
+               placeholder="账号描述" aria-describedby="account-comment-label"/>
       </div>
     </div>
     {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
@@ -133,13 +138,13 @@
   <table class="table table-striped table-bordered min60">
     <thead>
     <tr>
-      <th>编号</th>
-      <th>名称</th>
-      <th>型号</th>
-      <th>批次</th>
-      <th>价格</th>
-      <th>说明</th>
-      <th>备注</th>
+      <th>账号名</th>
+      <th>用户名</th>
+      <th>邮箱</th>
+      <th>部门</th>
+      <th class="width60">类型</th>
+      <th class="width60">状态</th>
+      <th>描述</th>
       <th class="danger text-center width60">变更</th>
     </tr>
     </thead>
@@ -153,33 +158,22 @@
 
 <template name="accountListItem">
   <tr>
-    <td>{{code}}</td>
-    <td>{{name}}</td>
-    <td>{{model}}</td>
-    <td>{{batch}}</td>
-    <td>{{price.currency}}{{price.value}}</td>
+    <td>{{username}}</td>
+    <td>{{nickname}}</td>
+    <td>{{email}}</td>
+    <td>{{station}}</td>
+    <td>{{grade}}</td>
+    <td>{{disabled}}</td>
     <td>{{comment}}</td>
-    <td>{{memo}}</td>
     <td class="text-center">
       <a href="{{_id}}" class="update-account" title="修改">
         <i class="fa fa-pencil-square-o fa-lg"></i>
       </a>
-      <a href="{{_id}}" class="remove-account" title="删除">
-        <i class="fa fa-times fa-lg danger"></i>
-      </a>
+      {{#if isAdmin }}
+        <a href="{{_id}}" class="remove-account" title="删除">
+          <i class="fa fa-times fa-lg danger"></i>
+        </a>
+      {{/if }}
     </td>
   </tr>
-</template>
-
-<template name="accountType">
-  <div class="input-group">
-    <span class="input-group-addon" id="includes-type-label">账号类型</span>
-    <select name="type" class="form-control"
-            aria-describedby="includes-type-label">
-      <option value="0">系统管理账号</option>
-      <option value="1">特权账号</option>
-      <option value="2" selected>普通账号</option>
-      <option value="3">受限只读账号</option>
-    </select>
-  </div>
 </template>

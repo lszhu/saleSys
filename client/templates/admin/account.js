@@ -1,5 +1,16 @@
+Template.accountListItem.helpers({
+  email: function() {
+    return this.emails && this.emails[0].address;
+  }
+});
+
 Template.account.helpers({
-  temp: function () {
+  isAdmin: function () {
+    var account = this.accounts && this.accounts.fetch();
+    if (account && account.length != 1) {
+      return true;
+    }
+    return account[0].type == 3;
   }
 });
 
@@ -112,7 +123,7 @@ function clearForm(target) {
 }
 
 function fillForm(_id) {
-  var data = Users.findOne(_id);
+  var data = Meteor.users.findOne(_id);
   //console.log('data: ' + JSON.stringify(data));
   var form = $('#add-account');
   form.find('[name=code]').val(data.code);

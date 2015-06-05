@@ -2,6 +2,19 @@
 Meteor.publish('accounts', function(filterKey, options) {
   check(filterKey, String);
   check(options, Object);
+
+  console.log('account: ' + this.userId);
+  // 验证登陆用户为超级用户
+  if (!this.userId) {
+    //throw new Meteor.Error('fail_login', '未正确登录系统');
+    return [];
+  }
+  var user = Users.findOne(this.userId);
+  if (!user || user.type != '0') {
+    //throw new Meteor.Error('invalid_grade', '用户等级无效')
+    return [];
+  }
+
   var selector = {};
   if (filterKey) {
     var key = new RegExp(filterKey, 'i');
@@ -11,7 +24,7 @@ Meteor.publish('accounts', function(filterKey, options) {
         {rate: filterKey}, {memo: key}
       ]
     };
-  }
+}
   return Users.find(selector, options);
 });
 

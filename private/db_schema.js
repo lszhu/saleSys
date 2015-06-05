@@ -304,23 +304,34 @@ exchange = {
   timestamp: Date
 };
 
-// 用户账号信息格式
-account = {
-
+// 用户登录账号（命名对应系统默认collection名称）信息格式
+users = {
+  // 账号名称
+  username: String,
+  // 用户真实姓名或昵称
+  nickname: String,
+  // 登录密码
+  password: String,
+  // 联络或找回密码的邮箱
+  emails: [{address: String, verified: Boolean}],
+  // 用户级别，分0-3共4级
+  // 3为超级用户包所有权限，同时将忽略后面的stationId和privilege等设置
+  // 2为特权用户，拥有除创建登录账号，不能创建销售分部和系统设置外的所有权限
+  // 1为普通用户，由stationId和privilege指定在特定销售分部下的权限
+  // 0为受限用户
+  grade: Number,
+  // 隶属销售分部，如果该属性值为空，表示不限于特定分部
+  stationId: String,
+  // 禁用状态，true表示禁用
+  disabled: Boolean,
+  permission: {},
+  // 账号创建时间
+  createdAt: Date
 };
 
 // 账号权限分配存储格式
 permission = {
-  // 用户账号Id，对应账号的数据库内部ObjectId
-  userId: String,
-  // 用户级别，分0-3共4级
-  // 0为超级用户包所有权限，同时将忽略后面的stationId和privilege等设置
-  // 1为特权用户，拥有除创建登录账号，不能创建销售分部和系统设置外的所有权限
-  // 2为普通用户，由stationId和privilege指定在特定销售分部下的权限
-  // 3为受限用户
-  grade: Number,
-  // 隶属销售分部，如果该属性值为空，表示不限于特定分部
-  stationId: String,
+
   // 权限列表，crud四个字符分别表示增查改删的权限
   // 不是所有时候四个权限位都有意义，比如报表创建就只有'c'有意义
   // 对应属性值为数值，限制权限只应用在指定时间范围内
