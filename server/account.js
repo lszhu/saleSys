@@ -1,4 +1,3 @@
-Users = Meteor.users;
 
 Meteor.methods({
   accountInsert: function (data) {
@@ -16,6 +15,7 @@ Meteor.methods({
       overlap: String
     });
 
+    var Users = Meteor.users;
     var account = data.account;
     //var account = Meteor.user();
 
@@ -47,6 +47,6 @@ Meteor.methods({
 
   accountRemove: function (objectId) {
     check(objectId, String);
-    Users.remove(objectId);
+    Meteor.users.remove(objectId);
   }
 });

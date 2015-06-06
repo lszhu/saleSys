@@ -4,13 +4,13 @@ Meteor.publish('accounts', function(filterKey, options) {
   check(options, Object);
 
   console.log('account: ' + this.userId);
-  // 验证登陆用户为超级用户
+  // 验证用户是否已经登录
   if (!this.userId) {
     //throw new Meteor.Error('fail_login', '未正确登录系统');
     return [];
   }
-  var user = Users.findOne(this.userId);
-  if (!user || user.type != '0') {
+  var user = Meteor.users.findOne(this.userId);
+  if (!user || user.grade != '3') {
     //throw new Meteor.Error('invalid_grade', '用户等级无效')
     return [];
   }
@@ -25,7 +25,7 @@ Meteor.publish('accounts', function(filterKey, options) {
       ]
     };
 }
-  return Users.find(selector, options);
+  return Meteor.users.find(selector, options);
 });
 
 // 发布各国货币信息

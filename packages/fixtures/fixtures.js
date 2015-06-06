@@ -6,6 +6,8 @@ if (Meteor.isServer) {
     //var Comments = new Mongo.Collection('comments');
     console.log('\n\nPreparing test data...');
 
+    // 添加测试用的系统登录账号
+    accountTestDataAdd();
     // 添加测试使用的销售分部（station）数据库条目
     stationTestDataAdd();
     // 添加世界常见货币信息

@@ -85,7 +85,7 @@ currency = {
     memo: String,
     // 最近修改时间
     timestamp: Date
-}
+};
 
 // 产品或货物格式
 product = {
@@ -312,7 +312,7 @@ users = {
   nickname: String,
   // 登录密码
   password: String,
-  // 联络或找回密码的邮箱
+  // 联络或找回密码的邮箱，这里与系统内定格式一致
   emails: [{address: String, verified: Boolean}],
   // 用户级别，分0-3共4级
   // 3为超级用户包所有权限，同时将忽略后面的stationId和privilege等设置
@@ -324,8 +324,8 @@ users = {
   stationId: String,
   // 禁用状态，true表示禁用
   disabled: Boolean,
-  permission: {},
-  // 账号创建时间
+  permission: Object,
+  // 账号创建时间，命名与系统内部一致
   createdAt: Date
 };
 
