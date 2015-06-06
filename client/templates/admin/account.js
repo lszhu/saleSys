@@ -5,9 +5,25 @@ Template.accountListItem.helpers({
   status: function() {
     return this.disabled ? '禁用' : '启用';
   },
+  colorStatus: function() {
+    return this.disabled ? 'danger' : '';
+  },
   rightGrade: function() {
     var comments = ['受限', '普通', '特权', '管理'];
     return this.grade && comments[this.grade];
+  },
+  colorGrade: function() {
+    var classes = ['warning', '', 'info', 'success'];
+    var index = parseInt(this.grade) || 0;
+    return classes[index];
+  },
+  isAdmin: function() {
+    var account = Template.parentData().accounts;
+    account = account && account.fetch();
+    if (account && account.length != 1) {
+      return true;
+    }
+    return account[0].grade == 3;
   }
 });
 
@@ -17,7 +33,7 @@ Template.account.helpers({
     if (account && account.length != 1) {
       return true;
     }
-    return account[0].type == 3;
+    return account[0].grade == 3;
   }
 });
 
@@ -104,7 +120,7 @@ Template.account.events({
       comment: form.find('[name=comment]').val(),
       memo: form.find('[name=memo]').val()
     };
-    console.log('account: ' + JSON.stringify(account));
+    //console.log('account: ' + JSON.stringify(account));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
     Meteor.call('accountInsert', {account: account, overlap: overlap});

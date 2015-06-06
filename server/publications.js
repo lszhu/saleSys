@@ -3,16 +3,16 @@ Meteor.publish('accounts', function(filterKey, options) {
   check(filterKey, String);
   check(options, Object);
 
-  console.log('account: ' + this.userId);
+  //console.log('account: ' + this.userId);
   // 验证用户是否已经登录
   if (!this.userId) {
-    //throw new Meteor.Error('fail_login', '未正确登录系统');
+    // 用户未登录
     return [];
   }
   var user = Meteor.users.findOne(this.userId);
   if (!user || user.grade != '3') {
-    //throw new Meteor.Error('invalid_grade', '用户等级无效')
-    return [];
+    // 不是系统管理员账号，则只发布当前登录用户的信息
+    return Meteor.users.find(this.userId);
   }
 
   var selector = {};

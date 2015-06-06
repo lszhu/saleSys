@@ -374,6 +374,21 @@ permission = {
   }
 };
 
+configuration = {
+  // 用户id（对应用户数据库users的数据库条目Id）
+  userId: String,
+  // 默认货币类型
+  currency: String,
+  // 每次分页加载的条目数量
+  itemLimit: Number,
+  // 消息的收发设置
+  message: Object,
+  // 用于统计用户数
+  exist: String,
+  // 变更时间
+  timestamp: Date
+};
+
 // 系统设置
 // 包含账号管理，权限设置，是否自动生成消息，自动消息配置（内容格式，发送目标）
 // 默认创建账号，为最低级别，具有订单管理功能及相关功能（如收发货物货款等）
