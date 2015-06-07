@@ -81,9 +81,9 @@ Template.station.events({
       comment: form.find('[name=comment]').val(),
       memo: form.find('[name=memo]').val()
     };
-    console.log('station: ' + JSON.stringify(station));
+    //console.log('station: ' + JSON.stringify(station));
     var overlap = form.find('[name=overlap]').val();
-    console.log('overlap is: ' + overlap);
+    //console.log('overlap is: ' + overlap);
     Meteor.call('stationInsert', {station: station, overlap: overlap});
     // 最后清除表单的内容
     clearForm(e.target);

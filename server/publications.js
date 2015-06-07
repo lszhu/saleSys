@@ -1,5 +1,5 @@
 // 发布账号信息
-Meteor.publish('accounts', function(filterKey, options) {
+Meteor.publish('accounts', function (filterKey, options) {
   check(filterKey, String);
   check(options, Object);
 
@@ -18,13 +18,20 @@ Meteor.publish('accounts', function(filterKey, options) {
   var selector = {};
   if (filterKey) {
     var key = new RegExp(filterKey, 'i');
+    // 从销售分部collection中找到名称匹配关键字的销售分部对应_id
+    var station = Stations.find({name: key}).fetch();
+    //console.log('accounts publish, station: ' + JSON.stringify(station));
+    station = station.map(function (e) {
+      return e._id;
+    });
     selector = {
-      $or: [
-        {symbol: key}, {name: key}, {country: key},
-        {rate: filterKey}, {memo: key}
+      $or: [{_id: this.userId},
+        {username: key}, {nickname: key}, {stationId: {$in: station}},
+        {emails: {$elemMatch: {address: key}}}, {comment: key}
       ]
     };
-}
+  }
+  console.log('user count: ' + Meteor.users.find(selector, options).count());
   return Meteor.users.find(selector, options);
 });
 
@@ -73,7 +80,7 @@ Meteor.publish('employees', function (filterKey, options) {
     var key = new RegExp(filterKey, 'i');
     // 从销售分部collection中找到名称匹配关键字的销售分部对应_id
     var station = Stations.find({name: key}).fetch();
-    console.log('station: ' + JSON.stringify(station));
+    //console.log('station: ' + JSON.stringify(station));
     station = station.map(function (e) {
       return e._id;
     });

@@ -3,10 +3,10 @@ Template.accountListItem.helpers({
     return this.emails && this.emails[0].address;
   },
   status: function() {
-    return this.disabled ? '禁用' : '启用';
+    return this.disabled == '1' ? '禁用' : '启用';
   },
   colorStatus: function() {
-    return this.disabled ? 'danger' : '';
+    return this.disabled == '1' ? 'danger' : '';
   },
   rightGrade: function() {
     var comments = ['受限', '普通', '特权', '管理'];
@@ -29,11 +29,10 @@ Template.accountListItem.helpers({
 
 Template.account.helpers({
   isAdmin: function () {
-    var account = this.accounts && this.accounts.fetch();
-    if (account && account.length != 1) {
-      return true;
-    }
-    return account[0].grade == 3;
+    var grade = Meteor.users.findOne(Meteor.userId());
+    console.log('account grade: ' + grade.grade);
+    return grade && grade.grade == 3;
+    //return account[0].grade == 3;
   }
 });
 
@@ -109,17 +108,21 @@ Template.account.events({
 
     var form = $(e.target);
     var account = {
-      code: form.find('[name=code]').val(),
-      name: form.find('[name=name]').val(),
-      model: form.find('[name=model]').val(),
-      batch: form.find('[name=batch]').val(),
-      price: {
-        value: parseFloat(form.find('[name=priceValue]').val()),
-        currency: form.find('[name=currency]').val()
-      },
-      comment: form.find('[name=comment]').val(),
-      memo: form.find('[name=memo]').val()
+      username: form.find('[name=username]').val(),
+      nickname: form.find('[name=nickname]').val(),
+      email: form.find('[name=email]').val(),
+      password: $.trim(form.find('[name=password]').val()),
+      disabled: form.find('[name=disabled]').val(),
+      stationId: form.find('[name=stationId]').val(),
+      grade: parseFloat(form.find('[name=grade]').val()),
+      comment: form.find('[name=comment]').val()
     };
+    var passwordAgain = $.trim(form.find('[name=password-again]').val());
+    if (passwordAgain != account.password) {
+      alert('两次输入的密码不一致');
+      // 不提交，直接返回编辑界面
+      return;
+    }
     //console.log('account: ' + JSON.stringify(account));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
@@ -131,16 +134,19 @@ Template.account.events({
 
 function clearForm(target) {
   var form = $(target);
-  form.find('[name=code]').val('');
-  form.find('[name=name]').val('');
-  form.find('[name=model]').val('');
-  form.find('[name=batch]').val('');
-  form.find('[name=priceValue]').val('');
-  // 货币类型设置为默认货币
-  console.log('default currency: ' + defaultCurrency());
-  form.find('[name=currency]').val(defaultCurrency());
+  form.find('[name=username]').val('');
+  form.find('[name=nickname]').val('');
+  form.find('[name=email]').val('');
+  form.find('[name=password]').val('');
+  form.find('[name=password-again]').val('');
+  // 设置账号默认为可用状态
+  form.find('[name=disabled]').val('0');
+  // 销售分部设置为默认货币
+  console.log('default currency: ' + defaultStationId());
+  form.find('[name=stationId]').val(defaultStationId());
+  // 账号等级设置为默认的1级（普通用户）
+  form.find('[name=grade]').val(1);
   form.find('[name=comment]').val('');
-  form.find('[name=memo]').val('');
   // 清空隐藏文本框中保存的数据库条目Id，即清空覆盖标识
   form.find('[name=overlap]').val('');
 }
@@ -149,12 +155,11 @@ function fillForm(_id) {
   var data = Meteor.users.findOne(_id);
   //console.log('data: ' + JSON.stringify(data));
   var form = $('#add-account');
-  form.find('[name=code]').val(data.code);
-  form.find('[name=name]').val(data.name);
-  form.find('[name=model]').val(data.model);
-  form.find('[name=batch]').val(data.batch);
-  form.find('[name=priceValue]').val(data.price.value);
-  form.find('[name=currency]').val(data.price.currency);
+  form.find('[name=username]').val(data.username);
+  form.find('[name=nickname]').val(data.nickname);
+  form.find('[name=email]').val(data.emails[0] && data.emails[0].address);
+  form.find('[name=disabled]').val(data.disabled == '1' ? '1' : '0');
+  form.find('[name=stationId]').val(data.stationId);
+  form.find('[name=grade]').val(data.grade);
   form.find('[name=comment]').val(data.comment);
-  form.find('[name=memo]').val(data.memo);
 }
