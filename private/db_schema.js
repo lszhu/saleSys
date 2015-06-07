@@ -322,8 +322,8 @@ users = {
   grade: Number,
   // 隶属销售分部，如果该属性值为空，表示不限于特定分部
   stationId: String,
-  // 禁用状态，true表示禁用
-  disabled: Boolean,
+  // 禁用状态，'1'表示禁用
+  disabled: String,
   permission: Object,
   // 账号创建时间，命名与系统内部一致
   createdAt: Date

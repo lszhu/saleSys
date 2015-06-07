@@ -85,6 +85,9 @@ Template.account.events({
     var form = t.$('#add-account');
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
     form.find('[name=overlap]').val(_id);
+    // 禁用账号等级和账号禁用设置框
+    t.$('[name=grade]').prop('disabled', true);
+    t.$('[name=disabled]').prop('disabled', true);
     // 显示编辑框
     form.removeClass('hidden');
     fillForm(_id);

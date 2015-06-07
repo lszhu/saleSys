@@ -1,4 +1,3 @@
-
 Meteor.methods({
   accountInsert: function (data) {
     //console.log('data: ' + JSON.stringify(data));
@@ -20,17 +19,22 @@ Meteor.methods({
     var account = data.account;
     var currentUser = Meteor.user();
 
-    if (currentUser.username == account.username && account.disabled == '1') {
-      throw new Meteor.Error('invalid_account_update', '不能禁用当前用户');
+    if (currentUser.username == account.username &&
+        (account.disabled == '1' || currentUser.grade != account.grade)) {
+      throw new Meteor.Error('invalid_account_update',
+          '不能禁用当前用户或修改当前用户的等级');
     }
 
-    if ((!account.username || !account.email || !account.password) &&
-        !data.overlap) {
+    if ((!account.username || !account.email || !account.password) && !data.overlap) {
       throw new Meteor.Error('invalid_account', '录入信息不完整');
     }
 
     // 更新条目情况的处理
     if (data.overlap) {
+      if (account.password) {
+        Accounts.setPassword(data.overlap, account.password);
+      }
+      account = _.omit(account, 'password');
       Users.update(data.overlap, {$set: account});
       return;
     }
@@ -51,6 +55,9 @@ Meteor.methods({
 
   accountRemove: function (objectId) {
     check(objectId, String);
+    if (objectId == Meteor.userId()) {
+      throw new Meteor.Error('invalid-account-remove', '不能删除当前账号');
+    }
     Meteor.users.remove(objectId);
   }
 });
