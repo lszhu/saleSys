@@ -25,13 +25,14 @@ Meteor.publish('accounts', function (filterKey, options) {
       return e._id;
     });
     selector = {
-      $or: [{_id: this.userId},
-        {username: key}, {nickname: key}, {stationId: {$in: station}},
-        {emails: {$elemMatch: {address: key}}}, {comment: key}
+      $or: [
+        {_id: this.userId}, {username: key},
+        {nickname: key}, {emails: {$elemMatch: {address: key}}},
+        {stationId: {$in: station}}, {comment: key}
       ]
     };
   }
-  console.log('user count: ' + Meteor.users.find(selector, options).count());
+  //console.log('user count: ' + Meteor.users.find(selector, options).count());
   return Meteor.users.find(selector, options);
 });
 

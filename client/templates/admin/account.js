@@ -1,23 +1,26 @@
 Template.accountListItem.helpers({
-  email: function() {
+  email: function () {
     return this.emails && this.emails[0].address;
   },
-  status: function() {
+  station: function () {
+    return this.stationId && Stations.findOne(this.stationId).name;
+  },
+  status: function () {
     return this.disabled == '1' ? '禁用' : '启用';
   },
-  colorStatus: function() {
+  colorStatus: function () {
     return this.disabled == '1' ? 'danger' : '';
   },
-  rightGrade: function() {
+  rightGrade: function () {
     var comments = ['受限', '普通', '特权', '管理'];
     return this.grade && comments[this.grade];
   },
-  colorGrade: function() {
+  colorGrade: function () {
     var classes = ['warning', '', 'info', 'success'];
     var index = parseInt(this.grade) || 0;
     return classes[index];
   },
-  isAdmin: function() {
+  isAdmin: function () {
     var account = Template.parentData().accounts;
     account = account && account.fetch();
     if (account && account.length != 1) {
@@ -85,9 +88,10 @@ Template.account.events({
     var form = t.$('#add-account');
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
     form.find('[name=overlap]').val(_id);
-    // 禁用账号等级和账号禁用设置框
-    t.$('[name=grade]').prop('disabled', true);
-    t.$('[name=disabled]').prop('disabled', true);
+    // 如果是当前用户则禁用账号等级和账号禁用设置框
+    var disabled = Meteor.userId() == _id;
+    t.$('[name=grade]').prop('disabled', disabled);
+    t.$('[name=disabled]').prop('disabled', disabled);
     // 显示编辑框
     form.removeClass('hidden');
     fillForm(_id);
