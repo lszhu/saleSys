@@ -30,6 +30,13 @@ Template.accountListItem.helpers({
   }
 });
 
+Template.addAccount.helpers({
+  isAdmin: function() {
+    var user = Meteor.user();
+    return user && user.grade == 3;
+  }
+});
+
 Template.account.helpers({
   isAdmin: function () {
     var grade = Meteor.users.findOne(Meteor.userId());
@@ -88,10 +95,6 @@ Template.account.events({
     var form = t.$('#add-account');
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
     form.find('[name=overlap]').val(_id);
-    // 如果是当前用户则禁用账号等级和账号禁用设置框
-    var disabled = Meteor.userId() == _id;
-    t.$('[name=grade]').prop('disabled', disabled);
-    t.$('[name=disabled]').prop('disabled', disabled);
     // 显示编辑框
     form.removeClass('hidden');
     fillForm(_id);
@@ -130,6 +133,18 @@ Template.account.events({
       // 不提交，直接返回编辑界面
       return;
     }
+
+    // 修复内容为未定义的属性
+    if (account.disabled === undefined) {
+      account.disabled = '';
+    }
+    if (account.stationId === undefined) {
+      account.stationId = '';
+    }
+    if (account.grade === undefined) {
+      account.grade = '';
+    }
+
     //console.log('account: ' + JSON.stringify(account));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);

@@ -17,17 +17,6 @@ Meteor.methods({
 
     var Users = Meteor.users;
     var account = data.account;
-    var currentUser = Meteor.user();
-
-    if (currentUser.username == account.username &&
-        (account.disabled == '1' || currentUser.grade != account.grade)) {
-      throw new Meteor.Error('invalid_account_update',
-          '不能禁用当前用户或修改当前用户的等级');
-    }
-
-    if ((!account.username || !account.email || !account.password) && !data.overlap) {
-      throw new Meteor.Error('invalid_account', '录入信息不完整');
-    }
 
     // 更新条目情况的处理
     if (data.overlap) {
@@ -35,6 +24,15 @@ Meteor.methods({
         Accounts.setPassword(data.overlap, account.password);
       }
       account = _.omit(account, 'password');
+      // 如果要更改邮箱，需要特殊处理
+      if (account.email) {
+        account.emails = [{address: account.email}];
+        account = _.omit(account, 'email');
+      }
+      // 如果是当前用户，不允许更改：'disabled', 'stationId', 'grade'
+      if (Meteor.userId() == data.overlap) {
+        account = _.omit(account, ['disabled', 'stationId', 'grade']);
+      }
       Users.update(data.overlap, {$set: account});
       return;
     }

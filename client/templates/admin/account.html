@@ -84,31 +84,34 @@
                aria-describedby="account-password-again-label"/>
       </div>
     </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="includes-disabled-label">可用状态</span>
-        <select name="disabled" class="form-control"
-                aria-describedby="includes-disabled-label">
-          <option value="0">启用</option>
-          <option value="1">禁用</option>
-        </select>
+    {{#if isAdmin }}
+      <div class="col-xs-4 attach">
+        <div class="input-group">
+          <span class="input-group-addon"
+                id="includes-disabled-label">可用状态</span>
+          <select name="disabled" class="form-control"
+                  aria-describedby="includes-disabled-label">
+            <option value="0">启用</option>
+            <option value="1">禁用</option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      {{> stationSelect localTitle = '所属部门' }}
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="includes-type-label">账号类型</span>
-        <select name="grade" class="form-control"
-                aria-describedby="includes-type-label">
-          <option value="0">受限只读账号</option>
-          <option value="1" selected>普通账号</option>
-          <option value="2">特权账号</option>
-          <option value="3">系统管理账号</option>
-        </select>
+      <div class="col-xs-4 attach">
+        {{> stationSelect localTitle = '所属部门' }}
       </div>
-    </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group">
+          <span class="input-group-addon" id="includes-type-label">账号类型</span>
+          <select name="grade" class="form-control"
+                  aria-describedby="includes-type-label">
+            <option value="0">受限只读账号</option>
+            <option value="1" selected>普通账号</option>
+            <option value="2">特权账号</option>
+            <option value="3">系统管理账号</option>
+          </select>
+        </div>
+      </div>
+    {{/if }}
     <div class="col-xs-4 attach">
       <button class="btn btn-warning btn-block">权 限 设 置</button>
     </div>
