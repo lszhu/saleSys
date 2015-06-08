@@ -324,7 +324,10 @@ users = {
   stationId: String,
   // 禁用状态，'1'表示禁用
   disabled: String,
+  // 该账号对应的权限
   permission: Object,
+  // 连续错误密码尝试次数，超过规定次数后会清零，并将该账号禁用
+  retry: Number,
   // 账号创建时间，命名与系统内部一致
   createdAt: Date
 };

@@ -59,3 +59,26 @@ Meteor.methods({
     Meteor.users.remove(objectId);
   }
 });
+
+Accounts.validateLoginAttempt(function(l) {
+  console.log('user name: ' + l.user && l.user.name);
+  if (l.user && l.user.retry >= 3) {
+    throw new Meteor.Error('login-retry-timeout', '密码连续错误超过3次');
+  }
+  if (l.user && l.user.disabled == '1') {
+    throw new Meteor.Error('login-invalid-account', '无效的账号名或密码');
+  }
+  return true;
+});
+
+Accounts.onLogin(function(l) {
+  Meteor.users.update(l.user._id, {$set: {retry: 0}});
+});
+
+Accounts.onLoginFailure(function(l) {
+  Meteor.users.update(l.user._id, {$inc: {retry: 1}});
+  var times = Meteor.users.findOne(l.user._id);
+  if (times && times.retry >= 3) {
+    Meteor.users.update(l.user._id, {$set: {disabled: '1', retry: 0}});
+  }
+});

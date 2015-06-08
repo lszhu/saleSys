@@ -13,7 +13,7 @@ Template.accountListItem.helpers({
   },
   rightGrade: function () {
     var comments = ['受限', '普通', '特权', '管理'];
-    return this.grade && comments[this.grade];
+    return comments[this.grade];
   },
   colorGrade: function () {
     var classes = ['warning', '', 'info', 'success'];
