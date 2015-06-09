@@ -46,7 +46,7 @@
 
   <form class="add-account">
     <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError "username" }}">
         <span class="input-group-addon" id="account-username-label">账号名称</span>
         <input type="text" name="username" class="form-control"
                placeholder="账号名称"
@@ -54,7 +54,7 @@
       </div>
     </div>
     <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError "nickname" }}">
         <span class="input-group-addon" id="account-nickname-label">用户姓名</span>
         <input type="text" name="nickname" class="form-control"
                placeholder="用户姓名"
@@ -62,21 +62,21 @@
       </div>
     </div>
     <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError "email" }}">
         <span class="input-group-addon" id="account-email-label">电子邮箱</span>
         <input type="text" name="email" class="form-control" placeholder="电子邮箱"
                aria-describedby="account-email-label">
       </div>
     </div>
     <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError "password" }}">
         <span class="input-group-addon" id="account-password-label">登录密码</span>
         <input type="password" name="password" class="form-control"
                placeholder="登录密码" aria-describedby="account-password-label"/>
       </div>
     </div>
     <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError "password" }}">
         <span class="input-group-addon"
               id="account-password-again-label">确认密码</span>
         <input type="password" name="password-again" class="form-control"
@@ -86,7 +86,7 @@
     </div>
     {{#if isAdmin }}
       <div class="col-xs-4 attach">
-        <div class="input-group">
+        <div class="input-group {{ hasError "status" }}">
           <span class="input-group-addon"
                 id="includes-disabled-label">可用状态</span>
           <select name="disabled" class="form-control"
@@ -100,7 +100,7 @@
         {{> stationSelect localTitle = '所属部门' }}
       </div>
       <div class="col-xs-4 attach">
-        <div class="input-group">
+        <div class="input-group {{ hasError "grade" }}">
           <span class="input-group-addon" id="includes-type-label">账号类型</span>
           <select name="grade" class="form-control"
                   aria-describedby="includes-type-label">
@@ -116,7 +116,7 @@
       <button class="btn btn-warning btn-block">权 限 设 置</button>
     </div>
     <div class="col-xs-12 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError "comment" }}">
         <span class="input-group-addon" id="account-comment-label">账号描述</span>
         <input type="text" name="comment" class="form-control"
                placeholder="账号描述" aria-describedby="account-comment-label"/>

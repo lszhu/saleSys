@@ -31,6 +31,9 @@ Template.accountListItem.helpers({
 });
 
 Template.addAccount.helpers({
+  hasError: function(field) {
+    return !!Session.get('accountSubmitErrors')[field] ? 'has-error' : '';
+  },
   isAdmin: function() {
     var user = Meteor.user();
     return user && user.grade == 3;
@@ -44,6 +47,10 @@ Template.account.helpers({
     return grade && grade.grade == 3;
     //return account[0].grade == 3;
   }
+});
+
+Template.account.onCreated(function() {
+  Session.set('accountSubmitErrors', {});
 });
 
 Template.account.onRendered(function () {
@@ -89,6 +96,9 @@ Template.account.events({
 
   'click .update-account': function (e, t) {
     e.preventDefault();
+    // 清除有可能残留的出错信息
+    Session.set('accountSubmitErrors', {});
+
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
     //console.log('_id: ' + _id);
@@ -118,9 +128,9 @@ Template.account.events({
 
     var form = $(e.target);
     var account = {
-      username: form.find('[name=username]').val(),
-      nickname: form.find('[name=nickname]').val(),
-      email: form.find('[name=email]').val(),
+      username: $.trim(form.find('[name=username]').val()),
+      nickname: $.trim(form.find('[name=nickname]').val()),
+      email: $.trim(form.find('[name=email]').val()),
       password: $.trim(form.find('[name=password]').val()),
       disabled: form.find('[name=disabled]').val(),
       stationId: form.find('[name=stationId]').val(),
@@ -129,12 +139,13 @@ Template.account.events({
     };
     var passwordAgain = $.trim(form.find('[name=password-again]').val());
     if (passwordAgain != account.password) {
-      alert('两次输入的密码不一致');
+      //alert('两次输入的密码不一致');
       // 不提交，直接返回编辑界面
-      return;
+      //return;
+      return throwError('两次输入的密码不一致');
     }
 
-    // 修复内容为未定义的属性
+    // 修复内容为未定义的属性（当以非管理员用户登录时）
     if (account.disabled === undefined) {
       account.disabled = '';
     }
@@ -147,8 +158,20 @@ Template.account.events({
 
     //console.log('account: ' + JSON.stringify(account));
     var overlap = form.find('[name=overlap]').val();
-    console.log('overlap is: ' + overlap);
-    Meteor.call('accountInsert', {account: account, overlap: overlap});
+    //console.log('overlap is: ' + overlap);
+
+    var post = {account: account, overlap: overlap};
+    var errors = validateAccount(post);
+    if (errors.err) {
+      //console.log('errors: ' + JSON.stringify(errors));
+      Session.set('accountSubmitErrors', errors);
+      if (errors.err) {
+        throwError(_.chain(errors).omit('err').values().value().join('，'));
+      }
+      return;
+    }
+
+    Meteor.call('accountInsert', post);
     // 最后清除表单的内容
     clearForm(e.target);
   }

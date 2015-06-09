@@ -61,7 +61,7 @@ Meteor.methods({
 });
 
 Accounts.validateLoginAttempt(function(l) {
-  console.log('user name: ' + l.user && l.user.name);
+  //console.log('user name: ' + l.user && l.user.name);
   if (l.user && l.user.retry >= 3) {
     throw new Meteor.Error('login-retry-timeout', '密码连续错误超过3次');
   }
