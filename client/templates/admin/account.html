@@ -5,8 +5,10 @@
         <button class="btn btn-primary edit-account">增加新账号</button>
       {{/if}}
     </h2>
-    <div id="add-account" class="hidden">
-      {{> addAccount }}
+    <div id="add-account">
+      {{#if showAddAccount }}
+        {{> addAccount }}
+      {{/if }}
       <div class="col-sm-12"><br></div>
     </div>
     {{#if isAdmin }}

@@ -31,16 +31,35 @@ Template.accountListItem.helpers({
 });
 
 Template.addAccount.helpers({
-  hasError: function(field) {
+  hasError: function (field) {
     return !!Session.get('accountSubmitErrors')[field] ? 'has-error' : '';
   },
-  isAdmin: function() {
+  isAdmin: function () {
     var user = Meteor.user();
     return user && user.grade == 3;
   }
 });
 
+Template.account.onRendered(function () {
+  this.find('#add-account')._uihooks = {
+    insertElement: function (node, next) {
+      $(node)
+          .hide()
+          .insertBefore(next)
+          .fadeIn();
+    },
+    removeElement: function (node) {
+      $(node).fadeOut(function () {
+        $(this).remove();
+      });
+    }
+  }
+});
+
 Template.account.helpers({
+  showAddAccount: function () {
+    return Session.get('showAddAccount');
+  },
   isAdmin: function () {
     var grade = Meteor.users.findOne(Meteor.userId());
     console.log('account grade: ' + grade.grade);
@@ -49,7 +68,7 @@ Template.account.helpers({
   }
 });
 
-Template.account.onCreated(function() {
+Template.account.onCreated(function () {
   Session.set('accountSubmitErrors', {});
 });
 
@@ -86,7 +105,8 @@ Template.account.events({
     if (target.find('[name=overlap]').val()) {
       target.find('[name=overlap]').val('');
     } else {
-      target.toggleClass('hidden');
+      //target.toggleClass('hidden');
+      Session.set('showAddAccount', !Session.get('showAddAccount'));
     }
     // 清空表单中填入的内容
     //clearForm(target);
@@ -105,9 +125,20 @@ Template.account.events({
     var form = t.$('#add-account');
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
     form.find('[name=overlap]').val(_id);
-    // 显示编辑框
-    form.removeClass('hidden');
-    fillForm(_id);
+    
+    // 如果当前已经显示表单编辑框，则直接填入待更新数据
+    if (Session.get('showAddAccount')) {
+      fillForm(_id);
+      return;
+    }
+    // 否则显示编辑框
+    Session.set('showAddAccount', true);
+    //form.removeClass('hidden');
+    // 由于采用动画显示账号编辑表单，因此表单插入页面有延迟
+    // 必须等表单插入页面后，填充表单才有效，jquery淡出默认值为400ms
+    Meteor.setTimeout(function () {
+      fillForm(_id);
+    }, 450);
   },
 
   'click .remove-account': function (e, t) {
@@ -171,7 +202,7 @@ Template.account.events({
       return;
     }
 
-    Meteor.call('accountInsert', post, function(err) {
+    Meteor.call('accountInsert', post, function (err) {
       if (err) {
         return throwError(err.reason);
       }
