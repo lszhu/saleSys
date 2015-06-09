@@ -171,9 +171,21 @@ Template.account.events({
       return;
     }
 
-    Meteor.call('accountInsert', post);
-    // 最后清除表单的内容
-    clearForm(e.target);
+    Meteor.call('accountInsert', post, function(err) {
+      if (err) {
+        return throwError(err.reason);
+      }
+
+      // 清除错误信息
+      Session.set('accountSubmitErrors', {});
+      // 如果是更新用户信息，则完成同时隐藏编辑表单
+      var form = $('#add-account');
+      if (form.find('[name=overlap]').val()) {
+        form.addClass('hidden');
+      }
+      // 最后清除表单的内容
+      clearForm(e.target);
+    });
   }
 });
 

@@ -18,6 +18,10 @@ Meteor.methods({
     var Users = Meteor.users;
     var account = data.account;
 
+    // 不允许账号名称为空
+    if (!account.username) {
+      throw new Meteor.Error('account-empty-username', '账号名称不能为空');
+    }
     // 更新条目情况的处理
     if (data.overlap) {
       if (account.password) {
