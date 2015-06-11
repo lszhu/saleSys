@@ -7,6 +7,9 @@ Template.customer.onRendered(function() {
   var key = this.data.filterKey;
   //console.log('key: ' + key);
   this.$('.customer-keyword').val(key);
+  var target = $('#add-customer');
+  //target.removeClass('hidden');
+  target.hide();
 });
 
 Template.customer.events({
@@ -31,12 +34,30 @@ Template.customer.events({
 
   'click .edit-customer': function (e) {
     e.preventDefault();
+    if (!this.timer) {
+      this.timer = {};
+    }
     var target = $('#add-customer');
     // 如果设置了覆盖标识（overlap）则清空，否则只是简单的显示/隐藏切换编辑框
     if (target.find('[name=overlap]').val()) {
       target.find('[name=overlap]').val('');
     } else {
-      target.toggleClass('hidden');
+      //target.toggleClass('hidden');
+      if (target.hasClass('hidden')) {
+        target.removeClass('hidden');
+        //this.timer.addCustomer && Meteor.clearTimeout(this.timer.addCustomer);
+        //this.timer.addCustomer = showAddCustomerForm(target);
+        target.slideDown('slow', function() {
+          console.log('ok');
+        })
+      } else {
+        //this.timer.addCustomer && Meteor.clearTimeout(this.timer.addCustomer);
+        //Meteor.setTimeout(function() {target.addClass('hidden')}, 200);
+        //this.timer.addCustomer = hideAddCustomerForm(target);
+        target.slideUp('slow', function() {
+          target.addClass('hidden');
+        })
+      }
     }
     // 清空表单中填入的内容
     //clearForm(target);

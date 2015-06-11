@@ -80,6 +80,9 @@ Accounts.onLogin(function(l) {
 });
 
 Accounts.onLoginFailure(function(l) {
+  if (!l.user || !l.user._id) {
+    return;
+  }
   Meteor.users.update(l.user._id, {$inc: {retry: 1}});
   var times = Meteor.users.findOne(l.user._id);
   if (times && times.retry >= 3) {

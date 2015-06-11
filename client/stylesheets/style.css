@@ -216,7 +216,7 @@ body {
     animation: fadeOut 2700ms ease-in 0s 1 forwards;
     -webkit-animation: fadeOut 2700ms ease-in 0s 1 forwards;
     -moz-animation: fadeOut 2700ms ease-in 0s 1 forwards;
-/*    width: 250px;*/
+    width: 250px;
     float: right;
     clear: both;
     margin-bottom: 5px;
@@ -266,3 +266,22 @@ h2.login {
     -webkit-animation: fadeOut 2700ms ease-in 0s 1 forwards;
     -moz-animation: fadeOut 2700ms ease-in 0s 1 forwards;
 }
+
+#add-customer{
+    overflow: hidden;
+}
+
+/*
+#add-customer.zero-height {
+    opacity: 1;
+    height: 100%;
+    transform: translate(0, -100%);
+    transform: scale(1, 1);
+    transition: all 0.5s;
+}
+#add-customer {
+    opacity: 0;
+    overflow: hidden;
+    height: 50%;
+    transform: scale(1, 0);
+}*/

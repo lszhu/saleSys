@@ -46,10 +46,10 @@ Template.account.onRendered(function () {
       $(node)
           .hide()
           .insertBefore(next)
-          .fadeIn();
+          .slideDown();
     },
     removeElement: function (node) {
-      $(node).fadeOut(function () {
+      $(node).slideUp(function () {
         $(this).remove();
       });
     }
@@ -70,6 +70,7 @@ Template.account.helpers({
 
 Template.account.onCreated(function () {
   Session.set('accountSubmitErrors', {});
+  Session.set('showAddAccount', false);
 });
 
 Template.account.onRendered(function () {
@@ -100,6 +101,9 @@ Template.account.events({
 
   'click .edit-account': function (e, t) {
     e.preventDefault();
+    // 清除有可能残留的出错信息
+    Session.set('accountSubmitErrors', {});
+
     var target = t.$('#add-account');
     // 如果设置了覆盖标识（overlap）则清空，否则只是简单的显示/隐藏切换编辑框
     if (target.find('[name=overlap]').val()) {
@@ -121,24 +125,24 @@ Template.account.events({
 
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
-    //console.log('_id: ' + _id);
-    var form = t.$('#add-account');
-    // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
-    form.find('[name=overlap]').val(_id);
-    
+
     // 如果当前已经显示表单编辑框，则直接填入待更新数据
     if (Session.get('showAddAccount')) {
+      setOverlap(_id);
       fillForm(_id);
       return;
     }
     // 否则显示编辑框
     Session.set('showAddAccount', true);
     //form.removeClass('hidden');
-    // 由于采用动画显示账号编辑表单，因此表单插入页面有延迟
-    // 必须等表单插入页面后，填充表单才有效，jquery淡出默认值为400ms
-    Meteor.setTimeout(function () {
-      fillForm(_id);
-    }, 450);
+    // 由于采用动画显示账号编辑表单，因此表单是动态插入页面，略有延迟
+    // 必须等表单插入页面后，填充表单才有效
+    Meteor.setTimeout(function (_id) {
+      return function () {
+        setOverlap(_id);
+        fillForm(_id);
+      };
+    }(_id), 300);
   },
 
   'click .remove-account': function (e, t) {
@@ -207,12 +211,13 @@ Template.account.events({
         return throwError(err.reason);
       }
 
-      // 清除错误信息
+      // 清除可能遗留的错误信息
       Session.set('accountSubmitErrors', {});
       // 如果是更新用户信息，则完成同时隐藏编辑表单
       var form = $('#add-account');
       if (form.find('[name=overlap]').val()) {
-        form.addClass('hidden');
+        //form.addClass('hidden');
+        Session.set('showAddAccount', !Session.get('showAddAccount'));
       }
       // 最后清除表单的内容
       clearForm(e.target);
@@ -250,4 +255,11 @@ function fillForm(_id) {
   form.find('[name=stationId]').val(data.stationId);
   form.find('[name=grade]').val(data.grade);
   form.find('[name=comment]').val(data.comment);
+}
+
+function setOverlap(_id) {
+  //console.log('_id: ' + _id);
+  var form = $('#add-account');
+  // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
+  form.find('[name=overlap]').val(_id);
 }
