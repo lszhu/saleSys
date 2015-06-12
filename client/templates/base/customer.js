@@ -3,7 +3,7 @@ Template.customer.helpers({
   }
 });
 
-Template.customer.onRendered(function() {
+Template.customer.onRendered(function () {
   var key = this.data.filterKey;
   //console.log('key: ' + key);
   this.$('.customer-keyword').val(key);
@@ -42,30 +42,18 @@ Template.customer.events({
     if (target.find('[name=overlap]').val()) {
       target.find('[name=overlap]').val('');
     } else {
-      //target.toggleClass('hidden');
       if (target.hasClass('hidden')) {
         target.removeClass('hidden');
-        //this.timer.addCustomer && Meteor.clearTimeout(this.timer.addCustomer);
-        //this.timer.addCustomer = showAddCustomerForm(target);
-        target.slideDown('slow', function() {
-          console.log('ok');
-        })
+        target.slideDown('fast');
       } else {
-        //this.timer.addCustomer && Meteor.clearTimeout(this.timer.addCustomer);
-        //Meteor.setTimeout(function() {target.addClass('hidden')}, 200);
-        //this.timer.addCustomer = hideAddCustomerForm(target);
-        target.slideUp('slow', function() {
+        target.slideUp('fast', function () {
           target.addClass('hidden');
         })
       }
     }
-    // 清空表单中填入的内容
-    //clearForm(target);
-    // 显示编辑框
-    //target.removeClass('hidden');
   },
 
-  'click .update-customer': function(e) {
+  'click .update-customer': function (e) {
     e.preventDefault();
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
@@ -74,11 +62,14 @@ Template.customer.events({
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
     form.find('[name=overlap]').val(_id);
     // 显示编辑框
-    form.removeClass('hidden');
+    if (form.hasClass('hidden')) {
+      form.removeClass('hidden');
+      form.slideDown('fast');
+    }
     fillForm(_id);
   },
 
-  'click .remove-customer': function(e) {
+  'click .remove-customer': function (e) {
     e.preventDefault();
     if (!confirm('你确实要删除该客户的信息吗？')) {
       return;
@@ -108,9 +99,38 @@ Template.customer.events({
     console.log('customer: ' + JSON.stringify(customer));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
-    Meteor.call('customerInsert', {customer: customer, overlap: overlap});
-    // 最后清除表单的内容
-    clearForm(e.target);
+    var data = {customer: customer, overlap: overlap};
+    if (!confirmCustomerInfo(data)) {
+      return;
+    }
+    var errors = validateCustomer(data);
+    if (errors.err) {
+      //console.log('errors: ' + JSON.stringify(errors));
+      Session.set('customerSubmitErrors', errors);
+      if (errors.err) {
+        throwError(_.chain(errors).omit('err').values().value().join('，'));
+      }
+      return;
+    }
+    Meteor.call('customerInsert', data, function (err) {
+      if (err) {
+        return throwError(err.reason);
+      }
+
+      // 清除可能遗留的错误信息
+      Session.set('customerSubmitErrors', {});
+      // 如果是更新用户信息，则完成同时隐藏编辑表单
+      var form = $('#add-customer');
+      if (form.find('[name=overlap]').val()) {
+        //form.addClass('hidden');
+        Session.set('showAddCustomer', !Session.get('showAddCustomer'));
+      }
+      // 最后清除表单的内容
+      clearForm(e.target);
+      form.slideUp('fast', function () {
+        form.addClass('hidden');
+      });
+    });
   }
 });
 
@@ -140,4 +160,27 @@ function fillForm(_id) {
   form.find('[name=email]').val(data.email);
   form.find('[name=address]').val(data.address);
   form.find('[name=memo]').val(data.memo);
+}
+
+function confirmCustomerInfo(data) {
+  var customer = data.customer;
+  if (data.overlap) {
+    return;
+  }
+  if (Customers.findOne({name: customer.name})) {
+    if (!confirm('系统中已存在同名客户，还有继续添加此客户吗？')) {
+      return false;
+    }
+  }
+  if (Customers.findOne({phone: customer.phone})) {
+    if (!confirm('系统中已存在客户使用此电话号码，还有继续添加此客户吗？')) {
+      return false;
+    }
+  }
+  if (Customers.findOne({email: customer.email})) {
+    if (!confirm('系统中已存在客户使用此电子邮箱，还有继续添加此客户吗？')) {
+      return false;
+    }
+  }
+  return true;
 }
