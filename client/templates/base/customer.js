@@ -1,5 +1,6 @@
-Template.customer.helpers({
-  temp: function () {
+Template.addCustomer.helpers({
+  hasError: function (field) {
+    return !!Session.get('customerSubmitErrors')[field] ? 'has-error' : '';
   }
 });
 
@@ -34,9 +35,8 @@ Template.customer.events({
 
   'click .edit-customer': function (e) {
     e.preventDefault();
-    if (!this.timer) {
-      this.timer = {};
-    }
+    // 清空可能遗留的错误信息
+    Session.set('customerSubmitErrors', {});
     var target = $('#add-customer');
     // 如果设置了覆盖标识（overlap）则清空，否则只是简单的显示/隐藏切换编辑框
     if (target.find('[name=overlap]').val()) {
@@ -55,6 +55,8 @@ Template.customer.events({
 
   'click .update-customer': function (e) {
     e.preventDefault();
+    // 清空可能遗留的错误信息
+    Session.set('customerSubmitErrors', {});
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
     var form = $('#add-customer');
@@ -165,7 +167,7 @@ function fillForm(_id) {
 function confirmCustomerInfo(data) {
   var customer = data.customer;
   if (data.overlap) {
-    return;
+    return true;
   }
   if (Customers.findOne({name: customer.name})) {
     if (!confirm('系统中已存在同名客户，还有继续添加此客户吗？')) {
