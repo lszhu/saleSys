@@ -9,7 +9,6 @@ Template.currency.onRendered(function() {
   //console.log('key: ' + key);
   this.$('.currency-keyword').val(key);
   var target = $('#add-currency');
-  //target.removeClass('hidden');
   target.hide();
 });
 
@@ -35,6 +34,8 @@ Template.currency.events({
 
   'click .edit-currency': function (e) {
     e.preventDefault();
+    // 清空可能遗留的错误信息
+    Session.set('currencySubmitErrors', {});
     var target = $('#add-currency');
     // 如果设置了覆盖标识（overlap）则清空，否则只是简单的显示/隐藏切换编辑框
     if (target.find('[name=overlap]').val()) {
@@ -42,9 +43,10 @@ Template.currency.events({
     } else {
       if (target.hasClass('hidden')) {
         target.removeClass('hidden');
-        target.slideDown();
+        target.slideDown('fast');
       } else {
         target.slideUp('fast', function () {
+          clearForm(target);
           target.addClass('hidden');
         });
       }
@@ -57,6 +59,8 @@ Template.currency.events({
 
   'click .update-currency': function(e) {
     e.preventDefault();
+    // 清空可能遗留的错误信息
+    Session.set('currencySubmitErrors', {});
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
     var form = $('#add-currency');
@@ -64,7 +68,10 @@ Template.currency.events({
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
     form.find('[name=overlap]').val(_id);
     // 显示编辑框
-    form.removeClass('hidden');
+    if (form.hasClass('hidden')) {
+      form.removeClass('hidden');
+      form.slideDown('fast');
+    }
     fillForm(_id);
   },
 
@@ -123,8 +130,6 @@ Template.currency.events({
         form.addClass('hidden');
       });
     });
-    // 最后清除表单的内容
-    clearForm(e.target);
   }
 });
 

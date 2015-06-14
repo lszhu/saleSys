@@ -4,7 +4,9 @@
       <button class="btn btn-primary edit-employee">增加新员工</button>
     </h2>
     <div id="add-employee" class="hidden">
-      {{> addEmployee }}
+      <div>
+        {{> addEmployee }}
+      </div>
       <div class="col-sm-12"><br></div>
     </div>
     <div class="input-group col-sm-6 attach">
@@ -34,89 +36,92 @@
 </template>
 
 <template name="addEmployee">
-  <strong>编辑销售部门信息</strong>
+  <div>
+    <strong>编辑销售部门信息</strong>
 
-  <form class="add-employee">
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="employee-code-label">编号</span>
-        <input type="text" name="code" class="form-control" placeholder="编号"
-               aria-describedby="employee-code-label">
+    <form class="add-employee">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'code'}}">
+          <span class="input-group-addon" id="employee-code-label">编号</span>
+          <input type="text" name="code" class="form-control" placeholder="编号"
+                 aria-describedby="employee-code-label">
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="employee-name-label">姓名</span>
-        <input type="text" name="name" class="form-control" placeholder="姓名"
-               aria-describedby="employee-name-label">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'name'}}">
+          <span class="input-group-addon" id="employee-name-label">姓名</span>
+          <input type="text" name="name" class="form-control" placeholder="姓名"
+                 aria-describedby="employee-name-label">
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="employee-sex-label">性别</span>
-        <select name="sex" class="form-control"
-                aria-describedby="employee-sex-label">
-          <option></option>
-          <option>男</option>
-          <option>女</option>
-        </select>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'sex'}}">
+          <span class="input-group-addon" id="employee-sex-label">性别</span>
+          <select name="sex" class="form-control"
+                  aria-describedby="employee-sex-label">
+            <option></option>
+            <option>男</option>
+            <option>女</option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      {{> stationSelect localTitle = '部门' }}
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="employee-phone-label">电话</span>
-        <input type="text" name="phone" class="form-control"
-               placeholder="电话" aria-describedby="employee-address-label"/>
+      <div class="col-xs-4 attach">
+        {{> stationSelect localTitle = '部门' }}
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="employee-email-label">邮箱</span>
-        <input type="text" name="email" class="form-control"
-               placeholder="邮箱" aria-describedby="employee-email-label"/>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'phone'}}">
+          <span class="input-group-addon" id="employee-phone-label">电话</span>
+          <input type="text" name="phone" class="form-control"
+                 placeholder="电话" aria-describedby="employee-address-label"/>
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="employee-title-label">职务</span>
-        <input type="text" name="title" class="form-control"
-               placeholder="职务" aria-describedby="employee-title-label"/>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'email'}}">
+          <span class="input-group-addon" id="employee-email-label">邮箱</span>
+          <input type="text" name="email" class="form-control"
+                 placeholder="邮箱" aria-describedby="employee-email-label"/>
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'title'}}">
+          <span class="input-group-addon" id="employee-title-label">职务</span>
+          <input type="text" name="title" class="form-control"
+                 placeholder="职务" aria-describedby="employee-title-label"/>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'salaryValue'}}">
         <span class="input-group-addon"
               id="employee-salary-value-label">工资</span>
-        <input type="text" name="salaryValue" class="form-control"
-               placeholder="简介" aria-describedby="employee-salary-value-label"/>
+          <input type="text" name="salaryValue" class="form-control"
+                 placeholder="简介"
+                 aria-describedby="employee-salary-value-label"/>
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      {{> currencySelect }}
-    </div>
-    <div class="col-xs-12 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="employee-memo-label">备注</span>
-        <input type="text" name="memo" class="form-control"
-               placeholder="备注" aria-describedby="employee-memo-label"/>
+      <div class="col-xs-4 attach">
+        {{> currencySelect }}
       </div>
-    </div>
-    {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
-    <div class="input-group hidden">
-      <span class="input-group-addon" id="employee-id-label">Id</span>
-      <input type="text" name="overlap" class="form-control"
-             placeholder="空" aria-describedby="employee-id-label">
-    </div>
-    <div class="col-xs-12"></div>
-    <div class="col-sm-4 col-sm-offset-4">
-      <button type="submit" class="btn btn-primary btn-block">
-        提交新信息
-      </button>
-    </div>
-  </form>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError 'memo'}}">
+          <span class="input-group-addon" id="employee-memo-label">备注</span>
+          <input type="text" name="memo" class="form-control"
+                 placeholder="备注" aria-describedby="employee-memo-label"/>
+        </div>
+      </div>
+      {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
+      <div class="input-group hidden">
+        <span class="input-group-addon" id="employee-id-label">Id</span>
+        <input type="text" name="overlap" class="form-control"
+               placeholder="空" aria-describedby="employee-id-label">
+      </div>
+      <div class="col-xs-12"></div>
+      <div class="col-sm-4 col-sm-offset-4">
+        <button type="submit" class="btn btn-primary btn-block">
+          提交新信息
+        </button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <template name="employeeList">

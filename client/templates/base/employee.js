@@ -5,10 +5,18 @@ Template.employeeListItem.helpers({
   }
 });
 
+Template.addEmployee.helpers({
+  hasError: function(field) {
+    return !!Session.get('currencySubmitErrors')[field] ? 'has-error' : '';
+  }
+});
+
 Template.employee.onRendered(function() {
   var key = this.data.filterKey;
   //console.log('key: ' + key);
   this.$('.employee-keyword').val(key);
+  var target = $('#add-employee');
+  target.hide();
 });
 
 Template.employee.events({
@@ -33,12 +41,22 @@ Template.employee.events({
 
   'click .edit-employee': function (e) {
     e.preventDefault();
+    // 清空可能遗留的错误信息
+    Session.set('employeeSubmitErrors', {});
     var target = $('#add-employee');
     // 如果设置了覆盖标识（overlap）则清空，否则只是简单的显示/隐藏切换编辑框
     if (target.find('[name=overlap]').val()) {
       target.find('[name=overlap]').val('');
     } else {
-      target.toggleClass('hidden');
+      if (target.hasClass('hidden')) {
+        target.removeClass('hidden');
+        target.slideDown('fast');
+      } else {
+        target.slideUp('fast', function() {
+          clearForm(target);
+          target.addClass('hidden');
+        });
+      }
     }
     // 清空表单中填入的内容
     //clearForm(target);
@@ -48,6 +66,8 @@ Template.employee.events({
 
   'click .update-employee': function (e) {
     e.preventDefault();
+    // 清空可能遗留的错误信息
+    Session.set('employeeSubmitErrors', {});
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
     var form = $('#add-employee');
@@ -55,7 +75,10 @@ Template.employee.events({
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
     form.find('[name=overlap]').val(_id);
     // 显示编辑框
-    form.removeClass('hidden');
+    if (form.hasClass('hidden')) {
+      form.removeClass('hidden');
+      form.slideDown('fast');
+    }
     fillForm(_id);
   },
 
@@ -93,9 +116,32 @@ Template.employee.events({
     //console.log('employee: ' + JSON.stringify(employee));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
-    Meteor.call('employeeInsert', {employee: employee, overlap: overlap});
-    // 最后清除表单的内容
-    clearForm(e.target);
+    var data = {employee: employee, overlap: overlap};
+    var errors = validateEmployee(data);
+    if (errors.err) {
+      Session.set('employeeSubmitErrors', errors);
+      throwError(getErrorMessage(errors));
+      return;
+    }
+    Meteor.call('employeeInsert', data, function(err) {
+      if (err) {
+        return throwError(err.reason);
+      }
+
+      // 清除可能遗留的错误信息
+      Session.set('employeeSubmitErrors', {});
+      // 如果是更新用户信息，则完成同时隐藏编辑表单
+      var form = $('#add-employee');
+      if (form.find('[name=overlap]').val()) {
+        //form.addClass('hidden');
+        Session.set('showAddEmployee', !Session.get('showAddEmployee'));
+      }
+      // 最后清除表单的内容
+      clearForm(e.target);
+      form.slideUp('fast', function () {
+        form.addClass('hidden');
+      });
+    });
   }
 });
 

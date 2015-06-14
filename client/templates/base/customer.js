@@ -47,6 +47,7 @@ Template.customer.events({
         target.slideDown('fast');
       } else {
         target.slideUp('fast', function () {
+          clearForm(target);
           target.addClass('hidden');
         });
       }
