@@ -102,9 +102,11 @@ Template.customer.events({
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
     var data = {customer: customer, overlap: overlap};
+    // 对一些特别情况需要用户进行确认
     if (!confirmCustomerInfo(data)) {
       return;
     }
+    // 对输入信息进行校验
     var errors = validateCustomer(data);
     if (errors.err) {
       //console.log('errors: ' + JSON.stringify(errors));
@@ -169,17 +171,17 @@ function confirmCustomerInfo(data) {
   if (data.overlap) {
     return true;
   }
-  if (Customers.findOne({name: customer.name})) {
+  if (customer.name && Customers.findOne({name: customer.name})) {
     if (!confirm('系统中已存在同名客户，还有继续添加此客户吗？')) {
       return false;
     }
   }
-  if (Customers.findOne({phone: customer.phone})) {
+  if (customer.phone && Customers.findOne({phone: customer.phone})) {
     if (!confirm('系统中已存在客户使用此电话号码，还有继续添加此客户吗？')) {
       return false;
     }
   }
-  if (Customers.findOne({email: customer.email})) {
+  if ( customer.email && Customers.findOne({email: customer.email})) {
     if (!confirm('系统中已存在客户使用此电子邮箱，还有继续添加此客户吗？')) {
       return false;
     }
