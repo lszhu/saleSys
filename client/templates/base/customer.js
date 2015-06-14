@@ -126,12 +126,8 @@ Template.customer.events({
       Session.set('customerSubmitErrors', {});
       // 如果是更新用户信息，则完成同时隐藏编辑表单
       var form = $('#add-customer');
-      if (form.find('[name=overlap]').val()) {
-        //form.addClass('hidden');
-        Session.set('showAddCustomer', !Session.get('showAddCustomer'));
-      }
-      // 最后清除表单的内容
-      clearForm(e.target);
+      // 清除表单的内容
+      clearForm(form);
       form.slideUp('fast', function () {
         form.addClass('hidden');
       });

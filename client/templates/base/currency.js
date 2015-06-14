@@ -118,14 +118,9 @@ Template.currency.events({
 
       // 清除可能遗留的错误信息
       Session.set('currencySubmitErrors', {});
-      // 如果是更新用户信息，则完成同时隐藏编辑表单
       var form = $('#add-currency');
-      if (form.find('[name=overlap]').val()) {
-        //form.addClass('hidden');
-        Session.set('showAddCurrency', !Session.get('showAddCurrency'));
-      }
-      // 最后清除表单的内容
-      clearForm(e.target);
+      // 清除表单的内容
+      clearForm(form);
       form.slideUp('fast', function () {
         form.addClass('hidden');
       });
