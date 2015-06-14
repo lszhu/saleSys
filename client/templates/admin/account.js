@@ -34,32 +34,34 @@ Template.addAccount.helpers({
   hasError: function (field) {
     return !!Session.get('accountSubmitErrors')[field] ? 'has-error' : '';
   },
-  isAdmin: function () {
+  showForAdmin: function () {
     var user = Meteor.user();
-    return user && user.grade == 3;
+    return user && user.grade == 3 ? '' : 'hidden';
   }
 });
 
-Template.account.onRendered(function () {
-  this.find('#add-account')._uihooks = {
-    insertElement: function (node, next) {
-      $(node)
-          .hide()
-          .insertBefore(next)
-          .slideDown();
-    },
-    removeElement: function (node) {
-      $(node).slideUp(function () {
-        $(this).remove();
-      });
-    }
-  }
-});
+/*
+ Template.account.onRendered(function () {
+ this.find('#add-account')._uihooks = {
+ insertElement: function (node, next) {
+ $(node)
+ .hide()
+ .insertBefore(next)
+ .slideDown();
+ },
+ removeElement: function (node) {
+ $(node).slideUp(function () {
+ $(this).remove();
+ });
+ }
+ }
+ });
+ */
 
 Template.account.helpers({
-  showAddAccount: function () {
-    return Session.get('showAddAccount');
-  },
+  //showAddAccount: function () {
+  //  return Session.get('showAddAccount');
+  //},
   isAdmin: function () {
     var grade = Meteor.users.findOne(Meteor.userId());
     console.log('account grade: ' + grade.grade);
@@ -70,13 +72,15 @@ Template.account.helpers({
 
 Template.account.onCreated(function () {
   Session.set('accountSubmitErrors', {});
-  Session.set('showAddAccount', false);
+  //Session.set('showAddAccount', false);
 });
 
 Template.account.onRendered(function () {
   var key = this.data.filterKey;
   //console.log('key: ' + key);
   this.$('.account-keyword').val(key);
+  var target = $('#add-account');
+  target.hide();
 });
 
 Template.account.events({
@@ -109,13 +113,17 @@ Template.account.events({
     if (target.find('[name=overlap]').val()) {
       target.find('[name=overlap]').val('');
     } else {
-      //target.toggleClass('hidden');
-      Session.set('showAddAccount', !Session.get('showAddAccount'));
+      if (target.hasClass('hidden')) {
+        target.removeClass('hidden');
+        target.slideDown('fast');
+      } else {
+        target.slideUp('fast', function () {
+          // 清空表单中填入的内容
+          clearForm(target);
+          target.addClass('hidden');
+        });
+      }
     }
-    // 清空表单中填入的内容
-    //clearForm(target);
-    // 显示编辑框
-    //target.removeClass('hidden');
   },
 
   'click .update-account': function (e, t) {
@@ -125,24 +133,16 @@ Template.account.events({
 
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
+    var form = $('#add-account');
 
     // 如果当前已经显示表单编辑框，则直接填入待更新数据
-    if (Session.get('showAddAccount')) {
-      setOverlap(_id);
-      fillForm(_id);
-      return;
+    if (form.hasClass('hidden')) {
+      form.removeClass('hidden');
+      form.slideDown('fast');
     }
-    // 否则显示编辑框
-    Session.set('showAddAccount', true);
-    //form.removeClass('hidden');
-    // 由于采用动画显示账号编辑表单，因此表单是动态插入页面，略有延迟
-    // 必须等表单插入页面后，填充表单才有效
-    Meteor.setTimeout(function (_id) {
-      return function () {
-        setOverlap(_id);
-        fillForm(_id);
-      };
-    }(_id), 300);
+    // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
+    form.find('[name=overlap]').val(_id);
+    fillForm(_id);
   },
 
   'click .remove-account': function (e, t) {
@@ -195,8 +195,8 @@ Template.account.events({
     var overlap = form.find('[name=overlap]').val();
     //console.log('overlap is: ' + overlap);
 
-    var post = {account: account, overlap: overlap};
-    var errors = validateAccount(post);
+    var data = {account: account, overlap: overlap};
+    var errors = validateAccount(data);
     if (errors.err) {
       //console.log('errors: ' + JSON.stringify(errors));
       Session.set('accountSubmitErrors', errors);
@@ -204,21 +204,20 @@ Template.account.events({
       return;
     }
 
-    Meteor.call('accountInsert', post, function (err) {
+    Meteor.call('accountInsert', data, function (err) {
       if (err) {
         return throwError(err.reason);
       }
 
       // 清除可能遗留的错误信息
       Session.set('accountSubmitErrors', {});
-      // 如果是更新用户信息，则完成同时隐藏编辑表单
       var form = $('#add-account');
-      if (form.find('[name=overlap]').val()) {
-        //form.addClass('hidden');
-        Session.set('showAddAccount', !Session.get('showAddAccount'));
-      }
-      // 最后清除表单的内容
-      clearForm(e.target);
+      // 清除表单的内容
+      clearForm(form);
+      // 隐藏表单
+      form.slideUp('fast', function () {
+        form.addClass('hidden');
+      });
     });
   }
 });
@@ -253,11 +252,4 @@ function fillForm(_id) {
   form.find('[name=stationId]').val(data.stationId);
   form.find('[name=grade]').val(data.grade);
   form.find('[name=comment]').val(data.comment);
-}
-
-function setOverlap(_id) {
-  //console.log('_id: ' + _id);
-  var form = $('#add-account');
-  // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
-  form.find('[name=overlap]').val(_id);
 }

@@ -5,12 +5,12 @@
         <button class="btn btn-primary edit-account">增加新账号</button>
       {{/if}}
     </h2>
-    <div id="add-account">
-      {{#if showAddAccount }}
+    <div id="add-account" class="hidden">
+      <div>
         {{> addAccount }}
-      {{/if }}
-      <div class="col-sm-12"><br></div>
+      </div>
     </div>
+    <div class="col-sm-12"><br></div>
     {{#if isAdmin }}
       <div class="input-group col-sm-6 attach">
         <span class="input-group-addon" id="account-admin-label">搜索</span>
@@ -44,50 +44,54 @@
 </template>
 
 <template name="addAccount">
-  <strong>设置账号信息</strong>
+  <div>
+    <strong>设置账号信息</strong>
 
-  <form class="add-account">
-    <div class="col-xs-4 attach">
-      <div class="input-group {{ hasError "username" }}">
-        <span class="input-group-addon" id="account-username-label">账号名称</span>
-        <input type="text" name="username" class="form-control"
-               placeholder="账号名称"
-               aria-describedby="account-username-label">
+    <form class="add-account">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError "username" }}">
+          <span class="input-group-addon"
+                id="account-username-label">账号名称</span>
+          <input type="text" name="username" class="form-control"
+                 placeholder="账号名称"
+                 aria-describedby="account-username-label">
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group {{ hasError "nickname" }}">
-        <span class="input-group-addon" id="account-nickname-label">用户姓名</span>
-        <input type="text" name="nickname" class="form-control"
-               placeholder="用户姓名"
-               aria-describedby="account-nickname-label">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError "nickname" }}">
+          <span class="input-group-addon"
+                id="account-nickname-label">用户姓名</span>
+          <input type="text" name="nickname" class="form-control"
+                 placeholder="用户姓名"
+                 aria-describedby="account-nickname-label">
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group {{ hasError "email" }}">
-        <span class="input-group-addon" id="account-email-label">电子邮箱</span>
-        <input type="text" name="email" class="form-control" placeholder="电子邮箱"
-               aria-describedby="account-email-label">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError "email" }}">
+          <span class="input-group-addon" id="account-email-label">电子邮箱</span>
+          <input type="text" name="email" class="form-control"
+                 placeholder="电子邮箱"
+                 aria-describedby="account-email-label">
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group {{ hasError "password" }}">
-        <span class="input-group-addon" id="account-password-label">登录密码</span>
-        <input type="password" name="password" class="form-control"
-               placeholder="登录密码" aria-describedby="account-password-label"/>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError "password" }}">
+          <span class="input-group-addon"
+                id="account-password-label">登录密码</span>
+          <input type="password" name="password" class="form-control"
+                 placeholder="登录密码" aria-describedby="account-password-label"/>
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group {{ hasError "password" }}">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError "password" }}">
         <span class="input-group-addon"
               id="account-password-again-label">确认密码</span>
-        <input type="password" name="password-again" class="form-control"
-               placeholder="确认登录密码"
-               aria-describedby="account-password-again-label"/>
+          <input type="password" name="password-again" class="form-control"
+                 placeholder="确认登录密码"
+                 aria-describedby="account-password-again-label"/>
+        </div>
       </div>
-    </div>
-    {{#if isAdmin }}
-      <div class="col-xs-4 attach">
+      <div class="col-xs-4 attach {{showForAdmin}}">
         <div class="input-group {{ hasError "status" }}">
           <span class="input-group-addon"
                 id="includes-disabled-label">可用状态</span>
@@ -98,10 +102,10 @@
           </select>
         </div>
       </div>
-      <div class="col-xs-4 attach">
+      <div class="col-xs-4 attach {{showForAdmin}}">
         {{> stationSelect localTitle = '所属部门' }}
       </div>
-      <div class="col-xs-4 attach">
+      <div class="col-xs-4 attach {{showForAdmin}}">
         <div class="input-group {{ hasError "grade" }}">
           <span class="input-group-addon" id="includes-type-label">账号类型</span>
           <select name="grade" class="form-control"
@@ -113,30 +117,30 @@
           </select>
         </div>
       </div>
-    {{/if }}
-    <div class="col-xs-4 attach">
-      <button class="btn btn-warning btn-block">权 限 设 置</button>
-    </div>
-    <div class="col-xs-12 attach">
-      <div class="input-group {{ hasError "comment" }}">
-        <span class="input-group-addon" id="account-comment-label">账号描述</span>
-        <input type="text" name="comment" class="form-control"
-               placeholder="账号描述" aria-describedby="account-comment-label"/>
+      <div class="col-xs-4 attach">
+        <button class="btn btn-warning btn-block">权 限 设 置</button>
       </div>
-    </div>
-    {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
-    <div class="input-group hidden">
-      <span class="input-group-addon" id="account-id-label">Id</span>
-      <input type="text" name="overlap" class="form-control"
-             placeholder="空" aria-describedby="account-id-label">
-    </div>
-    <div class="col-xs-12"></div>
-    <div class="col-sm-4 col-sm-offset-4">
-      <button type="submit" class="btn btn-primary btn-block">
-        提交新信息
-      </button>
-    </div>
-  </form>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError "comment" }}">
+          <span class="input-group-addon" id="account-comment-label">账号描述</span>
+          <input type="text" name="comment" class="form-control"
+                 placeholder="账号描述" aria-describedby="account-comment-label"/>
+        </div>
+      </div>
+      {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
+      <div class="input-group hidden">
+        <span class="input-group-addon" id="account-id-label">Id</span>
+        <input type="text" name="overlap" class="form-control"
+               placeholder="空" aria-describedby="account-id-label">
+      </div>
+      <div class="col-xs-12"></div>
+      <div class="col-sm-4 col-sm-offset-4">
+        <button type="submit" class="btn btn-primary btn-block">
+          提交新信息
+        </button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <template name="accountList">

@@ -18,41 +18,42 @@ Meteor.methods({
     var Users = Meteor.users;
     var account = data.account;
 
+    // 如果系统中存在账号，而用户又未登录，则不运行操作账号
+    if (!Meteor.userId() && Meteor.users.find().count() > 0) {
+      throw new Meteor.Error('unauthorized-user', '非授权用户');
+    }
+
+    var errors = validateAccount(data);
+    if (errors.err) {
+      throw new Meteor.Error('invalid-user', getErrorMessage(errors));
+    }
     // 不允许账号名称为空
-    if (!account.username) {
-      throw new Meteor.Error('account-empty-username', '账号名称不能为空');
+    //if (!account.username) {
+    //  throw new Meteor.Error('account-empty-username', '账号名称不能为空');
+    //}
+    // 创建新用户的情况
+    if (!data.overlap) {
+      var userId = Accounts.createUser(account);
+      //console.log('_id: ' + account.stationId);
+      account = _.omit(account, ['username', 'password', 'email']);
+      Meteor.users.update(userId, {$set: account});
+      return userId;
     }
     // 更新条目情况的处理
-    if (data.overlap) {
-      if (account.password) {
-        Accounts.setPassword(data.overlap, account.password);
-      }
-      account = _.omit(account, 'password');
-      // 如果要更改邮箱，需要特殊处理
-      if (account.email) {
-        account.emails = [{address: account.email}];
-        account = _.omit(account, 'email');
-      }
-      // 如果是当前用户，不允许更改：'disabled', 'stationId', 'grade'
-      if (Meteor.userId() == data.overlap) {
-        account = _.omit(account, ['disabled', 'stationId', 'grade']);
-      }
-      Users.update(data.overlap, {$set: account});
-      return;
+    if (account.password) {
+      Accounts.setPassword(data.overlap, account.password);
     }
-
-    // 创建新account时，不允许覆盖已有同账号名的条目
-    var exist = Users.findOne({username: account.model});
-    if (exist) {
-      throw new Meteor.Error('exist_account', '已经存在同名账号');
+    account = _.omit(account, 'password');
+    // 如果要更改邮箱，需要特殊处理
+    if (account.email) {
+      account.emails = [{address: account.email}];
+      account = _.omit(account, 'email');
     }
-
-    var userId = Accounts.createUser(account);
-    //console.log('_id: ' + account.stationId);
-    account = _.omit(account, ['username', 'password', 'email']);
-    Meteor.users.update(userId, {$set: account});
-
-    return userId;
+    // 如果是当前用户，不允许更改：'disabled', 'stationId', 'grade'
+    if (Meteor.userId() == data.overlap) {
+      account = _.omit(account, ['disabled', 'stationId', 'grade']);
+    }
+    Users.update(data.overlap, {$set: account});
   },
 
   accountRemove: function (objectId) {
@@ -64,7 +65,8 @@ Meteor.methods({
   }
 });
 
-Accounts.validateLoginAttempt(function(l) {
+// 在对登录进行验证前，先验证本次登录尝试是否有效，有效则返回真值
+Accounts.validateLoginAttempt(function (l) {
   //console.log('user name: ' + l.user && l.user.name);
   if (l.user && l.user.retry >= 3) {
     throw new Meteor.Error('login-retry-timeout', '密码连续错误超过3次');
@@ -75,11 +77,14 @@ Accounts.validateLoginAttempt(function(l) {
   return true;
 });
 
-Accounts.onLogin(function(l) {
+// 登录成功，则重置该账号的错误尝试次数
+Accounts.onLogin(function (l) {
   Meteor.users.update(l.user._id, {$set: {retry: 0}});
 });
 
-Accounts.onLoginFailure(function(l) {
+// 登录失败时，如果存在该用户，则将登录错误尝试次数加一
+// 如果超过三次则禁用，并同时清零错误登录尝试次数
+Accounts.onLoginFailure(function (l) {
   if (!l.user || !l.user._id) {
     return;
   }
