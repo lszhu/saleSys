@@ -4,16 +4,18 @@
       <button class="btn btn-primary edit-currency">增加新货币</button>
     </h2>
     <div id="add-currency" class="hidden">
-      {{> addCurrency }}
+      <div>
+        {{> addCurrency }}
+      </div>
       <div class="col-sm-12"><br></div>
     </div>
-    <div class="input-group col-sm-6">
+    <div class="input-group col-sm-6 attach">
       <span class="input-group-addon" id="currency-code-label">搜索</span>
       <input type="text" name="keyword" class="form-control currency-keyword"
              placeholder="搜索关键词" aria-describedby="currency-code-label">
-    <span class="btn input-group-addon filter-currency">
+      <span class="btn btn-primary input-group-addon filter-currency">
         查询
-    </span>
+      </span>
     </div>
     {{> currencyItem }}
 
@@ -34,42 +36,64 @@
 </template>
 
 <template name="addCurrency">
-  <strong>编辑货币信息（汇率为1美元兑换值）</strong>
+  <div>
+    <strong>编辑货币信息（汇率为1美元兑换值）</strong>
 
-  <form class="add-currency">
-    <div class="input-group">
-      <span class="input-group-addon" id="currency-name-label">名称</span>
-      <input type="text" name="name" class="form-control" placeholder="货币名称"
-             aria-describedby="currency-name-label">
-      <span class="input-group-addon" id="currency-symbol-label">标准符号</span>
-      <input type="text" name="symbol" class="form-control" placeholder="国际标准货币符号"
-             aria-describedby="currency-symbol-label">
-    </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="currency-rate-label">汇率</span>
-      <input type="text" name="rate" class="form-control" placeholder="兑美元汇率"
-             aria-describedby="currency-rate-label">
-      <span class="input-group-addon" id="currency-country-label">发行地区</span>
-      <input type="text" name="country" class="form-control" placeholder="发行地区"
-             aria-describedby="currency-country-label">
-    </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="currency-memo-label">备注</span>
-      <input type="text" name="memo" class="form-control"
-             placeholder="备注" aria-describedby="currency-memo-label"/>
-    </div>
-    {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
-    <div class="input-group hidden">
-      <span class="input-group-addon" id="currency-id-label">Id</span>
-      <input type="text" name="overlap" class="form-control"
-             placeholder="空" aria-describedby="currency-id-label">
-    </div>
-    <div class="col-sm-4 col-sm-offset-4">
-      <button type="submit" class="btn btn-primary btn-block">
-        提交新信息
-      </button>
-    </div>
-  </form>
+    <form class="add-currency">
+      <div class="col-xs-6 attach">
+        <div class="input-group {{ hasError 'name' }}">
+          <span class="input-group-addon" id="currency-name-label">名称</span>
+          <input type="text" name="name" class="form-control" placeholder="货币名称"
+                 aria-describedby="currency-name-label">
+        </div>
+      </div>
+      <div class="col-xs-6 attach">
+        <div class="input-group {{ hasError 'symbol' }}">
+          <span class="input-group-addon" id="currency-symbol-label">标准符号</span>
+          <input type="text" name="symbol" class="form-control"
+                 placeholder="国际标准货币符号"
+                 aria-describedby="currency-symbol-label">
+        </div>
+      </div>
+      <div class="col-xs-6 attach">
+        <div class="input-group {{ hasError 'rate' }}">
+          <span class="input-group-addon" id="currency-rate-label">汇率</span>
+          <input type="text" name="rate" class="form-control"
+                 placeholder="兑美元汇率"
+                 aria-describedby="currency-rate-label">
+        </div>
+      </div>
+      <div class="col-xs-6 attach">
+        <div class="input-group {{ hasError 'country' }}">
+          <span class="input-group-addon"
+                id="currency-country-label">发行地区</span>
+          <input type="text" name="country" class="form-control"
+                 placeholder="发行地区"
+                 aria-describedby="currency-country-label">
+        </div>
+      </div>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError 'memo' }}">
+          <span class="input-group-addon" id="currency-memo-label">备注</span>
+          <input type="text" name="memo" class="form-control"
+                 placeholder="备注" aria-describedby="currency-memo-label"/>
+        </div>
+      </div>
+      {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
+      <div class="input-group hidden">
+        <span class="input-group-addon" id="currency-id-label">Id</span>
+        <input type="text" name="overlap" class="form-control"
+               placeholder="空" aria-describedby="currency-id-label">
+      </div>
+      <div class="col-xs-12 attach">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="submit" class="btn btn-primary btn-block">
+            提交新信息
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>
 
 <template name="currencyItem">
@@ -78,7 +102,7 @@
     <tr>
       <th>名称</th>
       <th>标准符号</th>
-      <th>汇率</th>
+      <th>汇率（USD）</th>
       <th>发行地区</th>
       <th>备注</th>
       <th class="danger text-center width60">变更</th>

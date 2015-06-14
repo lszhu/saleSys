@@ -200,9 +200,7 @@ Template.account.events({
     if (errors.err) {
       //console.log('errors: ' + JSON.stringify(errors));
       Session.set('accountSubmitErrors', errors);
-      if (errors.err) {
-        throwError(_.chain(errors).omit('err').values().value().join('，'));
-      }
+      throwError(getErrorMessage(errors));
       return;
     }
 

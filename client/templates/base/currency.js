@@ -1,5 +1,6 @@
-Template.currency.helpers({
-  temp: function () {
+Template.addCurrency.helpers({
+  hasError: function (field) {
+    return !!Session.get('currencySubmitErrors')[field] ? 'has-error' : '';
   }
 });
 
@@ -7,6 +8,9 @@ Template.currency.onRendered(function() {
   var key = this.data.filterKey;
   //console.log('key: ' + key);
   this.$('.currency-keyword').val(key);
+  var target = $('#add-currency');
+  //target.removeClass('hidden');
+  target.hide();
 });
 
 Template.currency.events({
@@ -36,7 +40,14 @@ Template.currency.events({
     if (target.find('[name=overlap]').val()) {
       target.find('[name=overlap]').val('');
     } else {
-      target.toggleClass('hidden');
+      if (target.hasClass('hidden')) {
+        target.removeClass('hidden');
+        target.slideDown();
+      } else {
+        target.slideUp('fast', function () {
+          target.addClass('hidden');
+        });
+      }
     }
     // 清空表单中填入的内容
     //clearForm(target);
@@ -86,7 +97,32 @@ Template.currency.events({
     console.log('currency: ' + JSON.stringify(currency));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
-    Meteor.call('currencyInsert', {currency: currency, overlap: overlap});
+    var data = {currency: currency, overlap: overlap};
+    var errors = validateCurrency(data);
+    if (errors.err) {
+      Session.set('currencySubmitErrors', errors);
+      throwError(getErrorMessage(errors));
+      return;
+    }
+    Meteor.call('currencyInsert', data, function(err) {
+      if (err) {
+        return throwError(err.reason);
+      }
+
+      // 清除可能遗留的错误信息
+      Session.set('currencySubmitErrors', {});
+      // 如果是更新用户信息，则完成同时隐藏编辑表单
+      var form = $('#add-currency');
+      if (form.find('[name=overlap]').val()) {
+        //form.addClass('hidden');
+        Session.set('showAddCurrency', !Session.get('showAddCurrency'));
+      }
+      // 最后清除表单的内容
+      clearForm(e.target);
+      form.slideUp('fast', function () {
+        form.addClass('hidden');
+      });
+    });
     // 最后清除表单的内容
     clearForm(e.target);
   }

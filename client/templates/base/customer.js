@@ -48,7 +48,7 @@ Template.customer.events({
       } else {
         target.slideUp('fast', function () {
           target.addClass('hidden');
-        })
+        });
       }
     }
   },
@@ -112,7 +112,7 @@ Template.customer.events({
       //console.log('errors: ' + JSON.stringify(errors));
       Session.set('customerSubmitErrors', errors);
       if (errors.err) {
-        throwError(_.chain(errors).omit('err').values().value().join('，'));
+        throwError(getErrorMessage(errors));
       }
       return;
     }
