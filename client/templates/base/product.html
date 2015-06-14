@@ -4,7 +4,9 @@
       <button class="btn btn-primary edit-product">增加新型号</button>
     </h2>
     <div id="add-product" class="hidden">
-      {{> addProduct }}
+      <div>
+        {{> addProduct }}
+      </div>
       <div class="col-sm-12"><br></div>
     </div>
     <div class="input-group col-sm-6 attach">
@@ -34,75 +36,77 @@
 </template>
 
 <template name="addProduct">
-  <strong>编辑产品型号信息</strong>
+  <div>
+    <strong>编辑产品型号信息</strong>
 
-  <form class="add-product">
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="product-code-label">编号</span>
-        <input type="text" name="code" class="form-control" placeholder="编号"
-               aria-describedby="product-code-label">
+    <form class="add-product">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'code'}}">
+          <span class="input-group-addon" id="product-code-label">编号</span>
+          <input type="text" name="code" class="form-control" placeholder="编号"
+                 aria-describedby="product-code-label">
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="product-name-label">名称</span>
-        <input type="text" name="name" class="form-control" placeholder="名称"
-               aria-describedby="product-name-label">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'name'}}">
+          <span class="input-group-addon" id="product-name-label">名称</span>
+          <input type="text" name="name" class="form-control" placeholder="名称"
+                 aria-describedby="product-name-label">
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="product-model-label">型号</span>
-        <input type="text" name="model" class="form-control" placeholder="型号"
-               aria-describedby="product-model-label">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'model'}}">
+          <span class="input-group-addon" id="product-model-label">型号</span>
+          <input type="text" name="model" class="form-control" placeholder="型号"
+                 aria-describedby="product-model-label">
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="product-batch-label">批次</span>
-        <input type="text" name="batch" class="form-control"
-               placeholder="批次" aria-describedby="product-batch-label"/>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'batch'}}">
+          <span class="input-group-addon" id="product-batch-label">批次</span>
+          <input type="text" name="batch" class="form-control"
+                 placeholder="批次" aria-describedby="product-batch-label"/>
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'price'}}">
         <span class="input-group-addon"
               id="product-price-value-label">价格</span>
-        <input type="text" name="priceValue" class="form-control"
-               placeholder="价格" aria-describedby="product-price-value-label"/>
+          <input type="text" name="priceValue" class="form-control"
+                 placeholder="价格" aria-describedby="product-price-value-label"/>
+        </div>
       </div>
-    </div>
-    <div class="col-xs-4 attach">
-      {{> currencySelect }}
-    </div>
-    <div class="col-xs-12 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="product-comment-label">描述</span>
-        <input type="text" name="comment" class="form-control"
-               placeholder="描述" aria-describedby="product-comment-label"/>
+      <div class="col-xs-4 attach">
+        {{> currencySelect }}
       </div>
-    </div>
-    <div class="col-xs-12 attach">
-      <div class="input-group">
-        <span class="input-group-addon" id="product-memo-label">备注</span>
-        <input type="text" name="memo" class="form-control"
-               placeholder="备注" aria-describedby="product-memo-label"/>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError 'comment'}}">
+          <span class="input-group-addon" id="product-comment-label">描述</span>
+          <input type="text" name="comment" class="form-control"
+                 placeholder="描述" aria-describedby="product-comment-label"/>
+        </div>
       </div>
-    </div>
-    {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
-    <div class="input-group hidden">
-      <span class="input-group-addon" id="product-id-label">Id</span>
-      <input type="text" name="overlap" class="form-control"
-             placeholder="空" aria-describedby="product-id-label">
-    </div>
-    <div class="col-xs-12"></div>
-    <div class="col-sm-4 col-sm-offset-4">
-      <button type="submit" class="btn btn-primary btn-block">
-        提交新信息
-      </button>
-    </div>
-  </form>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError 'memo'}}">
+          <span class="input-group-addon" id="product-memo-label">备注</span>
+          <input type="text" name="memo" class="form-control"
+                 placeholder="备注" aria-describedby="product-memo-label"/>
+        </div>
+      </div>
+      {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
+      <div class="input-group hidden">
+        <span class="input-group-addon" id="product-id-label">Id</span>
+        <input type="text" name="overlap" class="form-control"
+               placeholder="空" aria-describedby="product-id-label">
+      </div>
+      <div class="col-xs-12"></div>
+      <div class="col-sm-4 col-sm-offset-4">
+        <button type="submit" class="btn btn-primary btn-block">
+          提交新信息
+        </button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <template name="productList">

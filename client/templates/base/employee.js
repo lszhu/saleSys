@@ -7,7 +7,7 @@ Template.employeeListItem.helpers({
 
 Template.addEmployee.helpers({
   hasError: function(field) {
-    return !!Session.get('currencySubmitErrors')[field] ? 'has-error' : '';
+    return !!Session.get('employeeSubmitErrors')[field] ? 'has-error' : '';
   }
 });
 
@@ -130,14 +130,9 @@ Template.employee.events({
 
       // 清除可能遗留的错误信息
       Session.set('employeeSubmitErrors', {});
-      // 如果是更新用户信息，则完成同时隐藏编辑表单
       var form = $('#add-employee');
-      if (form.find('[name=overlap]').val()) {
-        //form.addClass('hidden');
-        Session.set('showAddEmployee', !Session.get('showAddEmployee'));
-      }
-      // 最后清除表单的内容
-      clearForm(e.target);
+      // 清除表单的内容
+      clearForm(form);
       form.slideUp('fast', function () {
         form.addClass('hidden');
       });
