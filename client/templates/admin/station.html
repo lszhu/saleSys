@@ -4,16 +4,18 @@
       <button class="btn btn-primary edit-station">增加新部门</button>
     </h2>
     <div id="add-station" class="hidden">
-      {{> addStation }}
+      <div>
+        {{> addStation }}
+      </div>
       <div class="col-sm-12"><br></div>
     </div>
-    <div class="input-group col-sm-6">
+    <div class="input-group col-sm-6 attach">
       <span class="input-group-addon" id="station-code-label">搜索</span>
       <input type="text" name="keyword" class="form-control station-keyword"
              placeholder="搜索关键词" aria-describedby="station-code-label">
-    <span class="btn input-group-addon filter-station">
+      <span class="btn btn-primary input-group-addon filter-station">
         查询
-    </span>
+      </span>
     </div>
     {{> stationItem }}
 
@@ -34,47 +36,66 @@
 </template>
 
 <template name="addStation">
-  <strong>编辑销售部门信息</strong>
+  <div>
+    <strong>编辑销售部门信息</strong>
 
-  <form class="add-station">
-    <div class="input-group">
-      <span class="input-group-addon" id="station-code-label">编号</span>
-      <input type="text" name="code" class="form-control" placeholder="编号"
-             aria-describedby="station-code-label">
-      <span class="input-group-addon" id="station-name-label">名称</span>
-      <input type="text" name="name" class="form-control" placeholder="名称"
-             aria-describedby="station-name-label">
-      <span class="input-group-addon" id="station-manager-label">负责人</span>
-      <input type="text" name="manager" class="form-control" placeholder="负责人"
-             aria-describedby="station-manager-label">
-    </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="station-address-label">地址</span>
-      <input type="text" name="address" class="form-control"
-             placeholder="办公地址" aria-describedby="station-address-label"/>
-    </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="station-comment-label">简介</span>
-      <input type="text" name="comment" class="form-control"
-             placeholder="简介" aria-describedby="station-comment-label"/>
-    </div>
-    <div class="input-group">
-      <span class="input-group-addon" id="station-memo-label">备注</span>
-      <input type="text" name="memo" class="form-control"
-             placeholder="备注" aria-describedby="station-memo-label"/>
-    </div>
-    {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
-    <div class="input-group hidden">
-      <span class="input-group-addon" id="station-id-label">Id</span>
-      <input type="text" name="overlap" class="form-control"
-             placeholder="空" aria-describedby="station-id-label">
-    </div>
-    <div class="col-sm-4 col-sm-offset-4">
-      <button type="submit" class="btn btn-primary btn-block">
-        提交新信息
-      </button>
-    </div>
-  </form>
+    <form class="add-station">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'code'}}">
+          <span class="input-group-addon" id="station-code-label">编号</span>
+          <input type="text" name="code" class="form-control" placeholder="编号"
+                 aria-describedby="station-code-label">
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'name'}}">
+          <span class="input-group-addon" id="station-name-label">名称</span>
+          <input type="text" name="name" class="form-control" placeholder="名称"
+                 aria-describedby="station-name-label">
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'manager'}}">
+          <span class="input-group-addon" id="station-manager-label">负责人</span>
+          <input type="text" name="manager" class="form-control"
+                 placeholder="负责人"
+                 aria-describedby="station-manager-label">
+        </div>
+      </div>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError 'address'}}">
+          <span class="input-group-addon" id="station-address-label">地址</span>
+          <input type="text" name="address" class="form-control"
+                 placeholder="办公地址" aria-describedby="station-address-label"/>
+        </div>
+      </div>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError 'comment'}}">
+          <span class="input-group-addon" id="station-comment-label">简介</span>
+          <input type="text" name="comment" class="form-control"
+                 placeholder="简介" aria-describedby="station-comment-label"/>
+        </div>
+      </div>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError 'memo'}}">
+          <span class="input-group-addon" id="station-memo-label">备注</span>
+          <input type="text" name="memo" class="form-control"
+                 placeholder="备注" aria-describedby="station-memo-label"/>
+        </div>
+      </div>
+      {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
+      <div class="input-group hidden">
+        <span class="input-group-addon" id="station-id-label">Id</span>
+        <input type="text" name="overlap" class="form-control"
+               placeholder="空" aria-describedby="station-id-label">
+      </div>
+      <div class="col-sm-4 col-sm-offset-4">
+        <button type="submit" class="btn btn-primary btn-block">
+          提交新信息
+        </button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <template name="stationItem">
