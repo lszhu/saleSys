@@ -174,9 +174,7 @@ Template.account.events({
     };
     var passwordAgain = $.trim(form.find('[name=password-again]').val());
     if (passwordAgain != account.password) {
-      //alert('两次输入的密码不一致');
       // 不提交，直接返回编辑界面
-      //return;
       return throwError('两次输入的密码不一致');
     }
 
@@ -194,6 +192,11 @@ Template.account.events({
     //console.log('account: ' + JSON.stringify(account));
     var overlap = form.find('[name=overlap]').val();
     //console.log('overlap is: ' + overlap);
+
+    // 如果需要更改当前登录用户自身的密码，则在此直接更改
+    if (account.password && Meteor.userId() == overlap) {
+      updateOwnPassword(account);
+    }
 
     var data = {account: account, overlap: overlap};
     var errors = validateAccount(data);
@@ -252,4 +255,19 @@ function fillForm(_id) {
   form.find('[name=stationId]').val(data.stationId);
   form.find('[name=grade]').val(data.grade);
   form.find('[name=comment]').val(data.comment);
+}
+
+function updateOwnPassword(account) {
+  var password = account.password;
+  if (!password) {
+    return;
+  }
+  var oldPassword = prompt("你要改变当前登录用户的密码，请提供当前密码");
+  Accounts.changePassword(oldPassword, password, function(err) {
+    if (err) {
+      alert('更改密码失败，稍后再试');
+    }
+  });
+  // 清除账号信息中的密码，以防服务器再次更改
+  account.password = '';
 }

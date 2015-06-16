@@ -41,7 +41,11 @@ Meteor.methods({
     }
     // 更新条目情况的处理
     if (account.password) {
-      Accounts.setPassword(data.overlap, account.password);
+      // 如果是当前用户则直接在客户端设置密码
+      // 这里只有不是当前用户才能再次设置密码
+      if (data.overlap != Meteor.userId()) {
+        Accounts.setPassword(data.overlap, account.password);
+      }
     }
     account = _.omit(account, 'password');
     // 如果要更改邮箱，需要特殊处理
