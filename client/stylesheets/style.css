@@ -267,7 +267,7 @@ h2.login {
     -moz-animation: fadeOut 2700ms ease-in 0s 1 forwards;
 }
 
-#add-customer{
+#add-customer {
     overflow: hidden;
 }
 
@@ -285,3 +285,7 @@ h2.login {
     height: 50%;
     transform: scale(1, 0);
 }*/
+
+#old-password .modal-body {
+    height: 200px;
+}

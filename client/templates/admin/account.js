@@ -57,6 +57,13 @@ Template.addAccount.helpers({
  }
  });
  */
+Template.oldPassword.events({
+  'click .confirm': function(e, t) {
+
+    var form = $('#add-account');
+    var password = $.trim(form.find('[name=password]').val());
+  }
+});
 
 Template.account.helpers({
   //showAddAccount: function () {
@@ -193,35 +200,13 @@ Template.account.events({
     var overlap = form.find('[name=overlap]').val();
     //console.log('overlap is: ' + overlap);
 
-    // 如果需要更改当前登录用户自身的密码，则在此直接更改
+    // 如果需要更改当前登录用户自身的密码，则需验证旧密码
     if (account.password && Meteor.userId() == overlap) {
-      updateOwnPassword(account);
+      $('#old-password').modal({backdrop: 'static'}).modal('show');
+    } else {
+      // 更新除密码外账号的其他信息
+      updateAccount({account: account, overlap: overlap});
     }
-
-    var data = {account: account, overlap: overlap};
-    var errors = validateAccount(data);
-    if (errors.err) {
-      //console.log('errors: ' + JSON.stringify(errors));
-      Session.set('accountSubmitErrors', errors);
-      throwError(getErrorMessage(errors));
-      return;
-    }
-
-    Meteor.call('accountInsert', data, function (err) {
-      if (err) {
-        return throwError(err.reason);
-      }
-
-      // 清除可能遗留的错误信息
-      Session.set('accountSubmitErrors', {});
-      var form = $('#add-account');
-      // 清除表单的内容
-      clearForm(form);
-      // 隐藏表单
-      form.slideUp('fast', function () {
-        form.addClass('hidden');
-      });
-    });
   }
 });
 
@@ -263,11 +248,37 @@ function updateOwnPassword(account) {
     return;
   }
   var oldPassword = prompt("你要改变当前登录用户的密码，请提供当前密码");
-  Accounts.changePassword(oldPassword, password, function(err) {
+  Accounts.changePassword(oldPassword, password, function (err) {
     if (err) {
       alert('更改密码失败，稍后再试');
     }
   });
   // 清除账号信息中的密码，以防服务器再次更改
   account.password = '';
+}
+
+function updateAccount(data) {
+  var errors = validateAccount(data);
+  if (errors.err) {
+    //console.log('errors: ' + JSON.stringify(errors));
+    Session.set('accountSubmitErrors', errors);
+    throwError(getErrorMessage(errors));
+    return;
+  }
+
+  Meteor.call('accountInsert', data, function (err) {
+    if (err) {
+      return throwError(err.reason);
+    }
+
+    // 清除可能遗留的错误信息
+    Session.set('accountSubmitErrors', {});
+    var form = $('#add-account');
+    // 清除表单的内容
+    clearForm(form);
+    // 隐藏表单
+    form.slideUp('fast', function () {
+      form.addClass('hidden');
+    });
+  });
 }
