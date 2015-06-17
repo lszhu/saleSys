@@ -58,10 +58,32 @@ Template.addAccount.helpers({
  });
  */
 Template.oldPassword.events({
-  'click .confirm': function(e, t) {
+  'click .confirm': function (e, t) {
+    e.preventDefault();
+    $('#old-password').modal('hide');
 
-    var form = $('#add-account');
-    var password = $.trim(form.find('[name=password]').val());
+    //updateOwnPassword();
+    var data = getAccountInfo();
+    if (!data) {
+      return;
+    }
+    var passwordDom = t.$('[name=oldPassword]');
+    var oldPassword = $.trim(passwordDom.val());
+    // 为了保密，随后清除输入的旧密码
+    passwordDom.val('');
+
+    var password = data.account.password;
+    data.account.password = '';
+    Accounts.changePassword(oldPassword, password, function (err) {
+      if (err) {
+        alert('更改密码失败，稍后再试');
+      }
+      var form = $('#add-account');
+      form.find('[name=password]').val('');
+      form.find('[name=password-again]').val('');
+    });
+    // 更新除密码外其它账号信息
+    updateAccount(data);
   }
 });
 
@@ -168,47 +190,55 @@ Template.account.events({
   'submit .add-account': function (e) {
     e.preventDefault();
 
-    var form = $(e.target);
-    var account = {
-      username: $.trim(form.find('[name=username]').val()),
-      nickname: $.trim(form.find('[name=nickname]').val()),
-      email: $.trim(form.find('[name=email]').val()),
-      password: $.trim(form.find('[name=password]').val()),
-      disabled: form.find('[name=disabled]').val(),
-      stationId: form.find('[name=stationId]').val(),
-      grade: parseFloat(form.find('[name=grade]').val()),
-      comment: form.find('[name=comment]').val()
-    };
-    var passwordAgain = $.trim(form.find('[name=password-again]').val());
-    if (passwordAgain != account.password) {
-      // 不提交，直接返回编辑界面
-      return throwError('两次输入的密码不一致');
+    var data = getAccountInfo();
+    if (!data) {
+      return;
     }
-
-    // 修复内容为未定义的属性（当以非管理员用户登录时）
-    if (account.disabled === undefined) {
-      account.disabled = '';
-    }
-    if (account.stationId === undefined) {
-      account.stationId = '';
-    }
-    if (account.grade === undefined) {
-      account.grade = '';
-    }
-
-    //console.log('account: ' + JSON.stringify(account));
-    var overlap = form.find('[name=overlap]').val();
-    //console.log('overlap is: ' + overlap);
-
     // 如果需要更改当前登录用户自身的密码，则需验证旧密码
-    if (account.password && Meteor.userId() == overlap) {
+    if (data.account.password && Meteor.userId() == data.overlap) {
       $('#old-password').modal({backdrop: 'static'}).modal('show');
     } else {
       // 更新除密码外账号的其他信息
-      updateAccount({account: account, overlap: overlap});
+      updateAccount(data);
     }
   }
 });
+
+function getAccountInfo() {
+  var form = $('#add-account');
+  var account = {
+    username: $.trim(form.find('[name=username]').val()),
+    nickname: $.trim(form.find('[name=nickname]').val()),
+    email: $.trim(form.find('[name=email]').val()),
+    password: $.trim(form.find('[name=password]').val()),
+    disabled: form.find('[name=disabled]').val(),
+    stationId: form.find('[name=stationId]').val(),
+    grade: parseFloat(form.find('[name=grade]').val()),
+    comment: form.find('[name=comment]').val()
+  };
+  var passwordAgain = $.trim(form.find('[name=password-again]').val());
+  if (passwordAgain != account.password) {
+    // 不提交，直接返回编辑界面
+    throwError('两次输入的密码不一致');
+    return;
+  }
+
+  // 修复内容为未定义的属性（当以非管理员用户登录时）
+  if (account.disabled === undefined) {
+    account.disabled = '';
+  }
+  if (account.stationId === undefined) {
+    account.stationId = '';
+  }
+  if (account.grade === undefined) {
+    account.grade = '';
+  }
+
+  //console.log('account: ' + JSON.stringify(account));
+  var overlap = form.find('[name=overlap]').val();
+  //console.log('overlap is: ' + overlap);
+  return {account: account, overlap: overlap};
+}
 
 function clearForm(target) {
   var form = $(target);
@@ -242,6 +272,7 @@ function fillForm(_id) {
   form.find('[name=comment]').val(data.comment);
 }
 
+// 本函数因为无法隐藏密码，已不使用
 function updateOwnPassword(account) {
   var password = account.password;
   if (!password) {
