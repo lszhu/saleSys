@@ -40,24 +40,16 @@ Template.addAccount.helpers({
   }
 });
 
-/*
- Template.account.onRendered(function () {
- this.find('#add-account')._uihooks = {
- insertElement: function (node, next) {
- $(node)
- .hide()
- .insertBefore(next)
- .slideDown();
- },
- removeElement: function (node) {
- $(node).slideUp(function () {
- $(this).remove();
- });
- }
- }
- });
- */
 Template.oldPassword.events({
+  'click .cancel': function(e, t) {
+    e.preventDefault();
+
+    // 为了保密，清除输入的新旧密码
+    t.$('[name=oldPassword]').val('');
+    var form = $('#add-account');
+    form.find('[name=password]').val('');
+    form.find('[name=password-again]').val('');
+  },
   'click .confirm': function (e, t) {
     e.preventDefault();
     $('#old-password').modal('hide');
