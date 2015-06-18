@@ -4,6 +4,10 @@ Template.addProduct.helpers({
   }
 });
 
+Template.product.onCreated(function() {
+  Session.set('productSubmitErrors', {});
+});
+
 Template.product.onRendered(function () {
   var key = this.data.filterKey;
   //console.log('key: ' + key);

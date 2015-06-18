@@ -33,8 +33,8 @@ Template.header.helpers({
       order: {
         name: '订单',
         operation: [
-          {name: '添加订单', template: 'createOrder'},
-          {name: '查询与变更', template: 'queryOrder'},
+          {name: '订单管理', template: 'orderManagement'},
+          //{name: '查询与变更', template: 'queryOrder'},
           {name: '订单处理', template: 'disposeOrder'}
         ]
       },
@@ -43,7 +43,7 @@ Template.header.helpers({
         operation: [
           {name: '库存汇总表', template: 'report'},
           {name: '不良品分析', template: 'report'},
-          {name: '出入库记录', template: 'report'},
+          {name: '进出货记录', template: 'report'},
           {name: '订单汇总表', template: 'report'},
           {name: '资金汇总表', template: 'report'},
           {name: '资金收支表', template: 'report'},

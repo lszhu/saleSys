@@ -11,6 +11,10 @@ Template.addEmployee.helpers({
   }
 });
 
+Template.employee.onCreated(function() {
+  Session.set('employeeSubmitErrors', {});
+});
+
 Template.employee.onRendered(function() {
   var key = this.data.filterKey;
   //console.log('key: ' + key);

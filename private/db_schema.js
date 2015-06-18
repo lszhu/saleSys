@@ -134,7 +134,7 @@ station = {
 
 // 订单处理流程每步存储格式
 disposal = {
-  // 本步流程操作员
+  // 本步流程操作员账号Id
   operator: String,
   // 流程类型。询价，发货，收货，退货，付款，收款，退款，维修，报废
   type: String,
@@ -142,7 +142,7 @@ disposal = {
   comment: String,
   // 涉及到的现金流Id，为集合capital文档条目的数据库内部ObjectId
   capitalId: String,
-  // 产品出入库记录Id，为集合delivery文档条目的数据库内部ObjectId
+  // 产品进出货记录Id，为集合delivery文档条目的数据库内部ObjectId
   deliveryId: String,
   // 本步流程涉及到的单据文件（如发票、收据、快递单等）的地址
   voucher: Array,
@@ -160,11 +160,12 @@ order = {
   // 订单所属销售分部
   stationId: String,
   // 订单类型，sale表示销售订单，purchase表示采购订单
+  // retail为零售销售订单（没有订单编号和固定客户Id）
   type: String,
   // 客户Id，对应为customer集合的文档条目的数据库内部的ObjectId
   customerId: String,
-  // 订单负责人账号Id
-  managerId: String,
+  // 订单创建订单者账号Id
+  creatorId: String,
   // 订单说明
   comment: String,
   // 所隶属的父/母订单Id，为本order集合文档条目的数据库内部ObjectId
@@ -194,18 +195,22 @@ stock = {
   timestamp: Date
 };
 
-// 产品出入库记录
+// 产品进出货记录
 // 凡是对仓库库存进行变更，都会产生本记录
 delivery = {
   // 对应分部仓库Id，对应为station集合的文档条目的数据库内部的ObjectId
   stationId: String,
-  // 出入库产品信息
+  // 进出货产品信息
   product: [
     {
-      // 对应产品Id，为product集合的文档条目的数据库内部的ObjectId
+      // 对应产品型号Id，为product集合的文档条目的数据库内部的ObjectId
       productId: String,
       // 产品数量
       amount: Number,
+      // 产品总销售/采购价
+      value: Number,
+      // 对应货币类型
+      currency: String,
       // 相应产品唯一序列号列表
       sn: Array
     }
@@ -216,7 +221,7 @@ delivery = {
   operatorId: String,
   // 对应订单Id, 对应为order集合的文档条目的数据库内部的ObjectId
   orderId: String,
-  // 出入库信息描述
+  // 进出货信息描述
   comment: String,
   // 操作时间
   timestamp: Date
@@ -358,7 +363,7 @@ permission = {
     //station: {c: Number, r: Number, u: Number, d: Number},
     // 产品型号维护权限
     product: {c: Number, r: Number, u: Number, d: Number},
-    // 出入库权限
+    // 进出货权限
     delivery: {c: Number, r: Number, u: Number, d: Number},
     // 费用管理权限
     expense: {

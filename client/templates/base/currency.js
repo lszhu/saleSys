@@ -4,6 +4,10 @@ Template.addCurrency.helpers({
   }
 });
 
+Template.currency.onCreated(function() {
+  Session.set('currencySubmitErrors', {});
+});
+
 Template.currency.onRendered(function() {
   var key = this.data.filterKey;
   //console.log('key: ' + key);

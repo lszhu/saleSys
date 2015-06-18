@@ -1,3 +1,28 @@
+// 发布订单信息
+Meteor.publish('orders', function (filterKey, options) {
+  check(filterKey, String);
+  check(options, Object);
+
+  var selector = {};
+  if (filterKey) {
+    var key = new RegExp(filterKey, 'i');
+    // 从销售分部collection中找到名称匹配关键字的销售分部对应_id
+    var station = Stations.find({name: key}).fetch();
+    //console.log('station: ' + JSON.stringify(station));
+    station = station.map(function (e) {
+      return e._id;
+    });
+    selector = {
+      $or: [
+        {code: key}, {name: key}, {sex: key}, {title: key}, {phone: key},
+        {email: key}, {'salary.value': parseFloat(filterKey)},
+        {'salary.currency': key}, {stationId: {$in: station}}, {memo: key}
+      ]
+    };
+  }
+  return Orders.find(selector, options);
+});
+
 // 发布账号信息
 Meteor.publish('accounts', function (filterKey, options) {
   check(filterKey, String);

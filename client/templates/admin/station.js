@@ -4,6 +4,10 @@ Template.addStation.helpers({
   }
 });
 
+Template.station.onCreated(function() {
+  Session.set('stationSubmitErrors', {});
+});
+
 Template.station.onRendered(function() {
   var key = this.data.filterKey;
   //console.log('key: ' + key);
