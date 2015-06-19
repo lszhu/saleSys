@@ -14,9 +14,8 @@ Meteor.publish('orders', function (filterKey, options) {
     });
     selector = {
       $or: [
-        {code: key}, {name: key}, {sex: key}, {title: key}, {phone: key},
-        {email: key}, {'salary.value': parseFloat(filterKey)},
-        {'salary.currency': key}, {stationId: {$in: station}}, {memo: key}
+        {code: key}, {name: key}, {type: key}, {phone: key},
+        {customerId: key}, {stationId: {$in: station}}, {memo: key}
       ]
     };
   }

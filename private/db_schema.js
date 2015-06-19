@@ -164,6 +164,9 @@ order = {
   type: String,
   // 客户Id，对应为customer集合的文档条目的数据库内部的ObjectId
   customerId: String,
+  // 客户联系电话，可能与客户信息中相关内容相同或不同
+  // 如操作员未填写，默认会从客户信息中获取
+  phone: String,
   // 订单创建订单者账号Id
   creatorId: String,
   // 订单说明

@@ -79,10 +79,8 @@ Template.orderManagement.events({
     Session.set('orderManagementSubmitErrors', {});
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
-    var form = $('#add-order');
     //console.log('_id: ' + _id);
-    // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
-    form.find('[name=overlap]').val(_id);
+    var form = $('#add-order');
     // 显示编辑框
     if (form.hasClass('hidden')) {
       form.removeClass('hidden');
@@ -111,16 +109,11 @@ Template.orderManagement.events({
     var order= {
       code: form.find('[name=code]').val(),
       name: form.find('[name=name]').val(),
-      sex: form.find('[name=sex]').val(),
-      title: form.find('[name=title]').val(),
+      type: form.find('[name=type]').val(),
+      customerId: form.find('[name=customerId]').val(),
       phone: form.find('[name=phone]').val(),
-      email: form.find('[name=email]').val(),
       stationId: form.find('[name=stationId]').val(),
-      salary: {
-        value: parseFloat(form.find('[name=salaryValue]').val()),
-        currency: form.find('[name=currency]').val()
-      },
-      memo: form.find('[name=memo]').val()
+      comment: form.find('[name=comment]').val()
     };
     //console.log('order: ' + JSON.stringify(order));
     var overlap = form.find('[name=overlap]').val();
@@ -153,14 +146,11 @@ function clearForm(target) {
   var form = $(target);
   form.find('[name=code]').val('');
   form.find('[name=name]').val('');
-  form.find('[name=sex]').val('');
-  form.find('[name=title]').val('');
+  form.find('[name=type]').val('');
+  form.find('[name=customerId]').val('');
   form.find('[name=phone]').val('');
-  form.find('[name=email]').val('');
   form.find('[name=stationId]').val(defaultStationId());
-  form.find('[name=salaryValue]').val('');
-  form.find('[name=currency]').val(defaultCurrency());
-  form.find('[name=memo]').val('');
+  form.find('[name=comment]').val('');
 // 清空隐藏文本框中保存的数据库条目Id，即清空覆盖标识
   form.find('[name=overlap]').val('');
 }
@@ -171,12 +161,11 @@ function fillForm(_id) {
   var form = $('#add-order');
   form.find('[name=code]').val(data.code);
   form.find('[name=name]').val(data.name);
-  form.find('[name=sex]').val(data.sex);
-  form.find('[name=title]').val(data.title);
+  form.find('[name=type]').val(data.type);
+  form.find('[name=customerId]').val(data.customerId);
   form.find('[name=phone]').val(data.phone);
-  form.find('[name=email]').val(data.email);
   form.find('[name=stationId]').val(data.stationId);
-  form.find('[name=salaryValue]').val(data.salary.value);
-  form.find('[name=currency]').val(data.salary.currency);
-  form.find('[name=memo]').val(data.memo);
+  form.find('[name=comment]').val(data.comment);
+  // 将id保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
+  form.find('[name=overlap]').val(_id);
 }
