@@ -6,6 +6,11 @@ Meteor.publish('orders', function (filterKey, options) {
   var selector = {};
   if (filterKey) {
     var key = new RegExp(filterKey, 'i');
+    // 从客户名单集合中找到名称匹配关键字的客户的_id
+    var customer = Customers.find({name: key}).fetch();
+    customer = customer.map(function(e) {
+      return e._id;
+    });
     // 从销售分部collection中找到名称匹配关键字的销售分部对应_id
     var station = Stations.find({name: key}).fetch();
     //console.log('station: ' + JSON.stringify(station));
@@ -14,8 +19,10 @@ Meteor.publish('orders', function (filterKey, options) {
     });
     selector = {
       $or: [
-        {code: key}, {name: key}, {type: key}, {phone: key},
-        {customerId: key}, {stationId: {$in: station}}, {memo: key}
+        {code: key}, {name: key}, {type: key},
+        {customerId: {$in: customer}}, {phone: key},
+        {stationId: {$in: station}}, {status: key},
+        {comment: key}
       ]
     };
   }

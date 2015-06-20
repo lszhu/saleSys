@@ -60,9 +60,9 @@
           <select name="type" class="form-control"
                   aria-describedby="order-type-label">
             <option></option>
-            <option>零售（零散客户)</option>
-            <option>销售（特定客户）</option>
-            <option>采购</option>
+            <option value="零售">零售（零散客户)</option>
+            <option value="销售">销售（特定客户）</option>
+            <option value="采购">采购</option>
           </select>
         </div>
       </div>
@@ -70,7 +70,7 @@
         {{> stationSelect localTitle = '部门' }}
       </div>
       <div class="col-xs-4 attach">
-        {{> stationSelect localTitle = '客户' }}
+        {{> customerSelect localTitle = '客户' }}
       </div>
       <div class="col-xs-4 attach">
         <div class="input-group {{ hasError 'phone'}}">
@@ -132,7 +132,7 @@
     <td>{{type}}</td>
     <td>{{customerName}}</td>
     <td>{{stationName}}</td>
-    <td>{{status}}</td>
+    <td class="{{statusColor}}">{{status}}</td>
     <td class="text-center">
       <a href="{{_id}}" class="update-order" title="处理订单">
         <i class="fa fa-share fa-lg"></i>

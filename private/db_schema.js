@@ -159,8 +159,8 @@ order = {
   name: String,
   // 订单所属销售分部
   stationId: String,
-  // 订单类型，sale表示销售订单，purchase表示采购订单
-  // retail为零售销售订单（没有订单编号和固定客户Id）
+  // 订单类型，分为：销售，采购和零售三种
+  // 零售销售订单（没有订单编号和固定客户Id）
   type: String,
   // 客户Id，对应为customer集合的文档条目的数据库内部的ObjectId
   customerId: String,
@@ -175,7 +175,7 @@ order = {
   parentId: String,
   // 订单流程步骤记录
   procedure: [disposal],
-  // 订单状态，ongoing进行，finished为完成，canceled为取消
+  // 订单状态，分为：进行，完成，取消三种情况
   status: String,
   // 订单创建时间
   timestamp: Date

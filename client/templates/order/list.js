@@ -1,4 +1,20 @@
 Template.orderListItem.helpers({
+  //statusName: function(status) {
+  //  var names = {
+  //    ongoing: '进行',
+  //    finished: '完成',
+  //    canceled: '终止'
+  //  };
+  //  return names[status] || '未知';
+  //},
+  statusColor: function() {
+    var colors = {
+      '进行': 'bg-primary',
+      '完成': 'bg-success',
+      '终止': 'bg-warning'
+    };
+    return colors[this.status] || 'bg-danger';
+  },
   customerName: function() {
     var customer = Customers.findOne(this.customerId);
     return customer && customer.name;
@@ -119,7 +135,7 @@ Template.orderManagement.events({
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
     var data = {order: order, overlap: overlap};
-    var errors = validateOrder(data);
+    var errors = validateNewOrder(data);
     if (errors.err) {
       Session.set('orderManagementSubmitErrors', errors);
       throwError(getErrorMessage(errors));

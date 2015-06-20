@@ -1,0 +1,15 @@
+<!-- 必须在使用本模板时设置localTitle变量 -->
+<template name="customerSelect">
+  <div class="input-group">
+    <span class="input-group-addon" id="includes-customer-label">
+      {{localTitle}}
+    </span>
+    <select name="customerId" class="form-control"
+            aria-describedby="includes-customer-label">
+      <option value=""></option>
+      {{#each customers}}
+        <option value="{{_id}}">{{name}}（{{code}}）</option>
+      {{/each}}
+    </select>
+  </div>
+</template>
