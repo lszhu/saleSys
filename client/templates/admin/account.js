@@ -256,7 +256,7 @@ function fillForm(_id) {
   //console.log('data: ' + JSON.stringify(data));
   var form = $('#add-account');
   form.find('[name=username]').val(data.username);
-  form.find('[name=nickname]').val(data.nickname);
+  form.find('[name=nickname]').val(data.profile.name);
   form.find('[name=email]').val(data.emails[0] && data.emails[0].address);
   form.find('[name=disabled]').val(data.disabled == '1' ? '1' : '0');
   form.find('[name=stationId]').val(data.stationId);

@@ -35,7 +35,13 @@ Meteor.methods({
     if (!data.overlap) {
       var userId = Accounts.createUser(account);
       //console.log('_id: ' + account.stationId);
-      account = _.omit(account, ['username', 'password', 'email']);
+      account.profile = {
+        name: account.nickname,
+        // 创建用户账号时，默认使用货币类型为人民币元（CNY）
+        currency: 'CNY',
+        stationId: account.stationId
+      };
+      account = _.omit(account, ['username', 'password', 'email', 'nickname']);
       Meteor.users.update(userId, {$set: account});
       return userId;
     }
@@ -53,9 +59,17 @@ Meteor.methods({
       account.emails = [{address: account.email}];
       account = _.omit(account, 'email');
     }
+    // 对用户昵称（或真实姓名）进行处理
+    Meteor.users.update(userId, {$set: {'profile.name': account.nickname}});
+    account = _.omit(account, 'nickname');
     // 如果是当前用户，不允许更改：'disabled', 'stationId', 'grade'
     if (Meteor.userId() == data.overlap) {
       account = _.omit(account, ['disabled', 'stationId', 'grade']);
+    }
+    // 对默认显示的所属部门Id进处理
+    if (account.stationId) {
+      Meteor.users.update(userId,
+          {$set: {'profile.stationId': account.stationId}});
     }
     Users.update(data.overlap, {$set: account});
   },

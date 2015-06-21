@@ -6,10 +6,10 @@
     </span>
     <select name="stationId" class="form-control"
             aria-describedby="includes-station-label">
+      <option value="">不隶属于任何部门</option>
       {{#each stations}}
         {{> stationSelectItem }}
       {{/each}}
-      <option value="">不隶属于任何部门</option>
     </select>
   </div>
 </template>

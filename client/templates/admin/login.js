@@ -1,20 +1,20 @@
 var error_key = 'signinError';
 
-Template.login.onCreated(function() {
+Template.login.onCreated(function () {
   Session.set(error_key, {});
 });
 
 Template.login.helpers({
-  errorMessage: function() {
+  errorMessage: function () {
     return _.values(Session.get(error_key));
   },
-  errorClass: function(key) {
+  errorClass: function (key) {
     return Session.get(error_key)[key] && 'error';
   }
 });
 
 Template.login.events({
-  'submit .login': function(e, t) {
+  'submit .login': function (e, t) {
     e.preventDefault();
 
     var username = t.$('[name=username]').val();
@@ -22,10 +22,10 @@ Template.login.events({
 
     var errors = {};
 
-    if (! username) {
+    if (!username) {
       errors.username = '必须输入用户名';
     }
-    if (! password) {
+    if (!password) {
       errors.password = '必须输入密码';
     }
 
@@ -34,11 +34,18 @@ Template.login.events({
       return;
     }
 
-    Meteor.loginWithPassword(username, password, function(err) {
+    Meteor.loginWithPassword(username, password, function (err) {
       if (err) {
         return Session.set(error_key, {none: '不正确的用户名或密码'});
       }
+      // 设置登录后的一些参数
+      setUserEnv();
       Router.go('/');
     });
   }
 });
+
+// 设置账号登陆后的默认环境参数
+function setUserEnv() {
+  console.log('设置用户使用环境...');
+}

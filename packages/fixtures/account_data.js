@@ -85,8 +85,13 @@ accountTestDataAdd = function () {
   for (var i = 0; i < data.length; i++) {
     userId = Accounts.createUser(data[i]);
     data[i].stationId = station[Math.floor(len * Math.random())]._id;
+    data[i].profile = {
+      name: data[i].nickname,
+      currency: 'CNY',
+      stationId: data[i].stationId
+    };
     //console.log('_id: ' + data[i].stationId);
-    data[i] = _.omit(data[i], ['username', 'password', 'email']);
+    data[i] = _.omit(data[i], ['username', 'password', 'email', 'nickname']);
     Meteor.users.update(userId, {$set: data[i]});
   }
 };

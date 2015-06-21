@@ -9,15 +9,20 @@ Template.registerHelper('pluralize', function(n, thing) {
 
 // 获取默认货币类型，如果为设置，则设置人民币元（CNY）
 defaultCurrency = function() {
-  return Session.get('defaultCurrency') || 'CNY';
+  //return Session.get('defaultCurrency') || 'CNY';
+  var user = Meteor.user();
+  return user && user.profile.currency;
 };
 
-// 获取默认管理区域，如果为设置，则选择选择系统中最早出现的区域
+// 获取默认管理区域（可能为空，比如管理员账号）
 defaultStationId = function() {
-  var stationId = Session.get('defaultStationId');
-  if (stationId) {
-    return stationId;
-  }
-  var item = Stations && Stations.findOne();
-  return item && item._id;
+  var user = Meteor.user();
+  return user && user.profile.stationId;
+  //return Session.get('defaultStationId') || '';
+  //var stationId = Session.get('defaultStationId');
+  //if (stationId) {
+  //  return stationId;
+  //}
+  //var item = Stations && Stations.findOne();
+  //return item && item._id;
 };

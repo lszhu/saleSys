@@ -167,6 +167,8 @@ order = {
   // 客户联系电话，可能与客户信息中相关内容相同或不同
   // 如操作员未填写，默认会从客户信息中获取
   phone: String,
+  // 客户收货地址
+  address: String,
   // 订单创建订单者账号Id
   creatorId: String,
   // 订单说明
@@ -316,12 +318,18 @@ exchange = {
 users = {
   // 账号名称
   username: String,
-  // 用户真实姓名或昵称
-  nickname: String,
   // 登录密码
   password: String,
   // 联络或找回密码的邮箱，这里与系统内定格式一致
   emails: [{address: String, verified: Boolean}],
+  profile: {
+    // 用户真实姓名或昵称
+    nickname: String,
+    // 默认使用的货币类型
+    currency: String,
+    // 默认显示的部门Id（用于创建雇员等信息时自动选择部门）
+    stationId: String
+  }
   // 用户级别，分0-3共4级
   // 3为超级用户包所有权限，同时将忽略后面的stationId和privilege等设置
   // 2为特权用户，拥有除创建登录账号，不能创建销售分部和系统设置外的所有权限
