@@ -1,0 +1,193 @@
+<template name="orderDisposal">
+  <div>
+    <h2>订单处理详情</h2>
+    {{> editOrder }}
+    {{!--
+    <div class="attach-child">
+      <div class="col-xs-5">
+        订单编号：<span class="underline">&nbsp;&nbsp;</span>
+      </div>
+      <div class="col-xs-4">
+        订单类型：<span class="underline">&nbsp;销售&nbsp;</span>
+      </div>
+      <div class="col-xs-3">
+        订单状态：<span class="underline">&nbsp;进行&nbsp;</span>
+      </div>
+      <div class="col-xs-5">
+        交货地址：<span class="underline">&nbsp;北京市西城区复兴路10号&nbsp;</span>
+      </div>
+      <div class="col-xs-4">
+        客户名称：<span class="underline">&nbsp;刘振兴&nbsp;</span>
+      </div>
+      <div class="col-xs-3">
+        客户电话：<span class="underline">&nbsp;13912342345&nbsp;</span>
+      </div>
+      <div class="col-xs-5">
+        交付日期：<span class="underline">&nbsp;2015年10月20日&nbsp;</span>
+      </div>
+      <div class="col-xs-4">
+        执行部门：<span class="underline">&nbsp;中关村店&nbsp;</span>
+      </div>
+      <div class="col-xs-3">
+        跟单经理：<span class="underline">&nbsp;李四&nbsp;</span>
+      </div>
+      <div class="col-xs-12">
+        订单描述：<span class="underline">&nbsp;客户要求特殊包装，费用已计入报价&nbsp;</span>
+      </div>
+    </div>
+    --}}
+    <div>
+      <div class="col-xs-12 attach">
+        <div class="input-group">
+          <span class="input-group-addon" id="order-code-label">2015-08-22</span>
+          <input type="text" name="code" class="form-control" placeholder="处理内容概述"
+                 aria-describedby="order-code-label">
+          <span class="input-group-addon btn btn-primary">详情</span>
+        </div>
+      </div>
+      <div class="col-xs-12 attach">
+        <div class="input-group">
+          <span class="input-group-addon" id="order-code-label">2015-08-28</span>
+          <input type="text" name="code" class="form-control" placeholder="处理内容概述"
+                 aria-describedby="order-code-label">
+          <span class="input-group-addon btn btn-primary">详情</span>
+        </div>
+      </div>
+      <div class="col-xs-12 attach">
+        <div class="input-group">
+          <span class="input-group-addon" id="order-code-label">2015-08-31</span>
+          <input type="text" name="code" class="form-control" placeholder="处理内容概述"
+                 aria-describedby="order-code-label">
+          <span class="input-group-addon btn btn-primary">详情</span>
+        </div>
+      </div>
+    </div>
+    <div id="add-order" class="hidden">
+      <div>
+        {{> addOrderDisposal }}
+      </div>
+      <div class="col-sm-12"><br></div>
+    </div>
+
+  </div>
+</template>
+
+<template name="editOrder">
+  <div>
+    <form class="add-order">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'code'}}">
+          <span class="input-group-addon" id="order-code-label">编号</span>
+          <input type="text" name="code" class="form-control" placeholder="订单编号"
+                 aria-describedby="order-code-label">
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'type'}}">
+          <span class="input-group-addon" id="order-type-label">类型</span>
+          <select name="type" class="form-control"
+                  aria-describedby="order-type-label">
+            <option></option>
+            <option value="零售">零售（零散客户)</option>
+            <option value="销售">销售（特定客户）</option>
+            <option value="采购">采购</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'status'}}">
+          <span class="input-group-addon" id="order-status-label">状态</span>
+          <select name="status" class="form-control"
+                  aria-describedby="order-status-label">
+            <option>进行</option>
+            <option>完成</option>
+            <option>终止</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        {{> customerSelect localTitle = '客户' }}
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'phone'}}">
+          <span class="input-group-addon" id="order-phone-label">电话</span>
+          <input type="text" name="phone" class="form-control"
+                 placeholder="客户电话" aria-describedby="order-address-label"/>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'address'}}">
+          <span class="input-group-addon" id="order-address-label">地址</span>
+          <input type="text" name="address" class="form-control"
+                 placeholder="交货地址" aria-describedby="order-address-label"/>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'deadline'}}">
+          <span class="input-group-addon" id="order-deadline-label">期限</span>
+          <input type="text" name="deadline" class="form-control"
+                 placeholder="交货截止日期" aria-describedby="order-deadline-label"/>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        {{> stationSelect localTitle = '部门' }}
+      </div>
+      <div class="col-xs-4 attach">
+        {{> stationSelect localTitle = '主管' }}
+      </div>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError 'comment'}}">
+          <span class="input-group-addon" id="order-comment-label">描述</span>
+          <input type="text" name="comment" class="form-control"
+                 placeholder="订单描述" aria-describedby="order-comment-label"/>
+        </div>
+      </div>
+      {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
+      <div class="input-group hidden">
+        <span class="input-group-addon" id="order-id-label">Id</span>
+        <input type="text" name="overlap" class="form-control"
+               placeholder="空" aria-describedby="order-id-label">
+      </div>
+      <div class="col-xs-12"></div>
+    </form>
+  </div>
+</template>
+
+<template name="addOrderDisposal">
+  <table class="table table-striped table-bordered min60">
+    <thead>
+    <tr>
+      <th>编号</th>
+      <th>类型</th>
+      <th>客户／供应商</th>
+      <!--<th>创建者</th>-->
+      <th>所属部门</th>
+      <th>描述</th>
+      <!--<th>说明</th>-->
+      <th class="width60">状态</th>
+      <th class="info text-center width60">管理</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each orders }}
+      {{> orderDisposalListItem }}
+    {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="orderDisposalListItem">
+  <tr>
+    <td>{{code}}</td>
+    <td>{{type}}</td>
+    <td>{{customerName}}</td>
+    <td>{{stationName}}</td>
+    <td>{{comment}}</td>
+    <td class="{{statusColor}}">{{status}}</td>
+    <td class="text-center">
+      <a href="{{_id}}" class="disposal-order" title="处理订单">
+        <i class="fa fa-share fa-lg"></i>
+      </a>
+    </td>
+  </tr>
+</template>

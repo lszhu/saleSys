@@ -155,8 +155,6 @@ disposal = {
 order = {
   // 订单编号
   code: String,
-  // 订单名称
-  name: String,
   // 订单所属销售分部
   stationId: String,
   // 订单类型，分为：销售，采购和零售三种
@@ -169,8 +167,8 @@ order = {
   phone: String,
   // 客户收货地址
   address: String,
-  // 订单创建订单者账号Id
-  creatorId: String,
+  // 订单管理者Id，初始为订单创建者账号Id
+  managerId: String,
   // 订单说明
   comment: String,
   // 所隶属的父/母订单Id，为本order集合文档条目的数据库内部ObjectId
@@ -324,7 +322,7 @@ users = {
   emails: [{address: String, verified: Boolean}],
   profile: {
     // 用户真实姓名或昵称
-    nickname: String,
+    name: String,
     // 默认使用的货币类型
     currency: String,
     // 默认显示的部门Id（用于创建雇员等信息时自动选择部门）

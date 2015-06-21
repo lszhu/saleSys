@@ -246,6 +246,11 @@ table.min60 th {
     margin: 0;
 }
 
+.attach-child div {
+    padding: 2px;
+    margin: 2px 0;
+}
+
 table td {
     word-break: break-all;
     word-wrap: break-word;
@@ -288,4 +293,8 @@ h2.login {
 
 #old-password .modal-body {
     height: 150px;
+}
+
+.underline {
+    border-bottom: 1px solid gray;
 }

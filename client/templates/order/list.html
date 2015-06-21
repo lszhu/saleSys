@@ -48,13 +48,6 @@
         </div>
       </div>
       <div class="col-xs-4 attach">
-        <div class="input-group {{ hasError 'name'}}">
-          <span class="input-group-addon" id="order-name-label">名称</span>
-          <input type="text" name="name" class="form-control"
-                 placeholder="订单名称" aria-describedby="order-name-label"/>
-        </div>
-      </div>
-      <div class="col-xs-4 attach">
         <div class="input-group {{ hasError 'type'}}">
           <span class="input-group-addon" id="order-type-label">类型</span>
           <select name="type" class="form-control"
@@ -77,6 +70,13 @@
           <span class="input-group-addon" id="order-phone-label">电话</span>
           <input type="text" name="phone" class="form-control"
                  placeholder="客户电话" aria-describedby="order-address-label"/>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'address'}}">
+          <span class="input-group-addon" id="order-address-label">地址</span>
+          <input type="text" name="address" class="form-control"
+                 placeholder="交货地址" aria-describedby="order-address-label"/>
         </div>
       </div>
       <div class="col-xs-12 attach">
@@ -107,11 +107,11 @@
     <thead>
     <tr>
       <th>编号</th>
-      <th>名称</th>
       <th>类型</th>
-      <th>客户</th>
+      <th>客户／供应商</th>
       <!--<th>创建者</th>-->
       <th>所属部门</th>
+      <th>描述</th>
       <!--<th>说明</th>-->
       <th class="width60">状态</th>
       <th class="info text-center width60">管理</th>
@@ -128,13 +128,13 @@
 <template name="orderListItem">
   <tr>
     <td>{{code}}</td>
-    <td>{{name}}</td>
     <td>{{type}}</td>
     <td>{{customerName}}</td>
     <td>{{stationName}}</td>
+    <td>{{comment}}</td>
     <td class="{{statusColor}}">{{status}}</td>
     <td class="text-center">
-      <a href="{{_id}}" class="update-order" title="处理订单">
+      <a href="/order/{{_id}}" class="disposal-order" title="处理订单">
         <i class="fa fa-share fa-lg"></i>
       </a>
     </td>

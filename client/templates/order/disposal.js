@@ -1,12 +1,4 @@
-Template.orderListItem.helpers({
-  //statusName: function(status) {
-  //  var names = {
-  //    ongoing: '进行',
-  //    finished: '完成',
-  //    canceled: '终止'
-  //  };
-  //  return names[status] || '未知';
-  //},
+Template.orderDisposalListItem.helpers({
   statusColor: function() {
     var colors = {
       '进行': 'bg-primary',
@@ -25,18 +17,18 @@ Template.orderListItem.helpers({
   }
 });
 
-Template.addOrder.helpers({
+Template.editOrder.helpers({
   hasError: function (field) {
     return !!Session.get('orderManagementSubmitErrors')[field] ?
         'has-error' : '';
   }
 });
 
-Template.orderManagement.onCreated(function() {
+Template.addOrderDisposal.onCreated(function() {
   Session.set('orderManagementSubmitErrors', {});
 });
 
-Template.orderManagement.onRendered(function () {
+Template.addOrderDisposal.onRendered(function () {
   var key = this.data.filterKey;
   //console.log('key: ' + key);
   this.$('.order-keyword').val(key);
@@ -44,15 +36,13 @@ Template.orderManagement.onRendered(function () {
   target.hide();
 });
 
-Template.orderManagement.events({
+Template.addOrderDisposal.events({
   'keypress .order-keyword': function (e) {
     // 绑定回车键
     if (e.keyCode == '13') {
       e.preventDefault();
       var keyword = $('.order-keyword').val();
       keyword = keyword ? '?keyword=' + keyword : '';
-      //console.log('keyword: ' + keyword);
-      //alert('contents: ' + $('.order-keyword').val());
       Router.go(location.pathname + keyword);
     }
   },
@@ -84,7 +74,6 @@ Template.orderManagement.events({
       }
     }
   },
-
 
   'click .update-order': function (e) {
     e.preventDefault();
