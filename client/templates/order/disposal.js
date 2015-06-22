@@ -1,4 +1,4 @@
-Template.orderDisposalListItem.helpers({
+Template.orderDisposalItem.helpers({
   statusColor: function() {
     var colors = {
       '进行': 'bg-primary',
@@ -18,6 +18,13 @@ Template.orderDisposalListItem.helpers({
 });
 
 Template.editOrder.helpers({
+  hasError: function (field) {
+    return !!Session.get('orderManagementSubmitErrors')[field] ?
+        'has-error' : '';
+  }
+});
+
+Template.addOrderDisposal.helpers({
   hasError: function (field) {
     return !!Session.get('orderManagementSubmitErrors')[field] ?
         'has-error' : '';

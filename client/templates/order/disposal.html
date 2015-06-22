@@ -1,6 +1,13 @@
 <template name="orderDisposal">
-  <div>
-    <h2>订单处理详情</h2>
+  <div class="order-disposal">
+    <h2>订单处理详情
+      <div class="tools" style="float: right;">
+        <i title="添加处理记录" class="btn fa fa-comments-o"></i>
+        <i title="保存处理结果" class="btn fa fa-check"></i>
+        <i title="删除当前订单" class="btn fa fa-trash remove"></i>
+      </div>
+    </h2>
+
     {{> editOrder }}
     {{!--
     <div class="attach-child">
@@ -39,30 +46,42 @@
     <div>
       <div class="col-xs-12 attach">
         <div class="input-group">
-          <span class="input-group-addon" id="order-code-label">2015-08-22</span>
-          <input type="text" name="code" class="form-control" placeholder="处理内容概述"
+          <span class="input-group-addon"
+                id="order-code-label">2015-08-22</span>
+          <input type="text" name="code" class="form-control"
+                 placeholder="处理内容概述"
                  aria-describedby="order-code-label">
-          <span class="input-group-addon btn btn-primary">详情</span>
+          <span class="input-group-addon btn btn-primary" title="详情">
+            <i class="fa fa-caret-down"></i>
+          </span>
         </div>
       </div>
       <div class="col-xs-12 attach">
         <div class="input-group">
-          <span class="input-group-addon" id="order-code-label">2015-08-28</span>
-          <input type="text" name="code" class="form-control" placeholder="处理内容概述"
+          <span class="input-group-addon"
+                id="order-code-label">2015-08-28</span>
+          <input type="text" name="code" class="form-control"
+                 placeholder="处理内容概述"
                  aria-describedby="order-code-label">
-          <span class="input-group-addon btn btn-primary">详情</span>
+          <span class="input-group-addon btn btn-primary" title="详情">
+            <i class="fa fa-caret-up"></i>
+          </span>
         </div>
       </div>
       <div class="col-xs-12 attach">
         <div class="input-group">
-          <span class="input-group-addon" id="order-code-label">2015-08-31</span>
-          <input type="text" name="code" class="form-control" placeholder="处理内容概述"
+          <span class="input-group-addon"
+                id="order-code-label">2015-08-31</span>
+          <input type="text" name="code" class="form-control"
+                 placeholder="处理内容概述"
                  aria-describedby="order-code-label">
-          <span class="input-group-addon btn btn-primary">详情</span>
+          <span class="input-group-addon btn btn-primary" title="详情">
+            <i class="fa fa-caret-down"></i>
+          </span>
         </div>
       </div>
     </div>
-    <div id="add-order" class="hidden">
+    <div id="add-order-disposal" class="not-hidden">
       <div>
         {{> addOrderDisposal }}
       </div>
@@ -106,20 +125,20 @@
         </div>
       </div>
       <div class="col-xs-4 attach">
-        {{> customerSelect localTitle = '客户' }}
+        <div class="input-group {{ hasError 'address'}}">
+          <span class="input-group-addon" id="order-address-label">地址</span>
+          <input type="text" name="address" class="form-control"
+                 placeholder="交货地址" aria-describedby="order-address-label"/>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        {{> customerCombo localTitle = '客户' }}
       </div>
       <div class="col-xs-4 attach">
         <div class="input-group {{ hasError 'phone'}}">
           <span class="input-group-addon" id="order-phone-label">电话</span>
           <input type="text" name="phone" class="form-control"
                  placeholder="客户电话" aria-describedby="order-address-label"/>
-        </div>
-      </div>
-      <div class="col-xs-4 attach">
-        <div class="input-group {{ hasError 'address'}}">
-          <span class="input-group-addon" id="order-address-label">地址</span>
-          <input type="text" name="address" class="form-control"
-                 placeholder="交货地址" aria-describedby="order-address-label"/>
         </div>
       </div>
       <div class="col-xs-4 attach">
@@ -154,40 +173,36 @@
 </template>
 
 <template name="addOrderDisposal">
-  <table class="table table-striped table-bordered min60">
-    <thead>
-    <tr>
-      <th>编号</th>
-      <th>类型</th>
-      <th>客户／供应商</th>
-      <!--<th>创建者</th>-->
-      <th>所属部门</th>
-      <th>描述</th>
-      <!--<th>说明</th>-->
-      <th class="width60">状态</th>
-      <th class="info text-center width60">管理</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each orders }}
-      {{> orderDisposalListItem }}
-    {{/each}}
-    </tbody>
-  </table>
+  <div class="col-xs-4 attach">
+    <div class="input-group {{ hasError 'type'}}">
+      <span class="input-group-addon" id="disposal-type-label">类型</span>
+      <select name="type" class="form-control"
+              aria-describedby="disposal-type-label">
+        <option></option>
+        <option>询价</option>
+        <option>收货</option>
+        <option>发货</option>
+        <option>退货</option>
+        <option>付款</option>
+        <option>收款</option>
+        <option>退款</option>
+        <option>维修</option>
+        <option>报废</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-xs-4 attach">
+    {{> voucherCombo localTitle = '单据'}}
+  </div>
+  <div class="col-xs-12 attach">
+    <div class="input-group {{ hasError 'comment'}}">
+      <span class="input-group-addon" id="disposal-comment-label">说明</span>
+      <input type="text" name="comment" class="form-control"
+             placeholder="处理说明" aria-describedby="disposal-address-label"/>
+    </div>
+  </div>
 </template>
 
-<template name="orderDisposalListItem">
-  <tr>
-    <td>{{code}}</td>
-    <td>{{type}}</td>
-    <td>{{customerName}}</td>
-    <td>{{stationName}}</td>
-    <td>{{comment}}</td>
-    <td class="{{statusColor}}">{{status}}</td>
-    <td class="text-center">
-      <a href="{{_id}}" class="disposal-order" title="处理订单">
-        <i class="fa fa-share fa-lg"></i>
-      </a>
-    </td>
-  </tr>
+<template name="orderDisposalItem">
+
 </template>

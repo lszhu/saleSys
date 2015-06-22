@@ -1,4 +1,4 @@
-<!-- 必须在使用本模板时设置localTitle变量 -->
+<!-- 必须在使用本模板时设置localTitle及customers变量 -->
 <template name="customerSelect">
   <div class="input-group">
     <span class="input-group-addon" id="includes-customer-label">
@@ -13,3 +13,31 @@
     </select>
   </div>
 </template>
+
+<!-- 必须在使用本模板时设置localTitle及customers变量 -->
+<template name="customerCombo">
+  <div class="customer-combo">
+    <div class="input-group dropdown" role="presentation">
+        <span class="input-group-addon" id="includes-customer-combo">
+          {{localTitle}}
+        </span>
+      <input type="text" class="form-control" placeholder="客户名称"
+             aria-describedby="includes-customer-combo">
+
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle"
+                data-toggle="dropdown" aria-expanded="false">
+          <span class="caret" title="选择固定客户"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+          {{#each customers}}
+            <li><a href="{{_id}}">{{name}}（{{code}}）</a></li>
+          {{/each}}
+        </ul>
+      </div>
+      <!-- /btn-group -->
+
+    </div>
+  </div>
+</template>
+

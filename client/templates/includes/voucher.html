@@ -1,0 +1,33 @@
+<!-- 必须在使用本模板时设置localTitle及customers变量 -->
+<template name="voucherCombo">
+  <div class="voucher-combo">
+    <div class="input-group" role="presentation">
+
+    <span class="input-group-addon" id="includes-voucher-label">
+      {{localTitle}}
+    </span>
+      <span class="form-control dropdown-toggle text-center"
+            data-toggle="dropdown" aria-expanded="false"
+            aria-describedby="includes-voucher-combo">
+        单据列表 <i class="fa fa-caret-down"></i>
+      </span>
+      <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        {{#each customers}}
+          <li>
+            <div class="col-xs-9">
+            <a href="{{_id}}">{{name}}（{{code}}）
+            </a>
+              </div>
+            <div class="col-xs-2">
+              <i class="fa fa-times"></i>
+            </div>
+          </li>
+        {{/each}}
+      </ul>
+      <span class="input-group-addon btn btn-default tools" title="附加单据">
+        <i class="fa fa-plus"></i>
+      </span>
+
+    </div>
+  </div>
+</template>

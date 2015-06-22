@@ -169,6 +169,8 @@ order = {
   address: String,
   // 订单管理者Id，初始为订单创建者账号Id
   managerId: String,
+  // 订单交付截止日期
+  deadline: Date,
   // 订单说明
   comment: String,
   // 所隶属的父/母订单Id，为本order集合文档条目的数据库内部ObjectId
