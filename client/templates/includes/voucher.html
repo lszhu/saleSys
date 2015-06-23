@@ -2,24 +2,21 @@
 <template name="voucherCombo">
   <div class="voucher-combo">
     <div class="input-group" role="presentation">
-
-    <span class="input-group-addon" id="includes-voucher-label">
-      {{localTitle}}
-    </span>
-      <span class="form-control dropdown-toggle text-center"
-            data-toggle="dropdown" aria-expanded="false"
-            aria-describedby="includes-voucher-combo">
+      <span class="input-group-addon">
+       {{localTitle}}
+      </span>
+      <span type="button" class="form-control dropdown-toggle text-center"
+            data-toggle="dropdown" aria-expanded="false">
         单据列表 <i class="fa fa-caret-down"></i>
       </span>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
         {{#each customers}}
           <li>
-            <div class="col-xs-9">
-            <a href="{{_id}}">{{name}}（{{code}}）
+            <a style="display: inline-block" href="{{_id}}">
+              {{name}}（{{code}}）
             </a>
-              </div>
-            <div class="col-xs-2">
-              <i class="fa fa-times"></i>
+            <div class="voucher-item" title="删除">
+              <i class="fa fa-trash-o"></i>
             </div>
           </li>
         {{/each}}
@@ -27,7 +24,6 @@
       <span class="input-group-addon btn btn-default tools" title="附加单据">
         <i class="fa fa-plus"></i>
       </span>
-
     </div>
   </div>
 </template>

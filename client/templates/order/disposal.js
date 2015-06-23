@@ -17,16 +17,24 @@ Template.orderDisposalItem.helpers({
   }
 });
 
+Template.editOrder.onCreated(function() {
+  Session.set('editOrderSubmitErrors', {});
+});
+
 Template.editOrder.helpers({
   hasError: function (field) {
-    return !!Session.get('orderManagementSubmitErrors')[field] ?
+    return !!Session.get('editOrderSubmitErrors')[field] ?
         'has-error' : '';
   }
 });
 
+Template.editOrder.onCreated(function() {
+  Session.set('addOrderDisposalSubmitErrors', {});
+});
+
 Template.addOrderDisposal.helpers({
   hasError: function (field) {
-    return !!Session.get('orderManagementSubmitErrors')[field] ?
+    return !!Session.get('addOrderDisposalSubmitErrors')[field] ?
         'has-error' : '';
   }
 });

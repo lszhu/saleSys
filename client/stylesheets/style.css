@@ -312,9 +312,51 @@ h2.login {
 .order-disposal .tools {
     color: steelblue;
 }
-.order-disposal .tools :hover, button.tools:hover{
+.order-disposal .tools i:hover, span.tools:hover{
     color: limegreen;
 }
 .order-disposal .tools .remove:hover {
     color: red;
+}
+
+.add-order-disposal .tools {
+    margin: 3px auto;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.voucher-item {
+    text-align: center;
+    cursor: pointer;
+    float: right;
+    width: 20px;
+    margin: 3px 8px 3px 0;
+    color: steelblue;
+}
+
+.voucher-item:hover {
+    color: red;
+}
+
+.voucher-combo .dropdown-toggle {
+    cursor: pointer;
+}
+
+fieldset {
+    margin-top: 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding-bottom: 15px;
+}
+fieldset legend {
+    /*display: none;*/
+    margin-bottom: 2px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: midnightblue;
+    width: 100px;
+    border: none;
 }

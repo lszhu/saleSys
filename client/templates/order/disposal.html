@@ -1,12 +1,15 @@
 <template name="orderDisposal">
   <div class="order-disposal">
-    <h2>订单处理详情
-      <div class="tools" style="float: right;">
-        <i title="添加处理记录" class="btn fa fa-comments-o"></i>
-        <i title="保存处理结果" class="btn fa fa-check"></i>
-        <i title="删除当前订单" class="btn fa fa-trash remove"></i>
+    <div class="col-xs-6"><h2>订单处理详情 </h2></div>
+    <div class="col-xs-6 tools">
+      <div class="text-right">
+        <h2>
+          <i title="添加处理记录" class="btn fa fa-comments-o"></i>
+          <i title="保存处理结果" class="btn fa fa-check"></i>
+          <i title="删除当前订单" class="btn fa fa-trash-o remove"></i>
+        </h2>
       </div>
-    </h2>
+    </div>
 
     {{> editOrder }}
     {{!--
@@ -46,8 +49,9 @@
     <div>
       <div class="col-xs-12 attach">
         <div class="input-group">
-          <span class="input-group-addon"
+          <span class="input-group-addon" title="18:23:22"
                 id="order-code-label">2015-08-22</span>
+          <span class="input-group-addon" title="18:23:22">备货</span>
           <input type="text" name="code" class="form-control"
                  placeholder="处理内容概述"
                  aria-describedby="order-code-label">
@@ -58,8 +62,9 @@
       </div>
       <div class="col-xs-12 attach">
         <div class="input-group">
-          <span class="input-group-addon"
+          <span class="input-group-addon" title="11:10:35"
                 id="order-code-label">2015-08-28</span>
+          <span class="input-group-addon" title="18:23:22">发货</span>
           <input type="text" name="code" class="form-control"
                  placeholder="处理内容概述"
                  aria-describedby="order-code-label">
@@ -70,8 +75,9 @@
       </div>
       <div class="col-xs-12 attach">
         <div class="input-group">
-          <span class="input-group-addon"
+          <span class="input-group-addon" title="14:24:48"
                 id="order-code-label">2015-08-31</span>
+          <span class="input-group-addon" title="18:23:22">收款</span>
           <input type="text" name="code" class="form-control"
                  placeholder="处理内容概述"
                  aria-describedby="order-code-label">
@@ -125,14 +131,14 @@
         </div>
       </div>
       <div class="col-xs-4 attach">
+        {{> customerCombo localTitle = '客户' }}
+      </div>
+      <div class="col-xs-4 attach">
         <div class="input-group {{ hasError 'address'}}">
           <span class="input-group-addon" id="order-address-label">地址</span>
           <input type="text" name="address" class="form-control"
                  placeholder="交货地址" aria-describedby="order-address-label"/>
         </div>
-      </div>
-      <div class="col-xs-4 attach">
-        {{> customerCombo localTitle = '客户' }}
       </div>
       <div class="col-xs-4 attach">
         <div class="input-group {{ hasError 'phone'}}">
@@ -173,33 +179,76 @@
 </template>
 
 <template name="addOrderDisposal">
-  <div class="col-xs-4 attach">
-    <div class="input-group {{ hasError 'type'}}">
-      <span class="input-group-addon" id="disposal-type-label">类型</span>
-      <select name="type" class="form-control"
-              aria-describedby="disposal-type-label">
-        <option></option>
-        <option>询价</option>
-        <option>收货</option>
-        <option>发货</option>
-        <option>退货</option>
-        <option>付款</option>
-        <option>收款</option>
-        <option>退款</option>
-        <option>维修</option>
-        <option>报废</option>
-      </select>
-    </div>
-  </div>
-  <div class="col-xs-4 attach">
-    {{> voucherCombo localTitle = '单据'}}
-  </div>
-  <div class="col-xs-12 attach">
-    <div class="input-group {{ hasError 'comment'}}">
-      <span class="input-group-addon" id="disposal-comment-label">说明</span>
-      <input type="text" name="comment" class="form-control"
-             placeholder="处理说明" aria-describedby="disposal-address-label"/>
-    </div>
+  <div class="add-order-disposal">
+    <fieldset class="col-xs-12">
+      <legend>订单处理</legend>
+      <div class="col-xs-4 attach">
+        <div class="input-group">
+          <span class="input-group-addon"
+                id="disposal-timestamp-label">日期</span>
+          <input type="text" name="timestamp" class="form-control"
+                 aria-describedby="disposal-address-label"/>
+        </div>
+      </div>
+      <div class="col-xs-8 attach">
+        <div class="tools text-right">
+          <!--<i title="添加处理记录" class="btn fa fa-lg fa-comments-o"></i>-->
+          <i title="保存处理结果" class="btn fa fa-lg fa-check"></i>
+          <i title="删除当前处理" class="btn fa fa-lg fa-trash-o remove"></i>
+        </div>
+      </div>
+      {{! 用于排版时保证一行对齐 -}}
+      <div class="col-xs-12"></div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'type'}}">
+          <span class="input-group-addon" id="disposal-type-label">类型</span>
+          <select name="type" class="form-control"
+                  aria-describedby="disposal-type-label">
+            <option></option>
+            <option>备货</option>
+            <option>收货</option>
+            <option>发货</option>
+            <option>退货</option>
+            <option>付款</option>
+            <option>收款</option>
+            <option>退款</option>
+            <option>维修</option>
+            <option>报废</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        {{> stationSelect localTitle = '主管' }}
+      </div>
+      <div class="col-xs-4 attach">
+        {{> voucherCombo localTitle = '单据'}}
+      </div>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError 'comment'}}">
+          <span class="input-group-addon" id="disposal-comment-label">说明</span>
+          <input type="text" name="comment" class="form-control"
+                 placeholder="处理说明" aria-describedby="disposal-address-label"/>
+        </div>
+      </div>
+      <div class="col-xs-12">
+        <div class="col-xs-4 attach">
+          <div class="input-group">
+          <span class="input-group-addon">收发货记录Id</span>
+            <input type="text" name="deliveryId" class="form-control">
+          </div>
+        </div>
+        <div class="col-xs-4 attach">
+          <div class="input-group">
+            <span class="input-group-addon">收付款记录Id</span>
+            <input type="text" name="voucherId" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-12">
+        {{> delivery }}
+      </div>
+    </fieldset>
   </div>
 </template>
 
