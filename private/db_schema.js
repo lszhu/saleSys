@@ -220,7 +220,7 @@ delivery = {
       sn: Array
     }
   ],
-  // 操作类型, in表示入库，out表示出库，trim表示其他调整操作
+  // 操作类型, in表示入库，out表示出库，trim表示其他调整操作（如维修等）
   type: String,
   // 操作员账号Id
   operatorId: String,
@@ -273,7 +273,8 @@ capital = {
   // 资金来源或使用说明
   comment: String,
   // 资金来源或去处，可以是客户，也可以是员工（类型为loan或wage时）
-  // 如果是客户，对应customer集合中文档条目的数据库内部ObjectId
+  // 如果是固定客户，对应customer集合中文档条目的数据库内部ObjectId
+  // 如果是临时客户（对应零售情况），该值为空
   // 如果是员工，对应employee集合中文档条目的数据库内部ObjectId
   partnerId: String,
   // 对应订单Id, 对应为order集合的文档条目的数据库内部的ObjectId

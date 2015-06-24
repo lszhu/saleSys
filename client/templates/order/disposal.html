@@ -12,86 +12,11 @@
     </div>
 
     {{> editOrder }}
-    {{!--
-    <div class="attach-child">
-      <div class="col-xs-5">
-        订单编号：<span class="underline">&nbsp;&nbsp;</span>
-      </div>
-      <div class="col-xs-4">
-        订单类型：<span class="underline">&nbsp;销售&nbsp;</span>
-      </div>
-      <div class="col-xs-3">
-        订单状态：<span class="underline">&nbsp;进行&nbsp;</span>
-      </div>
-      <div class="col-xs-5">
-        交货地址：<span class="underline">&nbsp;北京市西城区复兴路10号&nbsp;</span>
-      </div>
-      <div class="col-xs-4">
-        客户名称：<span class="underline">&nbsp;刘振兴&nbsp;</span>
-      </div>
-      <div class="col-xs-3">
-        客户电话：<span class="underline">&nbsp;13912342345&nbsp;</span>
-      </div>
-      <div class="col-xs-5">
-        交付日期：<span class="underline">&nbsp;2015年10月20日&nbsp;</span>
-      </div>
-      <div class="col-xs-4">
-        执行部门：<span class="underline">&nbsp;中关村店&nbsp;</span>
-      </div>
-      <div class="col-xs-3">
-        跟单经理：<span class="underline">&nbsp;李四&nbsp;</span>
-      </div>
-      <div class="col-xs-12">
-        订单描述：<span class="underline">&nbsp;客户要求特殊包装，费用已计入报价&nbsp;</span>
-      </div>
-    </div>
-    --}}
-    <div>
-      <div class="col-xs-12 attach">
-        <div class="input-group">
-          <span class="input-group-addon" title="18:23:22"
-                id="order-code-label">2015-08-22</span>
-          <span class="input-group-addon" title="18:23:22">备货</span>
-          <input type="text" name="code" class="form-control"
-                 placeholder="处理内容概述"
-                 aria-describedby="order-code-label">
-          <span class="input-group-addon btn btn-primary" title="详情">
-            <i class="fa fa-caret-down"></i>
-          </span>
-        </div>
-      </div>
-      <div class="col-xs-12 attach">
-        <div class="input-group">
-          <span class="input-group-addon" title="11:10:35"
-                id="order-code-label">2015-08-28</span>
-          <span class="input-group-addon" title="18:23:22">发货</span>
-          <input type="text" name="code" class="form-control"
-                 placeholder="处理内容概述"
-                 aria-describedby="order-code-label">
-          <span class="input-group-addon btn btn-primary" title="详情">
-            <i class="fa fa-caret-up"></i>
-          </span>
-        </div>
-      </div>
-      <div class="col-xs-12 attach">
-        <div class="input-group">
-          <span class="input-group-addon" title="14:24:48"
-                id="order-code-label">2015-08-31</span>
-          <span class="input-group-addon" title="18:23:22">收款</span>
-          <input type="text" name="code" class="form-control"
-                 placeholder="处理内容概述"
-                 aria-describedby="order-code-label">
-          <span class="input-group-addon btn btn-primary" title="详情">
-            <i class="fa fa-caret-down"></i>
-          </span>
-        </div>
-      </div>
-    </div>
+
+    {{> orderDisposalItem }}
+
     <div id="add-order-disposal" class="not-hidden">
-      <div>
         {{> addOrderDisposal }}
-      </div>
-      <div class="col-sm-12"><br></div>
     </div>
 
   </div>
@@ -206,11 +131,11 @@
                   aria-describedby="disposal-type-label">
             <option></option>
             <option>备货</option>
-            <option>收货</option>
             <option>发货</option>
+            <option>收货</option>
             <option>退货</option>
-            <option>付款</option>
             <option>收款</option>
+            <option>付款</option>
             <option>退款</option>
             <option>维修</option>
             <option>报废</option>
@@ -233,25 +158,63 @@
       <div class="col-xs-12">
         <div class="col-xs-4 attach">
           <div class="input-group">
-          <span class="input-group-addon">收发货记录Id</span>
+          <span class="input-group-addon">货物清单</span>
             <input type="text" name="deliveryId" class="form-control">
           </div>
         </div>
         <div class="col-xs-4 attach">
           <div class="input-group">
-            <span class="input-group-addon">收付款记录Id</span>
+            <span class="input-group-addon">收付款记录</span>
             <input type="text" name="voucherId" class="form-control">
           </div>
         </div>
       </div>
 
-      <div class="col-xs-12">
-        {{> delivery }}
-      </div>
+      {{> delivery }}
     </fieldset>
   </div>
 </template>
 
 <template name="orderDisposalItem">
-
+  <div>
+    <div class="col-xs-12 attach">
+      <div class="input-group">
+          <span class="input-group-addon" title="18:23:22"
+                id="order-code-label">2015-08-22</span>
+        <span class="input-group-addon" title="18:23:22">备货</span>
+        <input type="text" name="code" class="form-control"
+               placeholder="处理内容概述"
+               aria-describedby="order-code-label">
+          <span class="input-group-addon btn btn-primary" title="详情">
+            <i class="fa fa-caret-down"></i>
+          </span>
+      </div>
+    </div>
+    <div class="col-xs-12 attach">
+      <div class="input-group">
+          <span class="input-group-addon" title="11:10:35"
+                id="order-code-label">2015-08-28</span>
+        <span class="input-group-addon" title="18:23:22">发货</span>
+        <input type="text" name="code" class="form-control"
+               placeholder="处理内容概述"
+               aria-describedby="order-code-label">
+          <span class="input-group-addon btn btn-primary" title="详情">
+            <i class="fa fa-caret-up"></i>
+          </span>
+      </div>
+    </div>
+    <div class="col-xs-12 attach">
+      <div class="input-group">
+          <span class="input-group-addon" title="14:24:48"
+                id="order-code-label">2015-08-31</span>
+        <span class="input-group-addon" title="18:23:22">收款</span>
+        <input type="text" name="code" class="form-control"
+               placeholder="处理内容概述"
+               aria-describedby="order-code-label">
+          <span class="input-group-addon btn btn-primary" title="详情">
+            <i class="fa fa-caret-down"></i>
+          </span>
+      </div>
+    </div>
+  </div>
 </template>

@@ -299,6 +299,12 @@ h2.login {
     border-bottom: 1px solid gray;
 }
 
+.voucher-combo .dropdown-menu {
+    max-height: 350px;
+    min-width: 180px;
+    overflow: auto;
+}
+
 .customer-combo .dropdown-menu {
     max-height: 350px;
     overflow: auto;
