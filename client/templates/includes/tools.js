@@ -16,7 +16,7 @@ function showAddCustomerForm($box) {
     } else {
       tmpHeight += delta;
     }
-    timer = Meteor.setTimeout(function() {
+    timer = Meteor.setTimeout(function () {
       slideDown();
     }, 20);
   }();
@@ -41,7 +41,7 @@ function hideAddCustomerForm($box) {
     } else {
       height -= delta;
     }
-    timer = Meteor.setTimeout(function() {
+    timer = Meteor.setTimeout(function () {
       slideUp();
     }, 20);
   }();

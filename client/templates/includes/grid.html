@@ -1,17 +1,27 @@
 <template name="delivery">
   <div class="delivery">
-    <div class="input-group col-xs-6">
-      <span class="input-group-addon">货物操作</span>
-      <select name="type" class="form-control">
-        <option></option>
-        <option>出库</option>
-        <option>入库</option>
-        <option>其它调整</option>
-      </select>
+    <div class="col-xs-6 col-sm-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon">货物操作</span>
+        <select name="type" class="form-control">
+          <option></option>
+          <option>出库</option>
+          <option>入库</option>
+          <option>其它</option>
+        </select>
       <span class="btn btn-primary input-group-addon open-goods-list">
-        货物清单 <i class="fa fa-caret-down"></i>
+        清单 <i class="fa fa-caret-down"></i>
       </span>
+      </div>
     </div>
+    <div class="col-xs-6 col-sm-8 attach">
+      <div class="input-group">
+        <span class="input-group-addon">备注</span>
+        <input type="text" name="comment" class="form-control"
+               placeholder="货物说明">
+      </div>
+    </div>
+
     <div class="col-xs-12 hidden grid"></div>
   </div>
 </template>

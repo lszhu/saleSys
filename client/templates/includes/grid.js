@@ -1,18 +1,27 @@
 Template.delivery.onCreated(function () {
   data = [
-    ['', 'Maserati', 'Mazda', 'Mercedes', 'Mini', 'Mitsubishi'],
-    ['2009', 0, 2941, 4303, 354, 5814],
-    ['2010', 3, 2905, 2867, 412, 5284],
-    ['2011', 4, 2517, 4822, 552, 6127],
-    ['2012', 2, 2422, 5399, 776, 4151]
+    ['2009', 'gadsd', 2941, 4303, 354, 'CNY', 'gasdfa'],
+    ['2010', 'gdasf', 2905, 2867, 412, 'CNY', 'gdkwer'],
+    ['2011', 'ghagd', 2517, 4822, 552, 'CNY', 'twefcsef'],
+    ['2012', 'uiasg', 2422, 5399, 776, 'CNY', 'iwedfs']
   ];
   //Session.set('data', data);
    container = document.createElement('div');
    hot = new Handsontable(container, {
     data: data,
     rowHeaders: true,
-    colHeaders: ['产品编号', '产品名称', '数量', '单价', '总价', '序列号'],
-
+    colHeaders: [
+      '产品编号', '产品名称', '数量',
+      '单价', '总价', '货币类型', '序列号'
+    ],
+    columns: [
+      {}, {},
+      {type: 'numeric'},
+      {type: 'numeric', format: '0,0.00'},
+      {type: 'numeric', format: '0,0.00'},
+      {},
+      {}//{renderer: 'safeHtmlRenderer'}
+    ],
     stretchH: 'all',
 
     manualColumnResize: true,
