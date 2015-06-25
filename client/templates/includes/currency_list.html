@@ -1,8 +1,7 @@
 <template name="currencySelect">
   <div class="input-group">
-    <span class="input-group-addon" id="includes-currency-label">币种</span>
-    <select name="currency" class="form-control"
-            aria-describedby="includes-currency-label">
+    <span class="input-group-addon">币种</span>
+    <select name="currency" class="form-control">
       {{#each currencies}}
         {{> currencySelectItem}}
       {{/each}}

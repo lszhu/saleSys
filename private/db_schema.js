@@ -136,7 +136,7 @@ station = {
 disposal = {
   // 本步流程操作员账号Id
   operator: String,
-  // 流程类型。询价，发货，收货，退货，付款，收款，退款，维修，报废
+  // 流程类型。备货，发货，收货，退货，换货，付款，收款，退款，维修，报废
   type: String,
   // 本部流程操作内容或过程描述
   comment: String,
@@ -160,8 +160,9 @@ order = {
   // 订单类型，分为：销售，采购和零售三种
   // 零售销售订单（没有订单编号和固定客户Id）
   type: String,
-  // 客户Id，对应为customer集合的文档条目的数据库内部的ObjectId
-  customerId: String,
+  // 客户名称或Id，如果是客户Id则对应为customer集合的文档条目的数据库内部的ObjectId
+  // 如果系统中无相关客户记录（如多数零售客户）则对应客户名称
+  customer: String,
   // 客户联系电话，可能与客户信息中相关内容相同或不同
   // 如操作员未填写，默认会从客户信息中获取
   phone: String,
@@ -173,8 +174,6 @@ order = {
   deadline: Date,
   // 订单说明
   comment: String,
-  // 所隶属的父/母订单Id，为本order集合文档条目的数据库内部ObjectId
-  parentId: String,
   // 订单流程步骤记录
   procedure: [disposal],
   // 订单状态，分为：进行，完成，取消三种情况

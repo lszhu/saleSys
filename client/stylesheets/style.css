@@ -20,7 +20,7 @@ body {
 
 .page {
     position: absolute;
-    top: 0px;
+    top: 0;
     width: 100%;
 }
 
@@ -30,7 +30,7 @@ body {
 
 /* line 32, ../sass/style.scss */
 .navbar .navbar-inner {
-    border-radius: 0px 0px 3px 3px;
+    border-radius: 0 0 3px 3px;
 }
 
 #spinner {
@@ -205,10 +205,10 @@ body {
     position: fixed;
     z-index: 10000;
     padding: 10px;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     pointer-events: none;
 }
 

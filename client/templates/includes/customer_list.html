@@ -1,11 +1,10 @@
 <!-- 必须在使用本模板时设置localTitle及customers变量 -->
 <template name="customerSelect">
   <div class="input-group">
-    <span class="input-group-addon" id="includes-customer-label">
+    <span class="input-group-addon">
       {{localTitle}}
     </span>
-    <select name="customerId" class="form-control"
-            aria-describedby="includes-customer-label">
+    <select name="customerId" class="form-control">
       <option value=""></option>
       {{#each customers}}
         <option value="{{_id}}">{{name}}（{{code}}）</option>
@@ -18,11 +17,11 @@
 <template name="customerCombo">
   <div class="customer-combo">
     <div class="input-group dropdown" role="presentation">
-        <span class="input-group-addon" id="includes-customer-combo">
+        <span class="input-group-addon">
           {{localTitle}}
         </span>
-      <input type="text" class="form-control" placeholder="客户名称"
-             aria-describedby="includes-customer-combo">
+      <input type="text" name="customerNameOrId" class="form-control"
+             placeholder="客户名称">
 
       <div class="input-group-btn">
         <button type="button" class="btn btn-default dropdown-toggle"
