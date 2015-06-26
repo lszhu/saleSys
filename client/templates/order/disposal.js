@@ -159,6 +159,10 @@ Template.addOrderDisposal.events({
   }
 });
 
+Template.orderDisposal.events({
+
+});
+
 function clearForm(target) {
   var form = $(target);
   form.find('[name=code]').val('');

@@ -1,10 +1,13 @@
 // 发布订单信息
-Meteor.publish('orders', function (filterKey, options) {
-  check(filterKey, String);
+Meteor.publish('orders', function (query, options) {
+  // query可能包含filterKey和_id
+  check(query, Object);
   check(options, Object);
 
   var selector = {};
-  if (filterKey) {
+  var _id = query._id;
+  var filterKey = query.filterKey;
+  if (filterKey && !_id) {
     var key = new RegExp(filterKey, 'i');
     // 从客户名单集合中找到名称匹配关键字的客户的_id
     var customer = Customers.find({name: key}).fetch();
@@ -24,6 +27,8 @@ Meteor.publish('orders', function (filterKey, options) {
         {status: key}, {comment: key}
       ]
     };
+  } else {
+    selector = _id;
   }
   return Orders.find(selector, options);
 });

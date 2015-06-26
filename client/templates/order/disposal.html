@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    {{> editOrder }}
+    {{> editOrder order }}
 
     {{> orderDisposalItem }}
 
@@ -30,7 +30,7 @@
         <div class="input-group {{ hasError 'code'}}">
           <span class="input-group-addon" id="order-code-label">编号</span>
           <input type="text" name="code" class="form-control" placeholder="订单编号"
-                 aria-describedby="order-code-label">
+                 aria-describedby="order-code-label" value="{{ code }}">
         </div>
       </div>
       <div class="col-xs-4 attach">
