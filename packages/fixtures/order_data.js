@@ -384,8 +384,13 @@ orderTestDataAdd = function () {
   if (count != 0) {
     return;
   }
+  var acc = Meteor.users.find().fetch();
+  var nc = acc.length;
+  var r;
   for (var i = 0; i < data.length; i++) {
-    //data[i].timestamp = new Date(2015, 4, 31 * Math.random());
+    r = Math.floor((Math.random() * nc));
+    data[i].stationId = acc[r].stationId;
+    data[i].managerId = acc[r]._id;
     Orders.insert(data[i]);
   }
 };

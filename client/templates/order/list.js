@@ -16,8 +16,11 @@ Template.orderListItem.helpers({
     return colors[this.status] || 'bg-danger';
   },
   customerName: function() {
-    var customer = Customers.findOne(this.customerId);
-    return customer && customer.name;
+    var customer = Customers.findOne(this.customer);
+    if (customer && customer.name) {
+      return customer.name;
+    }
+    return this.customer;
   },
   stationName: function () {
     var station = Stations.findOne(this.stationId);

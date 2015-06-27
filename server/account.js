@@ -80,6 +80,12 @@ Meteor.methods({
       throw new Meteor.Error('invalid-account-remove', '不能删除当前账号');
     }
     Meteor.users.remove(objectId);
+  },
+
+  getNameById: function(userId) {
+    check(userId, String);
+    var user = Meteor.users.findOne(userId);
+    return user && user.profile && user.profile.name;
   }
 });
 

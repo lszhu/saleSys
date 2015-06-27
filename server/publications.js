@@ -7,7 +7,9 @@ Meteor.publish('orders', function (query, options) {
   var selector = {};
   var _id = query._id;
   var filterKey = query.filterKey;
-  if (filterKey && !_id) {
+  if (_id) {
+    selector = _id;
+  } else if (filterKey) {
     var key = new RegExp(filterKey, 'i');
     // 从客户名单集合中找到名称匹配关键字的客户的_id
     var customer = Customers.find({name: key}).fetch();
@@ -27,8 +29,8 @@ Meteor.publish('orders', function (query, options) {
         {status: key}, {comment: key}
       ]
     };
-  } else {
-    selector = _id;
+  } else if (filterKey === undefined) {
+    selector = '';
   }
   return Orders.find(selector, options);
 });

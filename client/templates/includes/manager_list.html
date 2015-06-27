@@ -1,0 +1,16 @@
+<template name="managerList">
+  <div class="manager-list input-group">
+    <span class="input-group-addon">
+      {{localTitle}}
+    </span>
+    <select name="managerId" class="form-control">
+      {{#each managers}}
+        {{> managerListItem}}
+      {{/each}}
+    </select>
+  </div>
+</template>
+
+<template name="managerListItem">
+  <option value="{{_id}}" {{ isSelected _id select }}>{{ profile.name }}</option>
+</template>

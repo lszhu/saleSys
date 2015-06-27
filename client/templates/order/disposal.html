@@ -39,9 +39,9 @@
           <select name="type" class="form-control"
                   aria-describedby="order-type-label">
             <option></option>
-            <option value="零售">零售（零散客户)</option>
-            <option value="销售">销售（特定客户）</option>
-            <option value="采购">采购</option>
+            <option value="零售" {{ isSelected type '零售' }}>零售（零散客户)</option>
+            <option value="销售" {{ isSelected type '销售' }}>销售（特定客户）</option>
+            <option value="采购" {{ isSelected type '采购' }}>采购</option>
           </select>
         </div>
       </div>
@@ -50,9 +50,9 @@
           <span class="input-group-addon" id="order-status-label">状态</span>
           <select name="status" class="form-control"
                   aria-describedby="order-status-label">
-            <option>进行</option>
-            <option>完成</option>
-            <option>终止</option>
+            <option {{ isSelected status '进行' }}>进行</option>
+            <option {{ isSelected status '完成' }}>完成</option>
+            <option {{ isSelected status '终止' }}>终止</option>
           </select>
         </div>
       </div>
@@ -63,34 +63,43 @@
         <div class="input-group {{ hasError 'address'}}">
           <span class="input-group-addon" id="order-address-label">地址</span>
           <input type="text" name="address" class="form-control"
-                 placeholder="交货地址" aria-describedby="order-address-label"/>
+                 value="{{ address }}" placeholder="交货地址"
+                 aria-describedby="order-address-label"/>
         </div>
       </div>
       <div class="col-xs-4 attach">
         <div class="input-group {{ hasError 'phone'}}">
           <span class="input-group-addon" id="order-phone-label">电话</span>
           <input type="text" name="phone" class="form-control"
-                 placeholder="客户电话" aria-describedby="order-address-label"/>
+                 value="{{ phone }}" placeholder="客户电话"
+                 aria-describedby="order-address-label"/>
         </div>
       </div>
       <div class="col-xs-4 attach">
         <div class="input-group {{ hasError 'deadline'}}">
           <span class="input-group-addon" id="order-deadline-label">期限</span>
           <input type="text" name="deadline" class="form-control"
-                 placeholder="交货截止日期" aria-describedby="order-deadline-label"/>
+                 value= {{ formatDate deadline }} placeholder="交货截止日期"
+                 aria-describedby="order-deadline-label"/>
         </div>
       </div>
       <div class="col-xs-4 attach">
-        {{> stationSelect localTitle = '部门' }}
+        {{> currentStation localTitle = '部门' selection = stationId }}
       </div>
       <div class="col-xs-4 attach">
-        {{> stationSelect localTitle = '主管' }}
+        {{> managerList localTitle = '主管'}}
+        <!--<div class="input-group {{ hasError 'managerId'}}">-->
+          <!--<span class="input-group-addon">主管</span>-->
+          <!--<input type="text" name="managerId" class="form-control"-->
+                 <!--placeholder="主管姓名" data-manager-id="{{ managerId }}">-->
+        <!--</div>-->
       </div>
       <div class="col-xs-12 attach">
         <div class="input-group {{ hasError 'comment'}}">
           <span class="input-group-addon" id="order-comment-label">描述</span>
           <input type="text" name="comment" class="form-control"
-                 placeholder="订单描述" aria-describedby="order-comment-label"/>
+                 placeholder="订单描述" value="{{ comment }}"
+                 aria-describedby="order-comment-label"/>
         </div>
       </div>
       {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}

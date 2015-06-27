@@ -21,15 +21,33 @@ Template.editOrder.onCreated(function() {
   Session.set('editOrderSubmitErrors', {});
 });
 
-Template.editOrder.helpers({
-  hasError: function (field) {
-    return !!Session.get('editOrderSubmitErrors')[field] ?
-        'has-error' : '';
-  }
-});
 
 Template.editOrder.onCreated(function() {
   Session.set('addOrderDisposalSubmitErrors', {});
+});
+
+
+Template.editOrder.helpers({
+  //managerName: function() {
+  //  console.log('currentData: ' + JSON.stringify(Template.currentData()));
+  //  return Template.currentData().manager;
+  //},
+  hasError: function (field) {
+    return !!Session.get('editOrderSubmitErrors')[field] ?
+        'has-error' : '';
+  },
+  isSelected: function(u, v) {
+    return u == v ? 'selected' : '';
+  },
+  formatDate: function(d) {
+    if (!d) {
+      return '';
+    }
+    var year = d.getFullYear();
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+    return year + '-' + month + '-' + day;
+  }
 });
 
 Template.addOrderDisposal.helpers({

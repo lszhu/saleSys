@@ -20,3 +20,28 @@
     <option value="{{_id}}">{{name}}</option>
   {{/if}}
 </template>
+
+<!-- 必须在使用本模板时设置localTitle及stationSelectItem变量 -->
+<template name="currentStation">
+  <div class="input-group">
+    <span class="input-group-addon">
+      {{localTitle}}
+    </span>
+    <select name="stationId" class="form-control">
+      {{#each stations}}
+        {{> currentStationItem}}
+      {{/each}}
+    </select>
+  </div>
+</template>
+
+<template name="currentStationItem">
+  {{!-- #if isDefaultStation --}}
+  {{#if isSelected }}
+    <option value="{{_id}}" selected>{{name}}</option>
+  {{else}}
+    <option value="{{_id}}">{{name}}</option>
+  {{/if}}
+</template>
+
+
