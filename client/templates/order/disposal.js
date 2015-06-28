@@ -22,9 +22,6 @@ Template.editOrder.onCreated(function () {
 
   // 必须保证当前模板上下文数据不是未定义
   var currentData = Template.currentData();
-  //if (!isAdministrator() && (!currentData || !currentData.managerId)) {
-  //  return;
-  //}
   currentData._filteredManagersListener = new Tracker.Dependency();
   currentData._filteredManagers = [{}];
   currentData.getManagers = function () {
@@ -36,8 +33,8 @@ Template.editOrder.onCreated(function () {
     var query = stationId ? {stationId: stationId} : {};
     currentData._filteredManagers = Meteor.users.find(query).fetch();
     currentData._filteredManagersListener.changed();
-    console.log('filtered managerList: ' +
-        JSON.stringify(currentData.getManagers()));
+    //console.log('filtered managerList: ' +
+    //    JSON.stringify(currentData.getManagers()));
   } else if (currentData.managerId) {
     Meteor.call('getNameById', currentData.managerId,
         function (error, result) {
@@ -54,8 +51,8 @@ Template.editOrder.onCreated(function () {
             }];
           }
           currentData._filteredManagersListener.changed();
-          console.log('filtered managerList: ' +
-              JSON.stringify(currentData.getManagers()));
+          //console.log('filtered managerList: ' +
+          //    JSON.stringify(currentData.getManagers()));
         });
   }
 });
@@ -67,21 +64,11 @@ Template.editOrder.events({
     managers.unshift({});
     currentData._filteredManagers = managers;
     currentData._filteredManagersListener.changed();
-
-    //var option = $('<option value="' + managers[0]._id + '">' +
-    //    managers[0].profile.name + '</option>');
-    //$('.add-order [name=managerId]').append(option);
-
-    $('.add-order .manager-list [name=managerId]').val(0);
   }
 });
 
 
 Template.editOrder.helpers({
-  //managerName: function() {
-  //  console.log('currentData: ' + JSON.stringify(Template.currentData()));
-  //  return Template.currentData().manager;
-  //},
   hasError: function (field) {
     return !!Session.get('editOrderSubmitErrors')[field] ?
         'has-error' : '';
@@ -110,10 +97,6 @@ Template.addOrderDisposal.helpers({
 Template.addOrderDisposal.onCreated(function () {
   Session.set('addOrderDisposalSubmitErrors', {});
 });
-
-//Template.addOrderDisposal.onCreated(function() {
-//  Session.set('orderManagementSubmitErrors', {});
-//});
 
 Template.addOrderDisposal.onRendered(function () {
   var key = this.data.filterKey;
