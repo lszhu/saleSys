@@ -1,5 +1,5 @@
 Template.orderDisposalItem.helpers({
-  statusColor: function() {
+  statusColor: function () {
     var colors = {
       '进行': 'bg-primary',
       '完成': 'bg-success',
@@ -7,7 +7,7 @@ Template.orderDisposalItem.helpers({
     };
     return colors[this.status] || 'bg-danger';
   },
-  customerName: function() {
+  customerName: function () {
     var customer = Customers.findOne(this.customerId);
     return customer && customer.name;
   },
@@ -17,13 +17,63 @@ Template.orderDisposalItem.helpers({
   }
 });
 
-Template.editOrder.onCreated(function() {
+Template.editOrder.onCreated(function () {
   Session.set('editOrderSubmitErrors', {});
+
+  // 必须保证当前模板上下文数据不是未定义
+  var currentData = Template.currentData();
+  //if (!isAdministrator() && (!currentData || !currentData.managerId)) {
+  //  return;
+  //}
+  currentData._filteredManagersListener = new Tracker.Dependency();
+  currentData._filteredManagers = [{}];
+  currentData.getManagers = function () {
+    currentData._filteredManagersListener.depend();
+    return currentData._filteredManagers;
+  };
+  if (isAdministrator()) {
+    var stationId = currentData.stationId || Meteor.user().stationId;
+    var query = stationId ? {stationId: stationId} : {};
+    currentData._filteredManagers = Meteor.users.find(query).fetch();
+    currentData._filteredManagersListener.changed();
+    console.log('filtered managerList: ' +
+        JSON.stringify(currentData.getManagers()));
+  } else if (currentData.managerId) {
+    Meteor.call('getNameById', currentData.managerId,
+        function (error, result) {
+          currentData._filteredManagersListener.depend();
+          if (error) {
+            currentData._filteredManagers = [{
+              _id: currentData.managerId,
+              profile: {name: '未知'}
+            }];
+          } else {
+            currentData._filteredManagers = [{
+              _id: currentData.managerId,
+              profile: {name: result}
+            }];
+          }
+          currentData._filteredManagersListener.changed();
+          console.log('filtered managerList: ' +
+              JSON.stringify(currentData.getManagers()));
+        });
+  }
 });
 
+Template.editOrder.events({
+  'change .add-order select[name=stationId]': function (e) {
+    var managers = Meteor.users.find({stationId: $(e.target).val()}).fetch();
+    var currentData = Template.currentData() || {};
+    managers.unshift({});
+    currentData._filteredManagers = managers;
+    currentData._filteredManagersListener.changed();
 
-Template.editOrder.onCreated(function() {
-  Session.set('addOrderDisposalSubmitErrors', {});
+    //var option = $('<option value="' + managers[0]._id + '">' +
+    //    managers[0].profile.name + '</option>');
+    //$('.add-order [name=managerId]').append(option);
+
+    $('.add-order .manager-list [name=managerId]').val(0);
+  }
 });
 
 
@@ -36,10 +86,10 @@ Template.editOrder.helpers({
     return !!Session.get('editOrderSubmitErrors')[field] ?
         'has-error' : '';
   },
-  isSelected: function(u, v) {
+  isSelected: function (u, v) {
     return u == v ? 'selected' : '';
   },
-  formatDate: function(d) {
+  formatDate: function (d) {
     if (!d) {
       return '';
     }
@@ -57,9 +107,13 @@ Template.addOrderDisposal.helpers({
   }
 });
 
-Template.addOrderDisposal.onCreated(function() {
-  Session.set('orderManagementSubmitErrors', {});
+Template.addOrderDisposal.onCreated(function () {
+  Session.set('addOrderDisposalSubmitErrors', {});
 });
+
+//Template.addOrderDisposal.onCreated(function() {
+//  Session.set('orderManagementSubmitErrors', {});
+//});
 
 Template.addOrderDisposal.onRendered(function () {
   var key = this.data.filterKey;
@@ -141,7 +195,7 @@ Template.addOrderDisposal.events({
     e.preventDefault();
 
     var form = $(e.target);
-    var order= {
+    var order = {
       code: form.find('[name=code]').val(),
       type: form.find('[name=type]').val(),
       customerId: form.find('[name=customerId]').val(),
@@ -177,9 +231,7 @@ Template.addOrderDisposal.events({
   }
 });
 
-Template.orderDisposal.events({
-
-});
+Template.orderDisposal.events({});
 
 function clearForm(target) {
   var form = $(target);

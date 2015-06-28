@@ -1,3 +1,4 @@
+<!-- localTitle变量表示名称，managers为账号列表 -->
 <template name="managerList">
   <div class="manager-list input-group">
     <span class="input-group-addon">
@@ -5,12 +6,12 @@
     </span>
     <select name="managerId" class="form-control">
       {{#each managers}}
-        {{> managerListItem}}
+        {{> managerListItem }}
       {{/each}}
     </select>
   </div>
 </template>
 
 <template name="managerListItem">
-  <option value="{{_id}}" {{ isSelected _id select }}>{{ profile.name }}</option>
+  <option value="{{_id}}" {{ isSelected _id }}>{{ profile.name }}</option>
 </template>
