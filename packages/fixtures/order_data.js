@@ -384,6 +384,8 @@ orderTestDataAdd = function () {
   if (count != 0) {
     return;
   }
+  var customers = Customers.find().fetch();
+  var cc = customers.length;
   var acc = Meteor.users.find().fetch();
   var nc = acc.length;
   var r;
@@ -391,6 +393,10 @@ orderTestDataAdd = function () {
     r = Math.floor((Math.random() * nc));
     data[i].stationId = acc[r].stationId;
     data[i].managerId = acc[r]._id;
+    r = Math.floor((Math.random() * cc));
+    if (r > 2) {
+      data[i].customer = customers[r]._id;
+    }
     Orders.insert(data[i]);
   }
 };

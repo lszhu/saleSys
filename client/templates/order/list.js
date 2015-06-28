@@ -125,12 +125,20 @@ Template.orderManagement.events({
     var order= {
       code: form.find('[name=code]').val(),
       type: form.find('[name=type]').val(),
-      customerId: form.find('[name=customerId]').val(),
+      customer: form.find('[name=customerNameOrId]').val(),
       phone: form.find('[name=phone]').val(),
       address: form.find('[name=address]').val(),
       stationId: form.find('[name=stationId]').val(),
       comment: form.find('[name=comment]').val()
     };
+    // 如果表单中的客户名称和data-customer-id对应的客户名称相同则保存id值
+    console.log('customer: ' + JSON.stringify(order.customer));
+    var customerId = form.find('[name=customerNameOrId]').data('customerId');
+    var customer = Customers.findOne(customerId);
+    console.log('customerId: ' + customerId);
+    if (customer && customer.name == order.customer) {
+      order.customer = customerId;
+    }
     //console.log('order: ' + JSON.stringify(order));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
@@ -162,7 +170,7 @@ function clearForm(target) {
   var form = $(target);
   form.find('[name=code]').val('');
   form.find('[name=type]').val('');
-  form.find('[name=customerId]').val('');
+  form.find('[name=customerNameOrId]').val('');
   form.find('[name=phone]').val('');
   form.find('[name=address]').val('');
   form.find('[name=stationId]').val(defaultStationId());
@@ -177,7 +185,7 @@ function fillForm(_id) {
   var form = $('#add-order');
   form.find('[name=code]').val(data.code);
   form.find('[name=type]').val(data.type);
-  form.find('[name=customerId]').val(data.customerId);
+  form.find('[name=customerNameOrId]').val(data.customer);
   form.find('[name=phone]').val(data.phone);
   form.find('[name=address]').val(data.address);
   form.find('[name=stationId]').val(data.stationId);

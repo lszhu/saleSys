@@ -10,10 +10,20 @@ Template.customerCombo.helpers({
   },
   customerName: function() {
     var parentData = Template.parentData() || {};
-    console.log('data in edit order: ' + JSON.stringify(parentData));
+    //console.log('data in edit order: ' + JSON.stringify(parentData));
     if (parentData.customer) {
       var customer = Customers.findOne(parentData.customer);
       return customer && customer.name || parentData.customer;
+    }
+    return '';
+  },
+  customerId: function() {
+    var parentData = Template.parentData() || {};
+    //console.log('data in edit order: ' + JSON.stringify(parentData));
+    if (parentData.customer) {
+      var customer = Customers.findOne(parentData.customer);
+      console.log('customer in customerCombo: ' + JSON.stringify(customer));
+      return customer && customer._id;
     }
     return '';
   }
