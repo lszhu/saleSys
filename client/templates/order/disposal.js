@@ -28,14 +28,21 @@ Template.editOrder.onCreated(function () {
     currentData._filteredManagersListener.depend();
     return currentData._filteredManagers;
   };
-  if (isAdministrator()) {
+  // 特权用户必须能查看当前部门所有账号（订单主管）列表
+  if (isSuperUser()) {
     var stationId = currentData.stationId || Meteor.user().stationId;
     var query = stationId ? {stationId: stationId} : {};
     currentData._filteredManagers = Meteor.users.find(query).fetch();
     currentData._filteredManagersListener.changed();
     //console.log('filtered managerList: ' +
     //    JSON.stringify(currentData.getManagers()));
-  } else if (currentData.managerId) {
+    // 如果返回结果为空数组则表明当前的登录账号与所查询订单不在同一个部门
+    // 此时需要继续运行下面的代码
+    if (currentData._filteredManagers.length > 0) {
+      return;
+    }
+  }
+  if (currentData.managerId) {
     Meteor.call('getNameById', currentData.managerId,
         function (error, result) {
           currentData._filteredManagersListener.depend();
@@ -66,7 +73,6 @@ Template.editOrder.events({
     currentData._filteredManagersListener.changed();
   }
 });
-
 
 Template.editOrder.helpers({
   hasError: function (field) {
@@ -214,7 +220,20 @@ Template.addOrderDisposal.events({
   }
 });
 
-Template.orderDisposal.events({});
+Template.orderDisposal.events({
+  'click .order-tool .add-disposal': function(e, t) {
+    console.log('添加订单处理记录');
+  },
+  'click .order-tool .save-all': function(e, t) {
+    console.log('保存订单基本信息及处理记录');
+  },
+  'click .order-tool .print-preview': function(e, t) {
+    console.log('打印预览订单基本信息及处理记录');
+  },
+  'click .order-tool .remove-order': function(e, t) {
+    console.log('删除当前订单基本信息及处理记录');
+  }
+});
 
 function clearForm(target) {
   var form = $(target);

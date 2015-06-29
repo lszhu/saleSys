@@ -31,6 +31,9 @@ Template.currentStationItem.helpers({
     return this._id == defaultStationId();
   },
   isSelected: function() {
+    if (!Template.parentData()) {
+      return false;
+    }
     var stationId = Template.parentData().selection;
     //console.log('stationId: ' + stationId);
     if (stationId) {

@@ -47,12 +47,16 @@ Meteor.publish('accounts', function (filterKey, options) {
     return [];
   }
   var user = Meteor.users.findOne(this.userId);
-  if (!user || user.grade != '3') {
-    // 不是系统管理员账号，则只发布当前登录用户的信息
+  if (!user || user.grade <= 1) {
+    // 不是系统管理员和特权用户账号，则只发布当前登录用户的信息
     return Meteor.users.find(this.userId);
   }
 
   var selector = {};
+  // 如果是特权用户而不是系统管理员账号，需要限制在对应部门内
+  if (user.grade == 2) {
+    selector.stationId = user.stationId;
+  }
   if (filterKey) {
     var key = new RegExp(filterKey, 'i');
     // 从销售分部collection中找到名称匹配关键字的销售分部对应_id
@@ -61,13 +65,11 @@ Meteor.publish('accounts', function (filterKey, options) {
     station = station.map(function (e) {
       return e._id;
     });
-    selector = {
-      $or: [
+    selector.$or = [
         {_id: this.userId}, {username: key},
         {nickname: key}, {emails: {$elemMatch: {address: key}}},
         {stationId: {$in: station}}, {comment: key}
-      ]
-    };
+      ];
   }
   //console.log('user count: ' + Meteor.users.find(selector, options).count());
   return Meteor.users.find(selector, options);

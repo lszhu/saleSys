@@ -2,7 +2,7 @@ Template.managerList.helpers({
   managers: function() {
     var data = Template.parentData();
     //console.log('stationId: ' + JSON.stringify(data && data.stationId));
-    if (isAdministrator()) {
+    if (isSuperUser()) {
       return data.getManagers();
     } else {
       if (data && data._id) {
