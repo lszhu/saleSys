@@ -13,7 +13,7 @@ Meteor.publish('orders', function (query, options) {
     var key = new RegExp(filterKey, 'i');
     // 从客户名单集合中找到名称匹配关键字的客户的_id
     var customer = Customers.find({name: key}).fetch();
-    customer = customer.map(function(e) {
+    customer = customer.map(function (e) {
       return e._id;
     });
     // 从销售分部collection中找到名称匹配关键字的销售分部对应_id
@@ -66,10 +66,10 @@ Meteor.publish('accounts', function (filterKey, options) {
       return e._id;
     });
     selector.$or = [
-        {_id: this.userId}, {username: key},
-        {nickname: key}, {emails: {$elemMatch: {address: key}}},
-        {stationId: {$in: station}}, {comment: key}
-      ];
+      {_id: this.userId}, {username: key},
+      {nickname: key}, {emails: {$elemMatch: {address: key}}},
+      {comment: key}, {stationId: {$in: station}}
+    ];
   }
   //console.log('user count: ' + Meteor.users.find(selector, options).count());
   return Meteor.users.find(selector, options);

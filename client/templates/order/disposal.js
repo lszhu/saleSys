@@ -71,6 +71,11 @@ Template.editOrder.events({
     managers.unshift({});
     currentData._filteredManagers = managers;
     currentData._filteredManagersListener.changed();
+  },
+  'change .add-order input[name=deadline]': function (e) {
+    var t = $(e.target);
+    var time = (new Date(t.val())).getTime();
+    t.data('time', time ? time : 0);
   }
 });
 
@@ -81,6 +86,9 @@ Template.editOrder.helpers({
   },
   isSelected: function (u, v) {
     return u == v ? 'selected' : '';
+  },
+  time: function (d) {
+    return d.getTime();
   },
   formatDate: function (d) {
     if (!d) {
@@ -221,19 +229,49 @@ Template.addOrderDisposal.events({
 });
 
 Template.orderDisposal.events({
-  'click .order-tool .add-disposal': function(e, t) {
+  'click .order-tool .add-disposal': function (e, t) {
     console.log('添加订单处理记录');
+    e.preventDefault();
   },
-  'click .order-tool .save-all': function(e, t) {
+  'click .order-tool .save-all': function (e, t) {
     console.log('保存订单基本信息及处理记录');
+    e.preventDefault();
+    var orderInfo = getOrderInfo(t.find('.add-order'));
+    console.log('orderInfo: ' + JSON.stringify(orderInfo));
   },
-  'click .order-tool .print-preview': function(e, t) {
+  'click .order-tool .print-preview': function (e, t) {
     console.log('打印预览订单基本信息及处理记录');
   },
-  'click .order-tool .remove-order': function(e, t) {
+  'click .order-tool .remove-order': function (e, t) {
     console.log('删除当前订单基本信息及处理记录');
   }
 });
+
+function getOrderInfo(target) {
+  var t = $(target);
+  var info = {
+    code: t.find('[name=code]').val(),
+    type: t.find('[name=type]').val(),
+    status: t.find('[name=status]').val(),
+    // 后面需对customer进一步处理
+    customer: t.find('[name=customerNameOrId]'),
+    address: t.find('[name=address]').val(),
+    phone: t.find('[name=phone]').val(),
+    deadline: t.find('[name=deadline]').data('time'),
+    stationId: t.find('[name=stationId]').val(),
+    managerId: t.find('[name=managerId]').val(),
+    comment: t.find('[name=comment]').val()
+  };
+  // 设置customer，如果显示名称和保存的id值不一致，则说明名称编辑过，采用该值
+  // 否则保存对应客户Id（通过下拉按钮选择的客户）
+  var customer = Customers.findOne(info.customer.data('customer-id'));
+  if (customer && customer.name == info.customer.val() ) {
+    info.customer = customer._id;
+  } else {
+    info.customer = info.customer.val();
+  }
+  return info;
+}
 
 function clearForm(target) {
   var form = $(target);

@@ -79,7 +79,8 @@
         <div class="input-group {{ hasError 'deadline'}}">
           <span class="input-group-addon" id="order-deadline-label">期限</span>
           <input type="text" name="deadline" class="form-control"
-                 value= {{ formatDate deadline }} placeholder="交货截止日期"
+                 value="{{ formatDate deadline }}" placeholder="交货截止日期"
+                 data-time="{{ time deadline }}"
                  aria-describedby="order-deadline-label"/>
         </div>
       </div>
@@ -89,9 +90,9 @@
       <div class="col-xs-4 attach">
         {{> managerList localTitle = '主管' selection = managerId}}
         <!--<div class="input-group {{ hasError 'managerId'}}">-->
-          <!--<span class="input-group-addon">主管</span>-->
-          <!--<input type="text" name="managerId" class="form-control"-->
-                 <!--placeholder="主管姓名" data-manager-id="{{ managerId }}">-->
+        <!--<span class="input-group-addon">主管</span>-->
+        <!--<input type="text" name="managerId" class="form-control"-->
+        <!--placeholder="主管姓名" data-manager-id="{{ managerId }}">-->
         <!--</div>-->
       </div>
       <div class="col-xs-12 attach">
