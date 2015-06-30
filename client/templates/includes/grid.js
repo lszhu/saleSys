@@ -6,14 +6,15 @@ Template.delivery.onCreated(function () {
     ['2012', 'uiasg', 2422, 5399, 776, 'CNY', 'iwedfs']
   ];
   //Session.set('data', data);
-   container = document.createElement('div');
-   hot = new Handsontable(container, {
+  container = document.createElement('div');
+  hot = new Handsontable(container, {
     data: data,
     rowHeaders: true,
     colHeaders: [
       '产品编号', '产品名称', '数量',
       '单价', '总价', '货币类型', '序列号'
     ],
+    //colWidths: [100, 100, 100, 100, 100, 100, 100],
     columns: [
       {}, {},
       {type: 'numeric'},
@@ -69,7 +70,7 @@ Template.delivery.onRendered(function () {
 });
 
 Template.delivery.events({
-  'click .open-goods-list': function(e, t) {
+  'click .open-goods-list': function (e, t) {
     e.preventDefault();
     var show = $(t.find('.grid'));
     if (show.hasClass('hidden')) {

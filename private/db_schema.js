@@ -135,7 +135,7 @@ station = {
 // 订单处理流程每步存储格式
 disposal = {
   // 本步流程操作员账号Id
-  operator: String,
+  managerId: String,
   // 流程类型。备货，发货，收货，退货，换货，付款，收款，退款，维修，报废
   type: String,
   // 本部流程操作内容或过程描述

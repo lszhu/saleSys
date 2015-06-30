@@ -90,22 +90,22 @@ Template.editOrder.helpers({
   time: function (d) {
     return d.getTime();
   },
-  formatDate: function (d) {
-    if (!d) {
-      return '';
-    }
-    var year = d.getFullYear();
-    var month = d.getMonth() + 1;
-    var day = d.getDate();
-    return year + '-' + month + '-' + day;
-  }
+  formatDate: formatDate
 });
 
 Template.addOrderDisposal.helpers({
   hasError: function (field) {
     return !!Session.get('addOrderDisposalSubmitErrors')[field] ?
         'has-error' : '';
-  }
+  },
+  managerId: function() {
+    return Meteor.userId();
+  },
+  managerName: function() {
+    var user = Meteor.user();
+    return user && user.profile.name;
+  },
+  formatDate: formatDate
 });
 
 Template.addOrderDisposal.onCreated(function () {
@@ -113,131 +113,52 @@ Template.addOrderDisposal.onCreated(function () {
 });
 
 Template.addOrderDisposal.onRendered(function () {
-  var key = this.data.filterKey;
+  //var key = this.data.filterKey;
   //console.log('key: ' + key);
-  this.$('.order-keyword').val(key);
-  var target = $('#add-order');
-  target.hide();
+  //this.$('.order-keyword').val(key);
+  //$('#add-order').hide();
+
+  // 设置订单处理日期时间
+  var timestamp = this.$('[name=timestamp]');
+  timestamp.val(formatDate(new Date));
+  $(timestamp).data('time', Date.now());
+
 });
 
 Template.addOrderDisposal.events({
-  'keypress .order-keyword': function (e) {
-    // 绑定回车键
-    if (e.keyCode == '13') {
-      e.preventDefault();
-      var keyword = $('.order-keyword').val();
-      keyword = keyword ? '?keyword=' + keyword : '';
-      Router.go(location.pathname + keyword);
-    }
-  },
-
-  'click .filter-order': function (e) {
-    e.preventDefault();
-    var keyword = $('.order-keyword').val();
-    keyword = keyword ? '?keyword=' + keyword : '';
-    Router.go(location.pathname + keyword);
-  },
-
-  'click .edit-order': function (e) {
-    e.preventDefault();
-    // 清空可能遗留的错误信息
-    Session.set('orderManagementSubmitErrors', {});
-    var target = $('#add-order');
-    // 如果设置了覆盖标识（overlap）则清空，否则只是简单的显示/隐藏切换编辑框
-    if (target.find('[name=overlap]').val()) {
-      target.find('[name=overlap]').val('');
-    } else {
-      if (target.hasClass('hidden')) {
-        target.removeClass('hidden');
-        target.slideDown('fast');
-      } else {
-        target.slideUp('fast', function () {
-          clearForm(target);
-          target.addClass('hidden');
-        });
-      }
-    }
-  },
-
-  'click .update-order': function (e) {
-    e.preventDefault();
-    // 清空可能遗留的错误信息
-    Session.set('orderManagementSubmitErrors', {});
-    // 获取对应数据库条目Id
-    var _id = $(e.currentTarget).attr('href');
-    //console.log('_id: ' + _id);
-    var form = $('#add-order');
-    // 显示编辑框
-    if (form.hasClass('hidden')) {
-      form.removeClass('hidden');
-      form.slideDown('fast');
-    }
-    fillForm(_id);
-  },
-
-  'click .remove-order': function (e) {
-    e.preventDefault();
-    if (!confirm('你确实要删除该员工的信息吗？')) {
-      return;
-    }
-    // 获取对应数据库条目Id
-    var _id = $(e.currentTarget).attr('href');
-    //console.log('_id: ' + _id);
-    Meteor.call('orderRemove', _id);
-    // 清空覆盖（overlap）标识，用户点了'变更'后，又马上删除该条目就需要如下处理
-    $('#add-order').find('[name=overlap]').val('');
-  },
-
-  'submit .add-order': function (e) {
-    e.preventDefault();
-
-    var form = $(e.target);
-    var order = {
-      code: form.find('[name=code]').val(),
-      type: form.find('[name=type]').val(),
-      customerId: form.find('[name=customerId]').val(),
-      phone: form.find('[name=phone]').val(),
-      address: form.find('[name=address]').val(),
-      stationId: form.find('[name=stationId]').val(),
-      comment: form.find('[name=comment]').val()
-    };
-    //console.log('order: ' + JSON.stringify(order));
-    var overlap = form.find('[name=overlap]').val();
-    console.log('overlap is: ' + overlap);
-    var data = {order: order, overlap: overlap};
-    var errors = validateNewOrder(data);
-    if (errors.err) {
-      Session.set('orderManagementSubmitErrors', errors);
-      throwError(getErrorMessage(errors));
-      return;
-    }
-    Meteor.call('orderInsert', data, function (err) {
-      if (err) {
-        return throwError(err.reason);
-      }
-
-      // 清除可能遗留的错误信息
-      Session.set('orderManagementSubmitErrors', {});
-      var form = $('#add-order');
-      // 清除表单的内容
-      clearForm(form);
-      form.slideUp('fast', function () {
-        form.addClass('hidden');
-      });
-    });
+  'change [name=timestamp]': function(e) {
+    var t = $(e.target);
+    var time = (new Date(t.val())).getTime();
+    t.data('time', time ? time : 0);
   }
 });
 
+Template.orderDisposal.onRendered(function () {
+  // 刚加载订单处理页面时不显示订单处理的表单
+  $('#add-order-disposal').hide();
+});
+
 Template.orderDisposal.events({
-  'click .order-tool .add-disposal': function (e, t) {
+  'click .order-tool .add-disposal': function (e) {
     console.log('添加订单处理记录');
     e.preventDefault();
+    var disposal = $('#add-order-disposal');
+    if (disposal.hasClass('hidden')) {
+      disposal.removeClass('hidden');
+      disposal.fadeIn('normal');
+    } else {
+      disposal.fadeOut('normal', function () {
+        disposal.addClass('hidden');
+      });
+    }
   },
   'click .order-tool .save-all': function (e, t) {
     console.log('保存订单基本信息及处理记录');
     e.preventDefault();
     var orderInfo = getOrderInfo(t.find('.add-order'));
     console.log('orderInfo: ' + JSON.stringify(orderInfo));
+    var disposalInfo = getDisposalInfo(t.find('.add-order-disposal'));
+    console.log('disposalInfo: ' + JSON.stringify(disposalInfo));
   },
   'click .order-tool .print-preview': function (e, t) {
     console.log('打印预览订单基本信息及处理记录');
@@ -246,6 +167,33 @@ Template.orderDisposal.events({
     console.log('删除当前订单基本信息及处理记录');
   }
 });
+
+function getDisposalInfo(target) {
+  var t = $(target);
+  var info = {
+    timestamp: t.find('[name=timestamp]').data('time'),
+    type: t.find('[name=disposalType]').val(),
+    managerId: t.find('[name=managerId]').val(),
+    comment: t.find('[name=disposalComment]').val(),
+    goods: {
+      type: t.find('[name=goodsType]').val(),
+      comment: t.find('[name=goodsComment]').val(),
+      list: getGoodsList(t.find('.delivery .grid'))
+    },
+    capital: {
+      type: t.find('[name=capitalType]').val(),
+      accountType: t.find('[name=accountType]').val(),
+      comment: t.find('[name=capitalComment]').val(),
+      value: t.find('[name=value]').val(),
+      currency: t.find('[name=currency]').val()
+    }
+  };
+  return info;
+}
+
+function getGoodsList(target) {
+  return ['for test'];
+}
 
 function getOrderInfo(target) {
   var t = $(target);
@@ -265,7 +213,7 @@ function getOrderInfo(target) {
   // 设置customer，如果显示名称和保存的id值不一致，则说明名称编辑过，采用该值
   // 否则保存对应客户Id（通过下拉按钮选择的客户）
   var customer = Customers.findOne(info.customer.data('customer-id'));
-  if (customer && customer.name == info.customer.val() ) {
+  if (customer && customer.name == info.customer.val()) {
     info.customer = customer._id;
   } else {
     info.customer = info.customer.val();
