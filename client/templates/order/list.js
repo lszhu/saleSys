@@ -73,9 +73,9 @@ Template.orderManagement.events({
     Session.set('orderManagementSubmitErrors', {});
     var target = $('#add-order');
     // 如果设置了覆盖标识（overlap）则清空，否则只是简单的显示/隐藏切换编辑框
-    if (target.find('[name=overlap]').val()) {
-      target.find('[name=overlap]').val('');
-    } else {
+    //if (target.find('[name=overlap]').val()) {
+    //  target.find('[name=overlap]').val('');
+    //} else {
       if (target.hasClass('hidden')) {
         target.removeClass('hidden');
         target.slideDown('fast');
@@ -85,7 +85,7 @@ Template.orderManagement.events({
           target.addClass('hidden');
         });
       }
-    }
+    //}
   },
 
 
@@ -105,18 +105,6 @@ Template.orderManagement.events({
     fillForm(_id);
   },
 
-  'click .remove-order': function (e) {
-    e.preventDefault();
-    if (!confirm('你确实要删除该员工的信息吗？')) {
-      return;
-    }
-    // 获取对应数据库条目Id
-    var _id = $(e.currentTarget).attr('href');
-    //console.log('_id: ' + _id);
-    Meteor.call('orderRemove', _id);
-    // 清空覆盖（overlap）标识，用户点了'变更'后，又马上删除该条目就需要如下处理
-    $('#add-order').find('[name=overlap]').val('');
-  },
 
   'submit .add-order': function (e) {
     e.preventDefault();
@@ -140,16 +128,16 @@ Template.orderManagement.events({
       order.customer = customerId;
     }
     //console.log('order: ' + JSON.stringify(order));
-    var overlap = form.find('[name=overlap]').val();
-    console.log('overlap is: ' + overlap);
-    var data = {order: order, overlap: overlap};
-    var errors = validateNewOrder(data);
+    //var overlap = form.find('[name=overlap]').val();
+    //console.log('overlap is: ' + overlap);
+    //var data = {order: order, overlap: overlap};
+    var errors = validateNewOrder(order);
     if (errors.err) {
       Session.set('orderManagementSubmitErrors', errors);
       throwError(getErrorMessage(errors));
       return;
     }
-    Meteor.call('orderInsert', data, function (err) {
+    Meteor.call('orderInsert', order, function (err) {
       if (err) {
         return throwError(err.reason);
       }

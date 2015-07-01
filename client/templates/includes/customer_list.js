@@ -22,7 +22,7 @@ Template.customerCombo.helpers({
     //console.log('data in edit order: ' + JSON.stringify(parentData));
     if (parentData.customer) {
       var customer = Customers.findOne(parentData.customer);
-      console.log('customer in customerCombo: ' + JSON.stringify(customer));
+      //console.log('customer in customerCombo: ' + JSON.stringify(customer));
       return customer && customer._id;
     }
     return '';

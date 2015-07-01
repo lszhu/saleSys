@@ -73,9 +73,10 @@ Template.editOrder.events({
     currentData._filteredManagersListener.changed();
   },
   'change .add-order input[name=deadline]': function (e) {
-    var t = $(e.target);
-    var time = (new Date(t.val())).getTime();
-    t.data('time', time ? time : 0);
+    var target = $(e.target);
+    var t = target.val().split('-');
+    var time = (new Date(t[0], t[1] - 1, t[2])).getTime();
+    target.data('time', time ? time : 0);
   }
 });
 
@@ -88,7 +89,7 @@ Template.editOrder.helpers({
     return u == v ? 'selected' : '';
   },
   time: function (d) {
-    return d.getTime();
+    return d && d.getTime();
   },
   formatDate: formatDate
 });
@@ -98,10 +99,10 @@ Template.addOrderDisposal.helpers({
     return !!Session.get('addOrderDisposalSubmitErrors')[field] ?
         'has-error' : '';
   },
-  managerId: function() {
+  managerId: function () {
     return Meteor.userId();
   },
-  managerName: function() {
+  managerName: function () {
     var user = Meteor.user();
     return user && user.profile.name;
   },
@@ -126,10 +127,20 @@ Template.addOrderDisposal.onRendered(function () {
 });
 
 Template.addOrderDisposal.events({
-  'change [name=timestamp]': function(e) {
+  'change [name=timestamp]': function (e) {
     var t = $(e.target);
-    var time = (new Date(t.val())).getTime();
+    var d = t && t.val() && t.val().split('-');
+    var time = (new Date(d[0], d[1] - 1, d[2])).getTime();
     t.data('time', time ? time : 0);
+  }
+});
+
+Template.orderDisposal.onCreated(function() {
+  // 当打开特定Id的订单失败（比如对于Id的订单不存在）时进入创建订单详情页面
+  var data = Template.currentData();
+  //console.log('data: ' + JSON.stringify(data));
+  if (!data.order || !data.order._id) {
+    Router.go('/order');
   }
 });
 
@@ -159,12 +170,33 @@ Template.orderDisposal.events({
     console.log('orderInfo: ' + JSON.stringify(orderInfo));
     var disposalInfo = getDisposalInfo(t.find('.add-order-disposal'));
     console.log('disposalInfo: ' + JSON.stringify(disposalInfo));
+    var order = orderInfo;
+    var errors = validateNewOrder(order);
+    if (errors.err) {
+      Session.set('orderManagementSubmitErrors', errors);
+      throwError(getErrorMessage(errors));
+      return;
+    }
   },
   'click .order-tool .print-preview': function (e, t) {
     console.log('打印预览订单基本信息及处理记录');
   },
   'click .order-tool .remove-order': function (e, t) {
     console.log('删除当前订单基本信息及处理记录');
+    e.preventDefault();
+
+    // 获取对应数据库条目Id
+    var _id = this.order && this.order._id;
+    console.log('_id: ' + _id);
+    if (!confirm('你确实要删除该订单的所有相关信息吗？')) {
+      return;
+    }
+    Meteor.call('orderRemove', _id, function(err) {
+      if (err) {
+        return throwError(err.reason);
+      }
+      Router.go('/order');
+    });
   }
 });
 
