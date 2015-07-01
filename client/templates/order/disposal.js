@@ -130,12 +130,13 @@ Template.addOrderDisposal.events({
   'change [name=timestamp]': function (e) {
     var t = $(e.target);
     var d = t && t.val() && t.val().split('-');
-    var time = (new Date(d[0], d[1] - 1, d[2])).getTime();
+    // 如果手工设定的日期，则假设时间为下午6点（通常为下班时间）
+    var time = (new Date(d[0], d[1] - 1, d[2], 18)).getTime();
     t.data('time', time ? time : 0);
   }
 });
 
-Template.orderDisposal.onCreated(function() {
+Template.orderDisposal.onCreated(function () {
   // 当打开特定Id的订单失败（比如对于Id的订单不存在）时进入创建订单详情页面
   var data = Template.currentData();
   //console.log('data: ' + JSON.stringify(data));
@@ -150,9 +151,17 @@ Template.orderDisposal.onRendered(function () {
 });
 
 Template.orderDisposal.events({
+  // 添加订单处理记录
   'click .order-tool .add-disposal': function (e) {
     console.log('添加订单处理记录');
     e.preventDefault();
+
+    var data = Template.currentData();
+    if (!data || !data.order || !data.order._id) {
+      throwError('请先保存订单基本信息');
+      //alert('请先保存订单基本信息！');
+      return;
+    }
     var disposal = $('#add-order-disposal');
     if (disposal.hasClass('hidden')) {
       disposal.removeClass('hidden');
@@ -163,24 +172,56 @@ Template.orderDisposal.events({
       });
     }
   },
+
+  // 保存订单基本信息及处理记录
   'click .order-tool .save-all': function (e, t) {
     console.log('保存订单基本信息及处理记录');
     e.preventDefault();
     var orderInfo = getOrderInfo(t.find('.add-order'));
-    console.log('orderInfo: ' + JSON.stringify(orderInfo));
-    var disposalInfo = getDisposalInfo(t.find('.add-order-disposal'));
-    console.log('disposalInfo: ' + JSON.stringify(disposalInfo));
-    var order = orderInfo;
+    // 如果含有hidden类表示隐藏了订单处理部分，提交时也相应忽略这部分
+    var disposal = t.find('#add-order-disposal');
+    var disposalInfo = {};
+    var $disposal = $(disposal);
+    if (!$disposal.hasClass('hidden')) {
+      disposalInfo = getDisposalInfo(disposal);
+    }
+
+    var order = _.extend(orderInfo, {disposal: disposalInfo});
+    console.log('order: ' + JSON.stringify(order));
     var errors = validateNewOrder(order);
     if (errors.err) {
       Session.set('orderManagementSubmitErrors', errors);
-      throwError(getErrorMessage(errors));
-      return;
+      return throwError(getErrorMessage(errors));
+    }
+    // 如果当前加载了订单，则获取对应id，当前为订单更新操作
+    var currentOrder = Template.currentData().order;
+    var orderId = currentOrder && currentOrder._id ? currentOrder._id : '';
+    if (orderId) {
+      Meteor.call('orderUpdate', orderId, order, function (err) {
+        if (err) {
+          return throwError(err.reason);
+        }
+        // 清空并隐藏订单处理部分
+        clearDisposalInfo(disposal);
+        $disposal.fadeOut('normal', function () {
+          $disposal.addClass('hidden');
+        });
+      });
+    } else {
+      Meteor.call('orderInsert', order, function (err) {
+        if (err) {
+          return throwError(err.reason);
+        }
+      });
     }
   },
+
+  // 打印预览订单基本信息及处理记录
   'click .order-tool .print-preview': function (e, t) {
     console.log('打印预览订单基本信息及处理记录');
   },
+
+  // 删除当前订单基本信息及处理记录
   'click .order-tool .remove-order': function (e, t) {
     console.log('删除当前订单基本信息及处理记录');
     e.preventDefault();
@@ -191,14 +232,31 @@ Template.orderDisposal.events({
     if (!confirm('你确实要删除该订单的所有相关信息吗？')) {
       return;
     }
-    Meteor.call('orderRemove', _id, function(err) {
-      if (err) {
-        return throwError(err.reason);
-      }
-      Router.go('/order');
+    Meteor.call('orderRemove', _id, function (err) {
+      //if (err) {
+      //  return throwError(err.reason);
+      //}
+      //Router.go('/order');
+      err ? throwError(err.reason) : Router.go('/order');
     });
   }
 });
+
+function clearDisposalInfo(target) {
+  var t = $(target);
+  t.find('[name=timestamp]').data('time');
+  t.find('[name=disposalType]').val();
+  t.find('[name=managerId]').val();
+  t.find('[name=disposalComment]').val();
+  t.find('[name=goodsType]').val();
+  t.find('[name=goodsComment]').val();
+  clearGoodsList(t.find('.delivery .grid'));
+  t.find('[name=capitalType]').val();
+  t.find('[name=accountType]').val();
+  t.find('[name=capitalComment]').val();
+  t.find('[name=value]').val();
+  t.find('[name=currency]').val();
+}
 
 function getDisposalInfo(target) {
   var t = $(target);
@@ -224,7 +282,12 @@ function getDisposalInfo(target) {
 }
 
 function getGoodsList(target) {
+  // todo
   return ['for test'];
+}
+
+function clearGoodsList(target) {
+  // todo
 }
 
 function getOrderInfo(target) {
@@ -251,32 +314,4 @@ function getOrderInfo(target) {
     info.customer = info.customer.val();
   }
   return info;
-}
-
-function clearForm(target) {
-  var form = $(target);
-  form.find('[name=code]').val('');
-  form.find('[name=type]').val('');
-  form.find('[name=customerId]').val('');
-  form.find('[name=phone]').val('');
-  form.find('[name=address]').val('');
-  form.find('[name=stationId]').val(defaultStationId());
-  form.find('[name=comment]').val('');
-// 清空隐藏文本框中保存的数据库条目Id，即清空覆盖标识
-  form.find('[name=overlap]').val('');
-}
-
-function fillForm(_id) {
-  var data = Orders.findOne(_id);
-  //console.log('data: ' + JSON.stringify(data));
-  var form = $('#add-order');
-  form.find('[name=code]').val(data.code);
-  form.find('[name=type]').val(data.type);
-  form.find('[name=customerId]').val(data.customerId);
-  form.find('[name=phone]').val(data.phone);
-  form.find('[name=address]').val(data.address);
-  form.find('[name=stationId]').val(data.stationId);
-  form.find('[name=comment]').val(data.comment);
-  // 将id保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
-  form.find('[name=overlap]').val(_id);
 }

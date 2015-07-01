@@ -7,7 +7,7 @@ Template.orderListItem.helpers({
   //  };
   //  return names[status] || '未知';
   //},
-  statusColor: function() {
+  statusColor: function () {
     var colors = {
       '进行': 'bg-primary',
       '完成': 'bg-success',
@@ -15,7 +15,7 @@ Template.orderListItem.helpers({
     };
     return colors[this.status] || 'bg-danger';
   },
-  customerName: function() {
+  customerName: function () {
     var customer = Customers.findOne(this.customer);
     if (customer && customer.name) {
       return customer.name;
@@ -35,7 +35,7 @@ Template.addOrder.helpers({
   }
 });
 
-Template.orderManagement.onCreated(function() {
+Template.orderManagement.onCreated(function () {
   Session.set('orderManagementSubmitErrors', {});
 });
 
@@ -76,15 +76,15 @@ Template.orderManagement.events({
     //if (target.find('[name=overlap]').val()) {
     //  target.find('[name=overlap]').val('');
     //} else {
-      if (target.hasClass('hidden')) {
-        target.removeClass('hidden');
-        target.slideDown('fast');
-      } else {
-        target.slideUp('fast', function () {
-          clearForm(target);
-          target.addClass('hidden');
-        });
-      }
+    if (target.hasClass('hidden')) {
+      target.removeClass('hidden');
+      target.slideDown('fast');
+    } else {
+      target.slideUp('fast', function () {
+        clearForm(target);
+        target.addClass('hidden');
+      });
+    }
     //}
   },
 
@@ -110,7 +110,7 @@ Template.orderManagement.events({
     e.preventDefault();
 
     var form = $(e.target);
-    var order= {
+    var order = {
       code: form.find('[name=code]').val(),
       type: form.find('[name=type]').val(),
       customer: form.find('[name=customerNameOrId]').val(),
@@ -127,7 +127,11 @@ Template.orderManagement.events({
     if (customer && customer.name == order.customer) {
       order.customer = customerId;
     }
-    //console.log('order: ' + JSON.stringify(order));
+    var userId = Meteor.userId();
+    order = _.extend(order, {
+      status: '进行', deadline: '', managerId: userId, disposal: {}
+    });
+    console.log('order: ' + JSON.stringify(order));
     //var overlap = form.find('[name=overlap]').val();
     //console.log('overlap is: ' + overlap);
     //var data = {order: order, overlap: overlap};
