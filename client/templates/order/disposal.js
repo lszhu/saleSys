@@ -75,12 +75,14 @@ Template.editOrder.events({
   'change .add-order input[name=deadline]': function (e) {
     var target = $(e.target);
     var t = target.val().split('-');
-    if (t.length != 3) {
+    var time = new Date(t[0], t[1] - 1, t[2]);
+    if (time.toString() == 'Invalid Date') {
       throwError('交货截至日期填写有误！');
-      t = [0, 1, 0];
+      time = 0;
+    } else {
+      time = time.getTime();
     }
-    var time = (new Date(t[0], t[1] - 1, t[2])).getTime();
-    target.data('time', time ? time.toString() : '');
+    target.data('time', time);
   }
 });
 
@@ -93,7 +95,7 @@ Template.editOrder.helpers({
     return u == v ? 'selected' : '';
   },
   time: function (d) {
-    return d ? d.getTime() : '';
+    return d && d.getTime() ? d.getTime() : 0;
   },
   formatDate: formatDate
 });
@@ -123,10 +125,6 @@ Template.addOrderDisposal.onRendered(function () {
   //this.$('.order-keyword').val(key);
   //$('#add-order').hide();
 
-  // 设置订单处理日期时间
-  var timestamp = this.$('[name=timestamp]');
-  timestamp.val(formatDate(new Date));
-  $(timestamp).data('time', Date.now());
 
 });
 
@@ -134,13 +132,15 @@ Template.addOrderDisposal.events({
   'change [name=timestamp]': function (e) {
     var t = $(e.target);
     var d = t && t.val() && t.val().split('-');
-    if (d.length != 3) {
-      throwError('订单处理时间填写有误！');
-      d = [0, 1, 0];
-    }
     // 如果手工设定的日期，则假设时间为下午6点（通常为下班时间）
-    var time = (new Date(d[0], d[1] - 1, d[2], 18)).getTime();
-    t.data('time', time ? time : 0);
+    var time = (new Date(d[0], d[1] - 1, d[2], 18));
+    if (time.toString() == 'Invalid Date') {
+      throwError('订单处理时间填写有误！');
+      time = 0;
+    } else {
+      time = time.getTime();
+    }
+    t.data('time', time);
   }
 });
 
@@ -166,14 +166,19 @@ Template.orderDisposal.events({
 
     var data = Template.currentData();
     if (!data || !data.order || !data.order._id) {
-      throwError('请先保存订单基本信息');
+      throwError('请先填写并保存订单基本信息');
       //alert('请先保存订单基本信息！');
       return;
     }
     var disposal = $('#add-order-disposal');
     if (disposal.hasClass('hidden')) {
       disposal.removeClass('hidden');
-      disposal.fadeIn('normal');
+      disposal.fadeIn('normal', function () {
+        // 设置订单处理日期时间
+        disposal.find('[name=timestamp]')
+            .val(formatDate(new Date))
+            .data('time', Date.now());
+      });
     } else {
       disposal.fadeOut('normal', function () {
         disposal.addClass('hidden');
@@ -217,10 +222,12 @@ Template.orderDisposal.events({
         });
       });
     } else {
-      Meteor.call('orderInsert', order, function (err) {
+      Meteor.call('orderInsert', order, function (err, orderId) {
         if (err) {
           return throwError(err.reason);
         }
+        // 转到当前保存订单的处理界面
+        Router.go('/order/' + orderId);
       });
     }
   },
@@ -288,6 +295,10 @@ function getDisposalInfo(target) {
       currency: t.find('[name=currency]').val()
     }
   };
+  // 如果订单处理时间值未定义则设为0以满足校验
+  if (!info.timestamp) {
+    info.timestamp = 0;
+  }
   return info;
 }
 
@@ -322,6 +333,10 @@ function getOrderInfo(target) {
     info.customer = customer._id;
   } else {
     info.customer = info.customer.val();
+  }
+  // 如果期限（deadline）未定义则指定为0，以满足校验
+  if (!info.deadline) {
+    info.deadline = 0;
   }
   return info;
 }
