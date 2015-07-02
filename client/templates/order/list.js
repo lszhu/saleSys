@@ -135,7 +135,7 @@ Template.orderManagement.events({
     //var overlap = form.find('[name=overlap]').val();
     //console.log('overlap is: ' + overlap);
     //var data = {order: order, overlap: overlap};
-    var errors = validateNewOrder(order);
+    var errors = validateOrderBase(order);
     if (errors.err) {
       Session.set('orderManagementSubmitErrors', errors);
       throwError(getErrorMessage(errors));

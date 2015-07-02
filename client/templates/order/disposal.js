@@ -75,8 +75,12 @@ Template.editOrder.events({
   'change .add-order input[name=deadline]': function (e) {
     var target = $(e.target);
     var t = target.val().split('-');
+    if (t.length != 3) {
+      throwError('交货截至日期填写有误！');
+      t = [0, 1, 0];
+    }
     var time = (new Date(t[0], t[1] - 1, t[2])).getTime();
-    target.data('time', time ? time : 0);
+    target.data('time', time ? time.toString() : '');
   }
 });
 
@@ -89,7 +93,7 @@ Template.editOrder.helpers({
     return u == v ? 'selected' : '';
   },
   time: function (d) {
-    return d && d.getTime();
+    return d ? d.getTime() : '';
   },
   formatDate: formatDate
 });
@@ -130,6 +134,10 @@ Template.addOrderDisposal.events({
   'change [name=timestamp]': function (e) {
     var t = $(e.target);
     var d = t && t.val() && t.val().split('-');
+    if (d.length != 3) {
+      throwError('订单处理时间填写有误！');
+      d = [0, 1, 0];
+    }
     // 如果手工设定的日期，则假设时间为下午6点（通常为下班时间）
     var time = (new Date(d[0], d[1] - 1, d[2], 18)).getTime();
     t.data('time', time ? time : 0);
@@ -177,6 +185,7 @@ Template.orderDisposal.events({
   'click .order-tool .save-all': function (e, t) {
     console.log('保存订单基本信息及处理记录');
     e.preventDefault();
+
     var orderInfo = getOrderInfo(t.find('.add-order'));
     // 如果含有hidden类表示隐藏了订单处理部分，提交时也相应忽略这部分
     var disposal = t.find('#add-order-disposal');
@@ -188,7 +197,7 @@ Template.orderDisposal.events({
 
     var order = _.extend(orderInfo, {disposal: disposalInfo});
     console.log('order: ' + JSON.stringify(order));
-    var errors = validateNewOrder(order);
+    var errors = validateOrderBase(order);
     if (errors.err) {
       Session.set('orderManagementSubmitErrors', errors);
       return throwError(getErrorMessage(errors));
@@ -261,6 +270,7 @@ function clearDisposalInfo(target) {
 function getDisposalInfo(target) {
   var t = $(target);
   var info = {
+    index: t.data('index'),
     timestamp: t.find('[name=timestamp]').data('time'),
     type: t.find('[name=disposalType]').val(),
     managerId: t.find('[name=managerId]').val(),
