@@ -282,19 +282,37 @@ function getDisposalInfo(target) {
     type: t.find('[name=disposalType]').val(),
     managerId: t.find('[name=managerId]').val(),
     comment: t.find('[name=disposalComment]').val(),
-    goods: {
+    delivery: {
       type: t.find('[name=goodsType]').val(),
-      comment: t.find('[name=goodsComment]').val(),
-      list: getGoodsList(t.find('.delivery .grid'))
+      comment: t.find('[name=goodsComment]').val()
     },
     capital: {
       type: t.find('[name=capitalType]').val(),
-      accountType: t.find('[name=accountType]').val(),
-      comment: t.find('[name=capitalComment]').val(),
-      value: t.find('[name=value]').val(),
-      currency: t.find('[name=currency]').val()
+      comment: t.find('[name=capitalComment]').val()
     }
   };
+  // 存在delivery.type说明delivery内容有效，分析并添加具体内容
+  if (info.delivery.type) {
+    info.delivery.product = getGoodsList(t.find('.delivery .grid'));
+  }
+
+  var accountType = t.find('[name=accountType]').val();
+  var value = parseFloat(t.find('[name=value]').val());
+  value = value ? value : 0;
+  var money = {currency: t.find('[name=currency]').val()};
+  if (accountType == '收入现金') {
+    money.value = +value;
+    money.type = '现金';
+  } else if (accountType == '收入支票') {
+    money.value = +value;
+    money.type = '支票';
+  } else if (accountType == '支出') {
+    money.value = -value;
+    money.type = '现金';
+  } else if (accountType != '') {
+    throwError('资金操作类型不正确');
+  }
+  info.capital.money = money;
   // 如果订单处理时间值未定义则设为0以满足校验
   if (!info.timestamp) {
     info.timestamp = 0;

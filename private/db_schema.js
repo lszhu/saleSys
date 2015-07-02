@@ -73,18 +73,18 @@ employee = {
 
 // 货币类型格式
 currency = {
-    // 标准货币符号
-    symbol: String,
-    // 货币名称
-    name: String,
-    // 所属国别
-    country: String,
-    // 与美元的汇率
-    rate: Number,
-    // 备注
-    memo: String,
-    // 最近修改时间
-    timestamp: Date
+  // 标准货币符号
+  symbol: String,
+  // 货币名称
+  name: String,
+  // 所属国别
+  country: String,
+  // 与美元的汇率
+  rate: Number,
+  // 备注
+  memo: String,
+  // 最近修改时间
+  timestamp: Date
 };
 
 // 产品或货物格式
@@ -260,16 +260,14 @@ capital = {
   // 发生地点（销售分部）
   stationId: String,
   // 资金描述
-  money: [
-    {
-      // 类型：现金cash，支票cheque
-      type: String,
-      // 数额：正数为收入，负数为支出
-      value: Number,
-      // 货币类型
-      currency: String
-    }
-  ],
+  money: {
+    // 类型：现金cash，支票cheque
+    type: String,
+    // 数额：正数为收入，负数为支出
+    value: Number,
+    // 货币类型
+    currency: String
+  },
   // 资金来源或使用说明
   comment: String,
   // 资金来源或去处，可以是客户，也可以是员工（类型为loan或wage时）
@@ -281,7 +279,7 @@ capital = {
   // 通过对应订单Id可以查到所有相关凭证，此处不再重复保存
   orderId: String,
   // 操作员
-  operator: String,
+  operatorId: String,
   // 记录时间
   timestamp: Date
 };
@@ -330,7 +328,7 @@ users = {
     currency: String,
     // 默认显示的部门Id（用于创建雇员等信息时自动选择部门）
     stationId: String
-  }
+  },
   // 用户级别，分0-3共4级
   // 3为超级用户包所有权限，同时将忽略后面的stationId和privilege等设置
   // 2为特权用户，拥有除创建登录账号，不能创建销售分部和系统设置外的所有权限
