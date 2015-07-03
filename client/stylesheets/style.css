@@ -350,6 +350,9 @@ h2.login {
     cursor: pointer;
 }
 
+
+
+/* 不再使用fieldset和legend
 fieldset {
     margin-top: 10px;
     border: 1px solid lightgray;
@@ -357,7 +360,6 @@ fieldset {
     padding-bottom: 15px;
 }
 fieldset legend {
-    /*display: none;*/
     margin-bottom: 2px;
     text-align: center;
     font-size: 1.2em;
@@ -366,3 +368,4 @@ fieldset legend {
     width: 100px;
     border: none;
 }
+*/
