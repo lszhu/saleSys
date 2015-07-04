@@ -25,9 +25,13 @@ Template.delivery.onCreated(function () {
     ],
     stretchH: 'all',
 
+    fixedColumnsLeft: 6,
+
     manualColumnResize: true,
     manualRowResize: true
   });
+
+  //hot.setDataAtCell(0, 0, '+');
 
   //hot.addHook('afterLoadData', function() {
   //  hot.render();
@@ -36,9 +40,18 @@ Template.delivery.onCreated(function () {
 
 Template.delivery.onRendered(function () {
 
-  //var container = $('.grid')[0];
+  // 准备订单处理中内嵌表格
   var up_container = this.find('.grid');
   up_container.appendChild(container);
+  Handsontable.hooks.add('afterRender', function () {
+    $('th > .relative > .colHeader.cornerHeader').text('+');
+    console.log('rerender');
+  });
+  Handsontable.hooks.add('modifyColWidth', function () {
+    $('th > .relative > .colHeader.cornerHeader').text('+');
+    //console.log('modify colWidth');
+  });
+
   //hot.render();
   //var hot;
   //var data = Session.get('data');
@@ -70,15 +83,32 @@ Template.delivery.onRendered(function () {
 });
 
 Template.delivery.events({
+  // 用于显示货物清单
   'click .open-goods-list': function (e, t) {
     e.preventDefault();
+
+    // 获取小三角形图标，用于随后改变放置方向
+    var caret = $(e.currentTarget).find('i.fa');
     var show = $(t.find('.grid'));
     if (show.hasClass('hidden')) {
+      caret.removeClass('fa-caret-down');
+      caret.addClass('fa-caret-up');
       show.removeClass('hidden');
-      //hot.render();
+      hot.render();
     } else {
       show.addClass('hidden');
+      caret.removeClass('fa-caret-up');
+      caret.addClass('fa-caret-down');
     }
-    //hot.render();
+  },
+
+  // 用于给表格末尾添加新空行
+  'click .delivery': function(e) {
+    var t = $(e.target);
+    if (t.hasClass('colHeader') && t.hasClass('cornerHeader') ||
+        t.children('.colHeader.cornerHeader').length) {
+      console.log('click event');
+      hot.alter('insert_row');
+    }
   }
 });

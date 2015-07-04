@@ -100,9 +100,9 @@ Template.editOrder.helpers({
   formatDate: formatDate
 });
 
-Template.addOrderDisposal.helpers({
+Template.orderDisposalDetail.helpers({
   hasError: function (field) {
-    return !!Session.get('addOrderDisposalSubmitErrors')[field] ?
+    return !!Session.get('orderDisposalDetailSubmitErrors')[field] ?
         'has-error' : '';
   },
   managerId: function () {
@@ -115,11 +115,11 @@ Template.addOrderDisposal.helpers({
   formatDate: formatDate
 });
 
-Template.addOrderDisposal.onCreated(function () {
-  Session.set('addOrderDisposalSubmitErrors', {});
+Template.orderDisposalDetail.onCreated(function () {
+  Session.set('orderDisposalDetailSubmitErrors', {});
 });
 
-Template.addOrderDisposal.onRendered(function () {
+Template.orderDisposalDetail.onRendered(function () {
   //var key = this.data.filterKey;
   //console.log('key: ' + key);
   //this.$('.order-keyword').val(key);
@@ -128,7 +128,8 @@ Template.addOrderDisposal.onRendered(function () {
 
 });
 
-Template.addOrderDisposal.events({
+Template.orderDisposalDetail.events({
+  // 根据用户输入的时间更新DOM附件数据
   'change [name=timestamp]': function (e) {
     var t = $(e.target);
     var d = t && t.val() && t.val().split('-');
@@ -141,6 +142,21 @@ Template.addOrderDisposal.events({
       time = time.getTime();
     }
     t.data('time', time);
+  },
+
+  // 保存订单的当前处理内容
+  'click .fa-check': function(e) {
+    e.preventDefault();
+
+    console.log('clicked, data is: ' + JSON.stringify(hot.getData()));
+    console.log('保存当前订单处理');
+  },
+
+  // 删除订单的当前处理内容
+  'click .fa-trash-o': function(e) {
+    e.preventDefault();
+
+    console.log('删除当前订单处理');
   }
 });
 
@@ -155,7 +171,7 @@ Template.orderDisposal.onCreated(function () {
 
 Template.orderDisposal.onRendered(function () {
   // 刚加载订单处理页面时不显示订单处理的表单
-  $('#add-order-disposal').hide();
+  $('#order-disposal-detail').hide();
 });
 
 Template.orderDisposal.events({
@@ -170,7 +186,7 @@ Template.orderDisposal.events({
       //alert('请先保存订单基本信息！');
       return;
     }
-    var disposal = $('#add-order-disposal');
+    var disposal = $('#order-disposal-detail');
     if (disposal.hasClass('hidden')) {
       disposal.removeClass('hidden');
       disposal.fadeIn('normal', function () {
@@ -193,7 +209,7 @@ Template.orderDisposal.events({
 
     var orderInfo = getOrderInfo(t.find('.add-order'));
     // 如果含有hidden类表示隐藏了订单处理部分，提交时也相应忽略这部分
-    var disposal = t.find('#add-order-disposal');
+    var disposal = t.find('#order-disposal-detail');
     var disposalInfo = {};
     var $disposal = $(disposal);
     if (!$disposal.hasClass('hidden')) {
@@ -322,7 +338,8 @@ function getDisposalInfo(target) {
 
 function getGoodsList(target) {
   // todo
-  return ['for test'];
+  //console.log('clicked, data is: ' + JSON.stringify(hot.getData()));
+  return hot.getData();
 }
 
 function clearGoodsList(target) {
