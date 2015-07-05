@@ -11,8 +11,8 @@ Template.delivery.onCreated(function () {
     data: data,
     rowHeaders: true,
     colHeaders: [
-      '产品编号', '产品名称', '数量',
-      '单价', '总价', '货币类型', '序列号'
+      '编号', '名称', '数量',
+      '单价', '总价', '货种', '序列号'
     ],
     //colWidths: [100, 100, 100, 100, 100, 100, 100],
     columns: [

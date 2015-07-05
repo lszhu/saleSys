@@ -20,7 +20,7 @@ Template.orderDisposalItem.helpers({
 Template.editOrder.onCreated(function () {
   Session.set('editOrderSubmitErrors', {});
 
-  // 必须保证当前模板上下文数据不是未定义
+  // 必须保证当前模板上下文数据不是未定义，参考路由配置
   var currentData = Template.currentData();
   currentData._filteredManagersListener = new Tracker.Dependency();
   currentData._filteredManagers = [{}];
@@ -172,6 +172,13 @@ Template.orderDisposal.onCreated(function () {
 Template.orderDisposal.onRendered(function () {
   // 刚加载订单处理页面时不显示订单处理的表单
   $('#order-disposal-detail').hide();
+});
+
+Template.orderDisposal.helpers({
+  disposal: function() {
+    var data = Template.currentData();
+    return data && data.order && data.order.disposal;
+  }
 });
 
 Template.orderDisposal.events({

@@ -350,7 +350,9 @@ h2.login {
     cursor: pointer;
 }
 
-
+.order-disposal .panel-body {
+    padding: 0;
+}
 
 /* 不再使用fieldset和legend
 fieldset {

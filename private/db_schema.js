@@ -215,8 +215,8 @@ delivery = {
       value: Number,
       // 对应货币类型
       currency: String,
-      // 相应产品唯一序列号列表
-      sn: Array
+      // 相应产品唯一序列号列表，建议多个序列号间用（半角英文）空格分开
+      sn: String
     }
   ],
   // 操作类型, in表示入库，out表示出库，trim表示其他调整操作（如维修等）
