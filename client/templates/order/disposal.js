@@ -7,6 +7,8 @@ Template.orderDisposalItem.helpers({
     };
     return colors[this.status] || 'bg-danger';
   },
+  formatDate: formatDate,
+  formatTime: formatTime,
   customerName: function () {
     var customer = Customers.findOne(this.customerId);
     return customer && customer.name;
@@ -14,6 +16,35 @@ Template.orderDisposalItem.helpers({
   stationName: function () {
     var station = Stations.findOne(this.stationId);
     return station && station.name;
+  }
+});
+
+Template.orderDisposalItem.onRendered(function () {
+  var detail = this.find('.order-disposal-item > .panel');
+  $(detail).hide();
+});
+
+Template.orderDisposalItem.events({
+  'click .open-detail': function (e, t) {
+    e.preventDefault();
+
+    var target = $(e.target);
+    var detail = t.find('.order-disposal-item > .panel');
+    detail = $(detail);
+    if (detail.hasClass('hide-me')) {
+      detail.removeClass('hide-me');
+      detail.slideDown('normal');
+      target.find('.fa-caret-down')
+          .removeClass('fa-caret-down')
+          .addClass('fa-caret-up');
+    } else {
+      detail.slideUp('normal', function () {
+        detail.addClass('hide-me');
+        target.find('.fa-caret-up')
+            .removeClass('fa-caret-up')
+            .addClass('fa-caret-down');
+      });
+    }
   }
 });
 
@@ -145,7 +176,7 @@ Template.orderDisposalDetail.events({
   },
 
   // 保存订单的当前处理内容
-  'click .fa-check': function(e) {
+  'click .fa-check': function (e) {
     e.preventDefault();
 
     console.log('clicked, data is: ' + JSON.stringify(hot.getData()));
@@ -153,7 +184,7 @@ Template.orderDisposalDetail.events({
   },
 
   // 删除订单的当前处理内容
-  'click .fa-trash-o': function(e) {
+  'click .fa-trash-o': function (e) {
     e.preventDefault();
 
     console.log('删除当前订单处理');
@@ -175,9 +206,18 @@ Template.orderDisposal.onRendered(function () {
 });
 
 Template.orderDisposal.helpers({
-  disposal: function() {
+  indexDisposal: function () {
     var data = Template.currentData();
-    return data && data.order && data.order.disposal;
+    var disposal = data && data.order && data.order.disposal;
+    if (!disposal) {
+      return;
+    }
+    data = [];
+    for (var i = 0; i < disposal.length; i++) {
+      data.push({index: i, data: disposal[i]});
+    }
+    console.log('disposal data: ' + JSON.stringify(data));
+    return data;
   }
 });
 
@@ -194,17 +234,17 @@ Template.orderDisposal.events({
       return;
     }
     var disposal = $('#order-disposal-detail');
-    if (disposal.hasClass('hidden')) {
-      disposal.removeClass('hidden');
-      disposal.fadeIn('normal', function () {
+    if (disposal.hasClass('hide-me')) {
+      disposal.removeClass('hide-me');
+      disposal.slideDown('normal', function () {
         // 设置订单处理日期时间
         disposal.find('[name=timestamp]')
             .val(formatDate(new Date))
             .data('time', Date.now());
       });
     } else {
-      disposal.fadeOut('normal', function () {
-        disposal.addClass('hidden');
+      disposal.slideUp('normal', function () {
+        disposal.addClass('hide-me');
       });
     }
   },

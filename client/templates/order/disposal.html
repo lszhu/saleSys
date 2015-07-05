@@ -14,13 +14,13 @@
 
     {{> editOrder order }}
 
-    {{#each disposal }}
+    {{#each indexDisposal }}
       {{> orderDisposalItem }}
     {{/each }}
 
     {{! 用于排版时保证一行对齐 -}}
     <div class="row"></div>
-    <div id="order-disposal-detail" class="hidden" data-index="-1">
+    <div id="order-disposal-detail" class="hide-me" data-index="-1">
       <div class="panel panel-primary">
         <div class="panel-heading text-center">添加订单处理</div>
         <div class="panel-body">
@@ -225,21 +225,23 @@
 </template>
 
 <template name="orderDisposalItem">
-  <div class="order-disposal-item">
+  <div class="order-disposal-item" data-index="{{index}}">
     <div class="col-xs-12 attach">
       <div class="input-group">
-        <span class="input-group-addon" title="18:23:22">2015-08-22</span>
-        <span class="input-group-addon">备货</span>
+        <span class="input-group-addon" title="{{formatTime data.timestamp}}">
+          {{ formatDate data.timestamp }}
+        </span>
+        <span class="input-group-addon">{{ data.type }}</span>
         <input type="text" name="code" class="form-control"
                placeholder="处理内容概述">
-        <span class="input-group-addon btn btn-primary">
+        <span class="input-group-addon btn btn-primary open-detail">
           详情
           <i class="fa fa-caret-down"></i>
         </span>
       </div>
     </div>
     <div class="row"></div>
-    <div class="panel panel-default">
+    <div class="panel panel-default hide-me">
       <div class="panel-body">
         {{> orderDisposalDetail }}
       </div>
