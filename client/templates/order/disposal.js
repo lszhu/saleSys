@@ -291,6 +291,11 @@ Template.orderDisposal.events({
       return;
     }
     var disposal = $('#order-disposal-detail');
+    // 确保首次显示页面时是隐藏的
+    if (disposal.hasClass('hidden')) {
+      disposal.removeClass('hidden');
+      disposal.hide();
+    }
     if (disposal.hasClass('hide-me')) {
       disposal.removeClass('hide-me');
       disposal.slideDown('normal', function () {
