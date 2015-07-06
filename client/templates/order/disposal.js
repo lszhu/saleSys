@@ -96,14 +96,14 @@ Template.editOrder.onCreated(function () {
 });
 
 Template.editOrder.events({
-  'change .add-order select[name=stationId]': function (e) {
+  'change .edit-order select[name=stationId]': function (e) {
     var managers = Meteor.users.find({stationId: $(e.target).val()}).fetch();
     var currentData = Template.currentData() || {};
     managers.unshift({});
     currentData._filteredManagers = managers;
     currentData._filteredManagersListener.changed();
   },
-  'change .add-order input[name=deadline]': function (e) {
+  'change .edit-order input[name=deadline]': function (e) {
     var target = $(e.target);
     var t = target.val().split('-');
     var time = new Date(t[0], t[1] - 1, t[2]);
@@ -132,6 +132,55 @@ Template.editOrder.helpers({
 });
 
 Template.orderDisposalDetail.helpers({
+  selectionItem: function () {
+    return {
+      disposalTypes: [
+        {name: ''}, {name: '备货'}, {name: '发货'}, {name: '收货'},
+        {name: '换货'}, {name: '退货'}, {name: '收款'}, {name: '付款'},
+        {name: '退款'}, {name: '维修'}, {name: '报废'}
+      ],
+      goodsTypes: [
+        {name: ''}, {name: '出库'}, {name: '入库'}, {name: '其它'}
+      ],
+      accountTypes: [
+        {name: ''}, {name: '收入现金'}, {name: '收入支票'}, {name: '支出'}
+      ],
+      capitalTypes: [
+        {name: ''}, {name: '销售'}, {name: '采购'},
+        {name: '维护'}, {name: '日常开销'}
+      ]
+    };
+  },
+  isSelected: function (attr) {
+    var selection = Template.parentData();
+    selection = selection && selection.disposal && selection.disposal.type;
+    //console.log('selection: ' + selection);
+    return attr == selection ? 'selected' : '';
+  },
+  isSelectedAccount: function(attr) {
+
+  },
+  isSelectedCapital: function(attr) {
+    var data = Template.parentData();
+    console.log('disposal data: ' + JSON.stringify(data));
+    var capital = data && data.capital;
+    capital && console.log('capital: ' + JSON.stringify(capital));
+    return capital && capital.type == attr ? 'selected' : '';
+  },
+  isSelectedAccount: function(attr) {
+    var data = Template.parentData();
+    data = data ? data.capital : null;
+    console.log('account data: ' + JSON.stringify(data));
+    if (!data || !data.money || !data.money.value) {
+      return '' == attr ? 'selected' : '';
+    } else if (data.money.value < 0) {
+      return '支出' == attr ? 'selected' : '';
+    }
+    return '收入' + data.money.type == attr ? 'selected' : '';
+  },
+  absolute: function(v) {
+    return Math.abs(v);
+  },
   hasError: function (field) {
     return !!Session.get('orderDisposalDetailSubmitErrors')[field] ?
         'has-error' : '';
@@ -143,6 +192,9 @@ Template.orderDisposalDetail.helpers({
     var user = Meteor.user();
     return user && user.profile.name;
   },
+  time: function (d) {
+    return d && d.getTime() ? d.getTime() : 0;
+  },
   formatDate: formatDate
 });
 
@@ -152,10 +204,6 @@ Template.orderDisposalDetail.onCreated(function () {
 
 Template.orderDisposalDetail.onRendered(function () {
   //var key = this.data.filterKey;
-  //console.log('key: ' + key);
-  //this.$('.order-keyword').val(key);
-  //$('#add-order').hide();
-
 
 });
 
@@ -206,6 +254,7 @@ Template.orderDisposal.onRendered(function () {
 });
 
 Template.orderDisposal.helpers({
+  // 为每个处理内容关联上索引号并按时间排序，同时插入对应资金收支和货物处理信息
   indexDisposal: function () {
     var data = Template.currentData();
     var disposal = data && data.order && data.order.disposal;
@@ -214,8 +263,16 @@ Template.orderDisposal.helpers({
     }
     data = [];
     for (var i = 0; i < disposal.length; i++) {
-      data.push({index: i, data: disposal[i]});
+      data.push({
+        index: i,
+        disposal: disposal[i],
+        capital: Capitals.findOne(disposal[i].capitalId),
+        delivery: Deliveries.findOne(disposal[i].deliveryId)
+      });
     }
+    data.sort(function (a, b) {
+      return a.disposal.timestamp.valueOf() - b.disposal.timestamp.valueOf();
+    });
     console.log('disposal data: ' + JSON.stringify(data));
     return data;
   }
@@ -254,7 +311,7 @@ Template.orderDisposal.events({
     console.log('保存订单基本信息及处理记录');
     e.preventDefault();
 
-    var orderInfo = getOrderInfo(t.find('.add-order'));
+    var orderInfo = getOrderInfo(t.find('.edit-order'));
     // 如果含有hidden类表示隐藏了订单处理部分，提交时也相应忽略这部分
     var disposal = t.find('#order-disposal-detail');
     var disposalInfo = {};
@@ -360,7 +417,7 @@ function getDisposalInfo(target) {
   }
 
   var accountType = t.find('[name=accountType]').val();
-  var value = parseFloat(t.find('[name=value]').val());
+  var value = parseFloat(t.find('[name=capitalValue]').val());
   value = value ? value : 0;
   var money = {currency: t.find('[name=currency]').val()};
   if (accountType == '收入现金') {
@@ -403,7 +460,7 @@ function getOrderInfo(target) {
     customer: t.find('[name=customerNameOrId]'),
     address: t.find('[name=address]').val(),
     phone: t.find('[name=phone]').val(),
-    deadline: t.find('[name=deadline]').data('time'),
+    deadline: parseInt(t.find('[name=deadline]').data('time')),
     stationId: t.find('[name=stationId]').val(),
     managerId: t.find('[name=managerId]').val(),
     comment: t.find('[name=comment]').val()

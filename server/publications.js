@@ -1,3 +1,19 @@
+// 发布资金收支记录
+Meteor.publish('capitals', function(query, options) {
+  check(query, {orderId: String});
+  check(options. Object);
+
+  return Capitals.find(query, options);
+});
+
+// 发布库存变更信息
+Meteor.publish('deliveries', function(query, options) {
+  check(query, {orderId: String});
+  check(options, Object);
+
+  return Deliveries.find(query, options);
+});
+
 // 发布订单信息
 Meteor.publish('orders', function (query, options) {
   // query可能包含filterKey和_id

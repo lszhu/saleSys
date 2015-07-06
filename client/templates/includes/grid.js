@@ -82,6 +82,12 @@ Template.delivery.onRendered(function () {
    */
 });
 
+Template.delivery.helpers({
+  isSelected: function() {
+
+  }
+});
+
 Template.delivery.events({
   // 用于显示货物清单
   'click .open-goods-list': function (e, t) {

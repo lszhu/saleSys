@@ -1,3 +1,4 @@
+<!-- 如果指定了selection参数，则将其作为选中币种 -->
 <template name="currencySelect">
   <div class="input-group">
     <span class="input-group-addon">币种</span>
@@ -10,7 +11,7 @@
 </template>
 
 <template name="currencySelectItem">
-  {{#if isDefaultCurrency}}
+  {{#if isSelected}}
     <option value="{{symbol}}" selected>{{name}}（{{symbol}}）</option>
   {{else}}
     <option value="{{symbol}}">{{name}}（{{symbol}}）</option>
