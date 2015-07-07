@@ -1,3 +1,4 @@
+<!-- 必须提供goodsType用于设定货物出入库类型，提供deliveries包含货物相关记录 -->
 <template name="delivery">
   <div class="delivery">
     <div class="col-xs-6 col-sm-4 attach">
@@ -5,7 +6,7 @@
         <span class="input-group-addon">货物操作</span>
         <select name="goodsType" class="form-control">
           {{#each goodsTypes }}
-            <option {{ isSelected name }}>{{name}}</option>
+            <option {{ isSelected }}>{{name}}</option>
           {{/each}}
           {{!--
           <option></option>
@@ -23,7 +24,7 @@
       <div class="input-group">
         <span class="input-group-addon">备注</span>
         <input type="text" name="goodsComment" class="form-control"
-               placeholder="货物说明">
+               placeholder="货物说明" value="{{delivery.comment}}">
       </div>
     </div>
 

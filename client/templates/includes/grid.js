@@ -84,7 +84,11 @@ Template.delivery.onRendered(function () {
 
 Template.delivery.helpers({
   isSelected: function() {
-
+    console.log('this.name: ' + this.name);
+    var data = Template.parentData();
+    console.log('delivery data: ' + JSON.stringify(data.delivery));
+    data = data ? data.delivery : null;
+    return data.type == this.name ? 'selected' : '';
   }
 });
 
