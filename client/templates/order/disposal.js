@@ -229,6 +229,10 @@ Template.orderDisposalDetail.events({
 
     //console.log('clicked, data is: ' + JSON.stringify(hot.getData()));
     var data = Template.currentData();
+    var capitalId = data.disposal.capitalId;
+    capitalId = capitalId ? capitalId : '';
+    var deliveryId = data.disposal.deliveryId;
+    deliveryId = deliveryId ? deliveryId : '';
     var orderId = data && data.orderId;
     var order = Orders.findOne(orderId);
     if (!orderId || !order) {
@@ -245,6 +249,8 @@ Template.orderDisposalDetail.events({
       disposal: getDisposalInfo(disposal),
       orderId: orderId,
       index: index,
+      capitalId: capitalId,
+      deliveryId: deliveryId,
       partnerId: order.customer,
       stationId: order.stationId
     };
@@ -482,12 +488,14 @@ function getDisposalInfo(target) {
   if (!info.timestamp) {
     info.timestamp = 0;
   }
+  console.log('upload disposal data: ' + JSON.stringify(info));
   return info;
 }
 
 function getGoodsList(target) {
   // todo
   //console.log('clicked, data is: ' + JSON.stringify(hot.getData()));
+  return ['test only'];
   return hot.getData();
 }
 
