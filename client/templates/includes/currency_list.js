@@ -12,7 +12,7 @@ Template.currencySelectItem.helpers({
   // 如果特别指定了货币，则选中指定货币，否则选中默认货币
   isSelected: function() {
     var data = Template.parentData();
-    console.log('selected currency: ' + data && data.selection);
+    //console.log('selected currency: ' + data && data.selection);
     if (data && data.selection) {
       return this.symbol == data.selection;
     } else {

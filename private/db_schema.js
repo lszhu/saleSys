@@ -272,7 +272,7 @@ capital = {
   comment: String,
   // 资金来源或去处，可以是客户，也可以是员工（类型为loan或wage时）
   // 如果是固定客户，对应customer集合中文档条目的数据库内部ObjectId
-  // 如果是临时客户（对应零售情况），该值为空
+  // 如果是临时客户（对应零售情况），该值为空或客户名称
   // 如果是员工，对应employee集合中文档条目的数据库内部ObjectId
   partnerId: String,
   // 对应订单Id, 对应为order集合的文档条目的数据库内部的ObjectId

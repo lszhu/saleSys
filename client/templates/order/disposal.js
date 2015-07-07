@@ -157,20 +157,20 @@ Template.orderDisposalDetail.helpers({
     //console.log('selection: ' + selection);
     return attr == selection ? 'selected' : '';
   },
-  isSelectedAccount: function(attr) {
+  isSelectedAccount: function (attr) {
 
   },
-  isSelectedCapital: function(attr) {
+  isSelectedCapital: function (attr) {
     var data = Template.parentData();
-    console.log('disposal data: ' + JSON.stringify(data));
+    //console.log('disposal data: ' + JSON.stringify(data));
     var capital = data && data.capital;
-    capital && console.log('capital: ' + JSON.stringify(capital));
+    //capital && console.log('capital: ' + JSON.stringify(capital));
     return capital && capital.type == attr ? 'selected' : '';
   },
-  isSelectedAccount: function(attr) {
+  isSelectedAccount: function (attr) {
     var data = Template.parentData();
     data = data ? data.capital : null;
-    console.log('account data: ' + JSON.stringify(data));
+    //console.log('account data: ' + JSON.stringify(data));
     if (!data || !data.money || !data.money.value) {
       return '' == attr ? 'selected' : '';
     } else if (data.money.value < 0) {
@@ -178,7 +178,7 @@ Template.orderDisposalDetail.helpers({
     }
     return '收入' + data.money.type == attr ? 'selected' : '';
   },
-  absolute: function(v) {
+  absolute: function (v) {
     return Math.abs(v);
   },
   hasError: function (field) {
@@ -224,11 +224,45 @@ Template.orderDisposalDetail.events({
   },
 
   // 保存订单的当前处理内容
-  'click .fa-check': function (e) {
+  'click .fa-check': function (e, t) {
     e.preventDefault();
 
-    console.log('clicked, data is: ' + JSON.stringify(hot.getData()));
+    //console.log('clicked, data is: ' + JSON.stringify(hot.getData()));
+    var data = Template.currentData();
+    var orderId = data && data.orderId;
+    var order = Orders.findOne(orderId);
+    if (!orderId || !order) {
+      return throwError('未指定有效订单');
+    }
+    var index = data && data.hasOwnProperty('index') ? data.index : -1;
+    //console.log('disposal detail data: ' + JSON.stringify(data));
+    console.log('orderId is: ' + orderId);
+    console.log('index is: ' + index);
     console.log('保存当前订单处理');
+
+    var disposal = t.find('.order-disposal-detail');
+    data = {
+      disposal: getDisposalInfo(disposal),
+      orderId: orderId,
+      index: index,
+      partnerId: order.customer,
+      stationId: order.stationId
+    };
+    console.log('disposal data: ' + JSON.stringify(data));
+    Meteor.call('orderDisposalUpdate', data, function (err) {
+      if (err) {
+        throwError(err.reason);
+      } else {
+        if (index == -1) {
+          // 清空并隐藏订单处理部分
+          clearDisposalInfo(disposal);
+          // 此处操作了父级模板的DOM
+          $('#order-disposal-detail').fadeOut('normal', function () {
+            this.addClass('hide-me');
+          });
+        }
+      }
+    });
   },
 
   // 删除订单的当前处理内容
@@ -257,6 +291,7 @@ Template.orderDisposal.helpers({
   // 为每个处理内容关联上索引号并按时间排序，同时插入对应资金收支和货物处理信息
   indexDisposal: function () {
     var data = Template.currentData();
+    var orderId = data && data.order && data.order._id;
     var disposal = data && data.order && data.order.disposal;
     if (!disposal) {
       return;
@@ -265,6 +300,7 @@ Template.orderDisposal.helpers({
     for (var i = 0; i < disposal.length; i++) {
       data.push({
         index: i,
+        orderId: orderId,
         disposal: disposal[i],
         capital: Capitals.findOne(disposal[i].capitalId),
         delivery: Deliveries.findOne(disposal[i].deliveryId)
@@ -273,7 +309,7 @@ Template.orderDisposal.helpers({
     data.sort(function (a, b) {
       return a.disposal.timestamp.valueOf() - b.disposal.timestamp.valueOf();
     });
-    console.log('disposal data: ' + JSON.stringify(data));
+    //console.log('disposal data: ' + JSON.stringify(data));
     return data;
   }
 });
@@ -323,27 +359,32 @@ Template.orderDisposal.events({
     var $disposal = $(disposal);
     if (!$disposal.hasClass('hidden')) {
       disposalInfo = getDisposalInfo(disposal);
+      disposalInfo.index = $disposal.data('index');
     }
 
     var order = _.extend(orderInfo, {disposal: disposalInfo});
-    console.log('order: ' + JSON.stringify(order));
+    //console.log('order: ' + JSON.stringify(order));
     var errors = validateOrderBase(order);
     if (errors.err) {
       Session.set('orderManagementSubmitErrors', errors);
       return throwError(getErrorMessage(errors));
     }
     // 如果当前加载了订单，则获取对应id，当前为订单更新操作
-    var currentOrder = Template.currentData().order;
-    var orderId = currentOrder && currentOrder._id ? currentOrder._id : '';
+    var data = Template.currentData();
+    data = data && data.order;
+    var orderId = data && data._id ? data._id : '';
     if (orderId) {
       Meteor.call('orderUpdate', orderId, order, function (err) {
         if (err) {
           return throwError(err.reason);
         }
+        if (disposalInfo.index >= 0) {
+          return;
+        }
         // 清空并隐藏订单处理部分
         clearDisposalInfo(disposal);
         $disposal.fadeOut('normal', function () {
-          $disposal.addClass('hidden');
+          $disposal.addClass('hide-me');
         });
       });
     } else {
@@ -363,7 +404,7 @@ Template.orderDisposal.events({
   },
 
   // 删除当前订单基本信息及处理记录
-  'click .order-tool .remove-order': function (e, t) {
+  'click .order-tool .remove-order': function (e) {
     console.log('删除当前订单基本信息及处理记录');
     e.preventDefault();
 
@@ -402,7 +443,6 @@ function clearDisposalInfo(target) {
 function getDisposalInfo(target) {
   var t = $(target);
   var info = {
-    index: t.data('index'),
     timestamp: t.find('[name=timestamp]').data('time'),
     type: t.find('[name=disposalType]').val(),
     managerId: t.find('[name=managerId]').val(),
@@ -422,8 +462,10 @@ function getDisposalInfo(target) {
   }
 
   var accountType = t.find('[name=accountType]').val();
+  console.log('disposal account type: ' + accountType);
   var value = parseFloat(t.find('[name=capitalValue]').val());
   value = value ? value : 0;
+
   var money = {currency: t.find('[name=currency]').val()};
   if (accountType == '收入现金') {
     money.value = +value;
@@ -434,8 +476,6 @@ function getDisposalInfo(target) {
   } else if (accountType == '支出') {
     money.value = -value;
     money.type = '现金';
-  } else if (accountType != '') {
-    throwError('资金操作类型不正确');
   }
   info.capital.money = money;
   // 如果订单处理时间值未定义则设为0以满足校验
