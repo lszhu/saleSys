@@ -223,16 +223,27 @@ Template.orderDisposalDetail.events({
     t.data('time', time);
   },
 
+  // 资金金额不能为负数，如果输入负数，自动转为其绝对值
+  'change [name=capitalValue]': function(e) {
+    var t = $(e.target);
+    var value = t.val();
+    if (value < 0) {
+      t.val(-value);
+    }
+  },
+
   // 保存订单的当前处理内容
   'click .fa-check': function (e, t) {
     e.preventDefault();
 
     //console.log('clicked, data is: ' + JSON.stringify(hot.getData()));
     var data = Template.currentData();
-    var capitalId = data.disposal.capitalId;
-    capitalId = capitalId ? capitalId : '';
-    var deliveryId = data.disposal.deliveryId;
-    deliveryId = deliveryId ? deliveryId : '';
+    var capitalId = '';
+    var deliveryId = '';
+    if (data && data.disposal) {
+      capitalId = data.disposal.capitalId ? data.disposal.capitalId : '';
+      deliveryId = data.disposal.deliveryId ? data.disposal.deliveryId : '';
+    }
     var orderId = data && data.orderId;
     var order = Orders.findOne(orderId);
     if (!orderId || !order) {
@@ -255,6 +266,11 @@ Template.orderDisposalDetail.events({
       stationId: order.stationId
     };
     console.log('disposal data: ' + JSON.stringify(data));
+    var errors = validateOrderDisposal(data.disposal);
+    Session.set('orderDisposalDetailSubmitErrors', errors);
+    if (errors.err) {
+      return throwError(getErrorMessage(errors));
+    }
     Meteor.call('orderDisposalUpdate', data, function (err) {
       if (err) {
         throwError(err.reason);
@@ -264,7 +280,7 @@ Template.orderDisposalDetail.events({
           clearDisposalInfo(disposal);
           // 此处操作了父级模板的DOM
           $('#order-disposal-detail').fadeOut('normal', function () {
-            this.addClass('hide-me');
+            $(this).addClass('hide-me');
           });
         }
       }
@@ -272,9 +288,40 @@ Template.orderDisposalDetail.events({
   },
 
   // 删除订单的当前处理内容
-  'click .fa-trash-o': function (e) {
+  'click .fa-trash-o': function (e, t) {
     e.preventDefault();
 
+    var data = Template.currentData();
+    var orderId = data && data.orderId;
+    var index = data && data.hasOwnProperty('index') ? data.index : -2;
+    if (!orderId || index < -1) {
+      return throwError('订单信息指定错误');
+    } else if (index == -1) {
+      console.log('index: ' + index);
+      // 清除当前编辑的信息
+      clearDisposalInfo(t.find('.order-disposal-detail'));
+      return;
+    }
+    // 删除前需要用户确认
+    if (!confirm('确认要删除本处理信息')) {
+      return;
+    }
+    // 删除相应处理条目前要先隐藏详情，否则会自动展开下一条目的详情
+    var panel = $(e.target).parents('.panel').eq(0);
+    if (panel) {
+      panel.slideUp('normal', function () {
+        panel.addClass('hide-me');
+      })
+    }
+    Meteor.call('orderDisposalRemove', orderId, index, function (err) {
+      if (err) {
+        throwError(err.reason);
+        // 恢复该处理条目的展开显示
+        panel && panel.slideDown('normal', function () {
+          panel.removeClass('hide-me');
+        });
+      }
+    });
     console.log('删除当前订单处理');
   }
 });
@@ -431,19 +478,22 @@ Template.orderDisposal.events({
 });
 
 function clearDisposalInfo(target) {
-  var t = $(target);
-  t.find('[name=timestamp]').data('time');
-  t.find('[name=disposalType]').val();
-  t.find('[name=managerId]').val();
-  t.find('[name=disposalComment]').val();
-  t.find('[name=goodsType]').val();
-  t.find('[name=goodsComment]').val();
+  var t = target ? $(target) : $('#order-disposal-detail');
+  //t = $('#order-disposal-detail');
+  var d = new Date();
+  t.find('[name=timestamp]').val(formatDate(d));
+  t.find('[name=timestamp]').data('time', d.getTime());
+  t.find('[name=disposalType]').val('');
+  //t.find('[name=managerId]').val('');
+  t.find('[name=disposalComment]').val('');
+  t.find('[name=goodsType]').val('');
+  t.find('[name=goodsComment]').val('');
   clearGoodsList(t.find('.delivery .grid'));
-  t.find('[name=capitalType]').val();
-  t.find('[name=accountType]').val();
-  t.find('[name=capitalComment]').val();
-  t.find('[name=value]').val();
-  t.find('[name=currency]').val();
+  t.find('[name=capitalType]').val('');
+  t.find('[name=accountType]').val('');
+  t.find('[name=capitalComment]').val('');
+  t.find('[name=capitalValue]').val('');
+  //t.find('[name=currency]').val('');
 }
 
 function getDisposalInfo(target) {
@@ -472,7 +522,12 @@ function getDisposalInfo(target) {
   var value = parseFloat(t.find('[name=capitalValue]').val());
   value = value ? value : 0;
 
-  var money = {currency: t.find('[name=currency]').val()};
+  var money = {
+    currency: t.find('[name=currency]').val(),
+    // 默认值用于通过服务端验证
+    value: value,
+    type: ''
+  };
   if (accountType == '收入现金') {
     money.value = +value;
     money.type = '现金';
@@ -484,6 +539,7 @@ function getDisposalInfo(target) {
     money.type = '现金';
   }
   info.capital.money = money;
+
   // 如果订单处理时间值未定义则设为0以满足校验
   if (!info.timestamp) {
     info.timestamp = 0;
