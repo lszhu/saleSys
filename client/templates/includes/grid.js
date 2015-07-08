@@ -1,4 +1,4 @@
-Template.delivery.onCreated(function () {
+Template.goodsList.onCreated(function () {
   data = [
     ['2009', 'gadsd', 2941, 4303, 354, 'CNY', 'gasdfa'],
     ['2010', 'gdasf', 2905, 2867, 412, 'CNY', 'gdkwer'],
@@ -38,14 +38,14 @@ Template.delivery.onCreated(function () {
   //})
 });
 
-Template.delivery.onRendered(function () {
+Template.goodsList.onRendered(function () {
 
   // 准备订单处理中内嵌表格
   var up_container = this.find('.grid');
   up_container.appendChild(container);
   Handsontable.hooks.add('afterRender', function () {
     $('th > .relative > .colHeader.cornerHeader').text('+');
-    console.log('rerender');
+    console.log('render again');
   });
   Handsontable.hooks.add('modifyColWidth', function () {
     $('th > .relative > .colHeader.cornerHeader').text('+');
@@ -82,42 +82,17 @@ Template.delivery.onRendered(function () {
    */
 });
 
-Template.delivery.helpers({
-  hasError: function(field) {
-    return !!Session.get('orderDisposalDetailSubmitErrors')[field] ?
-        'has-error' : '';
-  },
-  isSelected: function() {
-    //console.log('this.name: ' + this.name);
-    var data = Template.parentData();
-    //console.log('delivery data: ' + JSON.stringify(data.delivery));
-    data = data ? data.delivery : null;
-    return data && data.type == this.name ? 'selected' : '';
-  }
+Template.goodsList.helpers({
+  //hasError: function(field) {
+  //  return !!Session.get('orderDisposalDetailSubmitErrors')[field] ?
+  //      'has-error' : '';
+  //},
 });
 
-Template.delivery.events({
-  // 用于显示货物清单
-  'click .open-goods-list': function (e, t) {
-    e.preventDefault();
-
-    // 获取小三角形图标，用于随后改变放置方向
-    var caret = $(e.currentTarget).find('i.fa');
-    var show = $(t.find('.grid'));
-    if (show.hasClass('hidden')) {
-      caret.removeClass('fa-caret-down');
-      caret.addClass('fa-caret-up');
-      show.removeClass('hidden');
-      hot.render();
-    } else {
-      show.addClass('hidden');
-      caret.removeClass('fa-caret-up');
-      caret.addClass('fa-caret-down');
-    }
-  },
+Template.goodsList.events({
 
   // 用于给表格末尾添加新空行
-  'click .delivery': function(e) {
+  'click .goodsList': function(e) {
     var t = $(e.target);
     if (t.hasClass('colHeader') && t.hasClass('cornerHeader') ||
         t.children('.colHeader.cornerHeader').length) {

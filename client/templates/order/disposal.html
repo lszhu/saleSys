@@ -184,7 +184,34 @@
       </div>
     </div>
 
-    {{> delivery goodsTypes = selectionItem.goodsTypes delivery = delivery }}
+    <!--{{> delivery goodsTypes = selectionItem.goodsTypes delivery = delivery }}-->
+    <div class="col-xs-6 col-sm-4 attach">
+      <div class="input-group {{ hasError 'goodsType' }}">
+        <span class="input-group-addon">货物操作</span>
+        <select name="goodsType" class="form-control">
+          {{#each selectionItem.goodsTypes }}
+            <option {{ isSelectedDelivery name }}>{{name}}</option>
+          {{/each}}
+          {{!--
+          <option></option>
+          <option>出库</option>
+          <option>入库</option>
+          <option>其它</option>
+          --}}
+        </select>
+      <span class="btn btn-primary input-group-addon open-goods-list">
+        清单 <i class="fa fa-caret-down"></i>
+      </span>
+      </div>
+    </div>
+
+    <div class="col-xs-6 col-sm-8 attach">
+      <div class="input-group">
+        <span class="input-group-addon">备注</span>
+        <input type="text" name="goodsComment" class="form-control"
+               placeholder="货物说明" value="{{delivery.comment}}">
+      </div>
+    </div>
 
     <div class="col-xs-4 attach">
       <div class="input-group {{ hasError 'accountType' }}">

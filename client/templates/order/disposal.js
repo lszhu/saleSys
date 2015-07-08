@@ -157,6 +157,13 @@ Template.orderDisposalDetail.helpers({
     //console.log('selection: ' + selection);
     return attr == selection ? 'selected' : '';
   },
+  isSelectedDelivery: function(attr) {
+    //console.log('this.name: ' + this.name);
+    var data = Template.parentData();
+    //console.log('delivery data: ' + JSON.stringify(data.delivery));
+    data = data && data.delivery;
+    return data && data.type == attr ? 'selected' : '';
+  },
   isSelectedCapital: function (attr) {
     var data = Template.parentData();
     //console.log('disposal data: ' + JSON.stringify(data));
@@ -219,6 +226,25 @@ Template.orderDisposalDetail.events({
     var time = (new Date(d[0], d[1] - 1, d[2], 18));
     time = (time.toString() == 'Invalid Date') ? 0 : time.getTime();
     t.data('time', time);
+  },
+
+  // 用于显示货物清单
+  'click .open-goods-list': function (e, t) {
+    e.preventDefault();
+
+    // 获取小三角形图标，用于随后改变放置方向
+    var caret = $(e.currentTarget).find('i.fa');
+    var show = $(t.find('.grid'));
+    if (show.hasClass('hidden')) {
+      caret.removeClass('fa-caret-down');
+      caret.addClass('fa-caret-up');
+      show.removeClass('hidden');
+      hot.render();
+    } else {
+      show.addClass('hidden');
+      caret.removeClass('fa-caret-up');
+      caret.addClass('fa-caret-down');
+    }
   },
 
   // 资金金额不能为负数，如果输入负数，自动转为其绝对值
