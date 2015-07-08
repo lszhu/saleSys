@@ -83,6 +83,10 @@ Template.delivery.onRendered(function () {
 });
 
 Template.delivery.helpers({
+  hasError: function(field) {
+    return !!Session.get('orderDisposalDetailSubmitErrors')[field] ?
+        'has-error' : '';
+  },
   isSelected: function() {
     //console.log('this.name: ' + this.name);
     var data = Template.parentData();

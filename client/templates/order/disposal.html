@@ -126,7 +126,7 @@
 <template name="orderDisposalDetail">
   <div class="order-disposal-detail">
     <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError 'timestamp' }}">
         <span class="input-group-addon">日期</span>
         <input type="text" name="timestamp" class="form-control"
                placeholder="处理日期" data-time="{{ time disposal.timestamp }}"
@@ -166,7 +166,7 @@
       </div>
     </div>
     <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError 'managerId' }}">
         <span class="input-group-addon">主管</span>
         <select name="managerId" class="form-control">
           <option value="{{ managerId }}">{{ managerName }}</option>
@@ -177,7 +177,7 @@
       {{> voucherCombo localTitle = '凭证'}}
     </div>
     <div class="col-xs-12 attach">
-      <div class="input-group {{ hasError 'comment'}}">
+      <div class="input-group {{ hasError 'disposalComment'}}">
         <span class="input-group-addon">说明</span>
         <input type="text" name="disposalComment" class="form-control"
                placeholder="处理说明" value="{{ disposal.comment }}">
@@ -187,7 +187,7 @@
     {{> delivery goodsTypes = selectionItem.goodsTypes delivery = delivery }}
 
     <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError 'accountType' }}">
         <span class="input-group-addon">资金操作</span>
         <select name="accountType" class="form-control">
           {{#each selectionItem.accountTypes }}
@@ -204,7 +204,7 @@
     </div>
 
     <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError 'capitalValue' }}">
         <span class="input-group-addon">金额</span>
         <input type="number" name="capitalValue" class="form-control"
                value="{{absolute capital.money.value}}">
@@ -215,7 +215,7 @@
     </div>
 
     <div class="col-xs-4 attach">
-      <div class="input-group">
+      <div class="input-group {{ hasError 'capitalType' }}">
         <span class="input-group-addon">资金类型</span>
         <select name="capitalType" class="form-control">
           {{#each selectionItem.capitalTypes }}
@@ -232,7 +232,7 @@
       </div>
     </div>
     <div class="col-xs-8 attach">
-      <div class="input-group {{ hasError 'comment'}}">
+      <div class="input-group {{ hasError 'capitalComment'}}">
         <span class="input-group-addon">备注</span>
         <input type="text" name="capitalComment" class="form-control"
                placeholder="资金说明" value="{{ capital.comment }}">

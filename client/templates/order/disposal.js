@@ -157,9 +157,6 @@ Template.orderDisposalDetail.helpers({
     //console.log('selection: ' + selection);
     return attr == selection ? 'selected' : '';
   },
-  isSelectedAccount: function (attr) {
-
-  },
   isSelectedCapital: function (attr) {
     var data = Template.parentData();
     //console.log('disposal data: ' + JSON.stringify(data));
@@ -182,8 +179,14 @@ Template.orderDisposalDetail.helpers({
     return Math.abs(v);
   },
   hasError: function (field) {
-    return !!Session.get('orderDisposalDetailSubmitErrors')[field] ?
-        'has-error' : '';
+    var data = Template.currentData();
+    var index = data && data.index;
+    if (isNaN(index)) {
+      return;
+    }
+    //console.log('index: ' + index);
+    var errors = Session.get('orderDisposalDetailSubmitErrors')[++index];
+    return errors && errors[field] ? 'has-error' : '';
   },
   managerId: function () {
     return Meteor.userId();
@@ -199,7 +202,7 @@ Template.orderDisposalDetail.helpers({
 });
 
 Template.orderDisposalDetail.onCreated(function () {
-  Session.set('orderDisposalDetailSubmitErrors', {});
+  Session.set('orderDisposalDetailSubmitErrors', []);
 });
 
 Template.orderDisposalDetail.onRendered(function () {
@@ -214,12 +217,7 @@ Template.orderDisposalDetail.events({
     var d = t && t.val() && t.val().split('-');
     // 如果手工设定的日期，则假设时间为下午6点（通常为下班时间）
     var time = (new Date(d[0], d[1] - 1, d[2], 18));
-    if (time.toString() == 'Invalid Date') {
-      throwError('订单处理时间填写有误！');
-      time = 0;
-    } else {
-      time = time.getTime();
-    }
+    time = (time.toString() == 'Invalid Date') ? 0 : time.getTime();
     t.data('time', time);
   },
 
@@ -250,6 +248,9 @@ Template.orderDisposalDetail.events({
       return throwError('未指定有效订单');
     }
     var index = data && data.hasOwnProperty('index') ? data.index : -1;
+    if (isNaN(index) || index < -1) {
+      return throwError('订单处理索引号有误');
+    }
     //console.log('disposal detail data: ' + JSON.stringify(data));
     console.log('orderId is: ' + orderId);
     console.log('index is: ' + index);
@@ -267,7 +268,9 @@ Template.orderDisposalDetail.events({
     };
     console.log('disposal data: ' + JSON.stringify(data));
     var errors = validateOrderDisposal(data.disposal);
-    Session.set('orderDisposalDetailSubmitErrors', errors);
+    console.log('index: ' + index);
+    signalOrderDisposalError(++index, errors);
+    //Session.set('orderDisposalDetailSubmitErrors', errors);
     if (errors.err) {
       return throwError(getErrorMessage(errors));
     }
