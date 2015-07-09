@@ -1,22 +1,6 @@
 Template.orderDisposalItem.helpers({
-  statusColor: function () {
-    var colors = {
-      '进行': 'bg-primary',
-      '完成': 'bg-success',
-      '终止': 'bg-warning'
-    };
-    return colors[this.status] || 'bg-danger';
-  },
   formatDate: formatDate,
-  formatTime: formatTime,
-  customerName: function () {
-    var customer = Customers.findOne(this.customerId);
-    return customer && customer.name;
-  },
-  stationName: function () {
-    var station = Stations.findOne(this.stationId);
-    return station && station.name;
-  }
+  formatTime: formatTime
 });
 
 Template.orderDisposalItem.onRendered(function () {
@@ -210,11 +194,6 @@ Template.orderDisposalDetail.helpers({
 
 Template.orderDisposalDetail.onCreated(function () {
   Session.set('orderDisposalDetailSubmitErrors', []);
-});
-
-Template.orderDisposalDetail.onRendered(function () {
-  //var key = this.data.filterKey;
-
 });
 
 Template.orderDisposalDetail.events({
@@ -432,7 +411,6 @@ Template.orderDisposal.events({
 
   // 保存订单基本信息及处理记录
   'click .order-tool .save-all': function (e, t) {
-    console.log('保存订单基本信息及处理记录');
     e.preventDefault();
 
     var orderInfo = getOrderInfo(t.find('.edit-order'));
@@ -440,8 +418,9 @@ Template.orderDisposal.events({
     var disposal = t.find('#order-disposal-detail');
     var disposalInfo = {};
     var $disposal = $(disposal);
-    if (!$disposal.hasClass('hidden')) {
+    if (!$disposal.hasClass('hide-me')) {
       disposalInfo = getDisposalInfo(disposal);
+      console.log('upload disposal data: ' + JSON.stringify(disposalInfo));
       disposalInfo.index = $disposal.data('index');
     }
 
@@ -574,7 +553,6 @@ function getDisposalInfo(target) {
   if (!info.timestamp) {
     info.timestamp = 0;
   }
-  console.log('upload disposal data: ' + JSON.stringify(info));
   return info;
 }
 
