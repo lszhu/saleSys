@@ -385,14 +385,14 @@ Template.orderDisposal.events({
     }
     if (disposal.hasClass('hide-me')) {
       disposal.removeClass('hide-me');
-      disposal.slideDown('normal', function () {
+      disposal.fadeIn('normal', function () {
         // 设置订单处理日期时间
         disposal.find('[name=timestamp]')
             .val(formatDate(new Date))
             .data('time', Date.now());
       });
     } else {
-      disposal.slideUp('normal', function () {
+      disposal.fadeOut('normal', function () {
         disposal.addClass('hide-me');
       });
     }
