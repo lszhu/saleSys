@@ -295,7 +295,7 @@ Template.orderDisposalDetail.events({
     console.log('disposal data: ' + JSON.stringify(data));
     var errors = validateOrderDisposal(data.disposal);
     console.log('index: ' + index);
-    signalOrderDisposalError(++index, errors);
+    signalOrderDisposalError(index + 1, errors);
     //Session.set('orderDisposalDetailSubmitErrors', errors);
     if (errors.err) {
       return throwError(getErrorMessage(errors));
@@ -304,6 +304,7 @@ Template.orderDisposalDetail.events({
       if (err) {
         throwError(err.reason);
       } else {
+        //console.log('index: ' + index);
         if (index == -1) {
           // 清空并隐藏订单处理部分
           clearDisposalInfo(disposal);
@@ -447,8 +448,8 @@ Template.orderDisposal.events({
     var order = _.extend(orderInfo, {disposal: disposalInfo});
     //console.log('order: ' + JSON.stringify(order));
     var errors = validateOrderBase(order);
+    Session.set('editOrderSubmitErrors', errors);
     if (errors.err) {
-      Session.set('orderManagementSubmitErrors', errors);
       return throwError(getErrorMessage(errors));
     }
     // 如果当前加载了订单，则获取对应id，当前为订单更新操作
