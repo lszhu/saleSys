@@ -92,7 +92,7 @@ Template.goodsList.helpers({
 Template.goodsList.events({
 
   // 用于给表格末尾添加新空行
-  'click .goodsList': function(e) {
+  'click .goods-list': function(e) {
     var t = $(e.target);
     if (t.hasClass('colHeader') && t.hasClass('cornerHeader') ||
         t.children('.colHeader.cornerHeader').length) {
