@@ -315,23 +315,12 @@ Template.orderDisposalDetail.events({
     if (!confirm('确认要删除本处理信息')) {
       return;
     }
-    // 删除相应处理条目前要先隐藏详情，否则会自动展开下一条目的详情
-    var panel = $(e.target).parents('.panel').eq(0);
-    if (panel) {
-      panel.slideUp('normal', function () {
-        panel.addClass('hide-me');
-      })
-    }
+    // 保存最后一个订单处理条目的展开状态，用于删除条目后的恢复
+    var lastOne = $('.order-disposal-item > .panel.panel-default')
+        .last().hasClass('hide-me');
     Meteor.call('orderDisposalRemove', orderId, index, function (err) {
-      if (err) {
-        throwError(err.reason);
-        // 恢复该处理条目的展开显示
-        panel && panel.slideDown('normal', function () {
-          panel.removeClass('hide-me');
-        });
-      }
+      return err ? throwError(err.reason) : shiftHiddenItem(index, lastOne);
     });
-    console.log('删除当前订单处理');
   }
 });
 
@@ -595,4 +584,23 @@ function getOrderInfo(target) {
     info.deadline = 0;
   }
   return info;
+}
+
+function shiftHiddenItem(index, lastOne) {
+  if (index < 0) {
+    return;
+  }
+  var items = $('.order-disposal-item > .panel.panel-default');
+  for (var i = index + 1, len = items.length; i < len; i++) {
+    if (items.eq(i) && items.eq(i).hasClass('hide-me')) {
+      items.eq(i - 1).addClass('hide-me').hide();
+    } else {
+      items.eq(i - 1).removeClass('hide-me').show();
+    }
+  }
+  if (lastOne) {
+    items.last().addClass('hide-me').hide();
+  } else {
+    items.last().removeClass('hide-me').show();
+  }
 }
