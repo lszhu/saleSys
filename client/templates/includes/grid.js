@@ -2,12 +2,14 @@ Template.goodsList.onCreated(function () {
   var data = Template.currentData();
   var index = data && data.index;
   if (!data || !data.delivery || !data.delivery.product) {
-    data = [
-      ['2009', 'gadsd', 2941, 4303, 354, 'CNY', 'gasdfa'],
-      ['2010', 'gdasf', 2905, 2867, 412, 'CNY', 'gdkwer'],
-      ['2011', 'ghagd', 2517, 4822, 552, 'CNY', 'twesef'],
-      ['2012', 'uiasg', 2422, 5399, 776, 'CNY', 'iwedfs']
-    ];
+    //data = [
+    //  ['2009', 'gadsd', 2941, 4303, 354, 'CNY', 'gasdfa'],
+    //  ['2010', 'gdasf', 2905, 2867, 412, 'CNY', 'gdkwer'],
+    //  ['2011', 'ghagd', 2517, 4822, 552, 'CNY', 'twesef'],
+    //  ['2012', 'uiasg', 2422, 5399, 776, 'CNY', 'iwedfs']
+    //];
+    // 默认显示两个空行
+    data = [[], []];
   } else {
     //data = JSON.parse(JSON.stringify(data.delivery.product));
     data = data.delivery.product;
@@ -19,7 +21,7 @@ Template.goodsList.onCreated(function () {
     rowHeaders: true,
     colHeaders: [
       '编号', '名称', '数量',
-      '单价', '总价', '货种', '序列号'
+      '单价', '总价', '币种', '序列号'
     ],
     //colWidths: [100, 100, 100, 100, 100, 100, 100],
     columns: [
@@ -33,17 +35,13 @@ Template.goodsList.onCreated(function () {
     stretchH: 'all',
     fixedColumnsLeft: 6,
     manualColumnResize: true,
-    manualRowResize: true
+    manualRowResize: true,
+    afterChange: handsOnTableAfterChange(data)
   });
 
   orderDisposalDetailGoodsLists[index + 1] = {
     data: data, container: container, hot: hot
   };
-  //hot.setDataAtCell(0, 0, '+');
-
-  //hot.addHook('afterLoadData', function() {
-  //  hot.render();
-  //})
 });
 
 Template.goodsList.onRendered(function () {
@@ -62,45 +60,12 @@ Template.goodsList.onRendered(function () {
     //console.log('modify colWidth');
   });
 
-  //hot.render();
-  //var hot;
-  //var data = Session.get('data');
-
-  //Meteor.setTimeout(function() {
-  //  hot.render();
-  //}, 120);
-  /*
-   function bindDumpButton() {
-   if (typeof Handsontable === "undefined") {
-   return;
-   }
-
-   Handsontable.Dom.addEvent(document.body, 'click', function (e) {
-
-   var element = e.target || e.srcElement;
-
-   if (element.nodeName == "BUTTON" && element.name == 'dump') {
-   var name = element.getAttribute('data-dump');
-   var instance = element.getAttribute('data-instance');
-   var hot = window[instance];
-   console.log('data of ' + name, hot.getData());
-   }
-   });
-   }
-
-   //bindDumpButton();
-   */
 });
 
 Template.goodsList.helpers({
-  //hasError: function(field) {
-  //  return !!Session.get('orderDisposalDetailSubmitErrors')[field] ?
-  //      'has-error' : '';
-  //},
 });
 
 Template.goodsList.events({
-
   // 用于给表格末尾添加新空行
   'click .goods-list': function(e) {
     e.preventDefault();
@@ -116,3 +81,32 @@ Template.goodsList.events({
     }
   }
 });
+
+function handsOnTableAfterChange(dataSource) {
+  return function (changes, source) {
+    if (!changes || !changes.length) {
+      return;
+    }
+    var data = dataSource;
+    //console.log('changes: ' + JSON.stringify(changes));
+    console.log('source: ' + source);
+    var len = changes.length;
+    for (var i = 0; i < len; i++) {
+      var row = changes[i][0];
+      //console.log('row: ' + row);
+      var col = changes[i][1];
+      //console.log('col: ' + col);
+      var newValue = changes[i][3];
+      if (col == 2) {
+        data[row][4] = newValue * data[row][3];
+      }
+      if (col == 3) {
+        data[row][4] = newValue * data[row][2];
+      }
+      if (col == 4 && data[row][2] != 0) {
+        data[row][3] = newValue / data[row][2];
+      }
+    }
+    this.loadData(data);
+  };
+}
