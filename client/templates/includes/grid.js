@@ -1,13 +1,20 @@
 Template.goodsList.onCreated(function () {
-  data = [
-    ['2009', 'gadsd', 2941, 4303, 354, 'CNY', 'gasdfa'],
-    ['2010', 'gdasf', 2905, 2867, 412, 'CNY', 'gdkwer'],
-    ['2011', 'ghagd', 2517, 4822, 552, 'CNY', 'twefcsef'],
-    ['2012', 'uiasg', 2422, 5399, 776, 'CNY', 'iwedfs']
-  ];
-  //Session.set('data', data);
-  container = document.createElement('div');
-  hot = new Handsontable(container, {
+  var data = Template.currentData();
+  var index = data && data.index;
+  if (!data || !data.delivery || !data.delivery.product) {
+    data = [
+      ['2009', 'gadsd', 2941, 4303, 354, 'CNY', 'gasdfa'],
+      ['2010', 'gdasf', 2905, 2867, 412, 'CNY', 'gdkwer'],
+      ['2011', 'ghagd', 2517, 4822, 552, 'CNY', 'twesef'],
+      ['2012', 'uiasg', 2422, 5399, 776, 'CNY', 'iwedfs']
+    ];
+  } else {
+    //data = JSON.parse(JSON.stringify(data.delivery.product));
+    data = data.delivery.product;
+  }
+
+  var container = document.createElement('div');
+  var hot = new Handsontable(container, {
     data: data,
     rowHeaders: true,
     colHeaders: [
@@ -24,13 +31,14 @@ Template.goodsList.onCreated(function () {
       {}//{renderer: 'safeHtmlRenderer'}
     ],
     stretchH: 'all',
-
     fixedColumnsLeft: 6,
-
     manualColumnResize: true,
     manualRowResize: true
   });
 
+  orderDisposalDetailGoodsLists[index + 1] = {
+    data: data, container: container, hot: hot
+  };
   //hot.setDataAtCell(0, 0, '+');
 
   //hot.addHook('afterLoadData', function() {
@@ -39,9 +47,11 @@ Template.goodsList.onCreated(function () {
 });
 
 Template.goodsList.onRendered(function () {
-
+  var data = Template.currentData();
+  var index = data && data.index;
   // 准备订单处理中内嵌表格
-  var up_container = this.find('.grid');
+  var up_container = this.find('.goods-list > .grid');
+  var container = orderDisposalDetailGoodsLists[index + 1].container;
   up_container.appendChild(container);
   Handsontable.hooks.add('afterRender', function () {
     $('th > .relative > .colHeader.cornerHeader').text('+');
@@ -93,11 +103,16 @@ Template.goodsList.events({
 
   // 用于给表格末尾添加新空行
   'click .goods-list': function(e) {
+    e.preventDefault();
+
+    var data = Template.currentData();
+    var index = data && data.index;
+    var hot = getGoodsListHot(index + 1);
     var t = $(e.target);
     if (t.hasClass('colHeader') && t.hasClass('cornerHeader') ||
         t.children('.colHeader.cornerHeader').length) {
       console.log('click event');
-      hot.alter('insert_row');
+      hot && hot.alter('insert_row');
     }
   }
 });

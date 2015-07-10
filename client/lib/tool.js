@@ -15,3 +15,13 @@ defaultStationId = function() {
   var user = Meteor.user();
   return user && user.profile.stationId;
 };
+
+// 获取指定订单处理的货物列表
+getGoodsListHot = function (index) {
+  var data = orderDisposalDetailGoodsLists[index];
+  if (!data || !data.hot) {
+    throwError('未找到货物列表');
+    return null;
+  }
+  return data.hot;
+};

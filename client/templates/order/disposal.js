@@ -17,7 +17,7 @@ Template.orderDisposalItem.events({
     detail = $(detail);
     if (detail.hasClass('hide-me')) {
       detail.removeClass('hide-me');
-      detail.slideDown('normal');
+      detail.fadeIn('normal');
       target.find('.fa-caret-down')
           .removeClass('fa-caret-down')
           .addClass('fa-caret-up');
@@ -141,7 +141,7 @@ Template.orderDisposalDetail.helpers({
     //console.log('selection: ' + selection);
     return attr == selection ? 'selected' : '';
   },
-  isSelectedDelivery: function(attr) {
+  isSelectedDelivery: function (attr) {
     //console.log('this.name: ' + this.name);
     var data = Template.parentData();
     //console.log('delivery data: ' + JSON.stringify(data.delivery));
@@ -211,14 +211,17 @@ Template.orderDisposalDetail.events({
   'click .open-goods-list': function (e, t) {
     e.preventDefault();
 
+    var data = Template.currentData();
+    var index = data && data.index;
+    var hot = getGoodsListHot(index + 1);
     // 获取小三角形图标，用于随后改变放置方向
     var caret = $(e.currentTarget).find('i.fa');
-    var show = $(t.find('.grid'));
+    var show = $(t.find('.goods-list > .grid'));
     if (show.hasClass('hidden')) {
       caret.removeClass('fa-caret-down');
       caret.addClass('fa-caret-up');
       show.removeClass('hidden');
-      hot.render();
+      hot && hot.render();
     } else {
       show.addClass('hidden');
       caret.removeClass('fa-caret-up');
@@ -227,7 +230,7 @@ Template.orderDisposalDetail.events({
   },
 
   // 资金金额不能为负数，如果输入负数，自动转为其绝对值
-  'change [name=capitalValue]': function(e) {
+  'change [name=capitalValue]': function (e) {
     var t = $(e.target);
     var value = t.val();
     if (value < 0) {
@@ -262,8 +265,12 @@ Template.orderDisposalDetail.events({
     console.log('保存当前订单处理');
 
     var disposal = t.find('.order-disposal-detail');
+    var disposalData = getDisposalInfo(disposal);
+    if (disposalData.delivery.type) {
+      disposalData.delivery.product = trimGoodsList(getGoodsList(index + 1));
+    }
     data = {
-      disposal: getDisposalInfo(disposal),
+      disposal: disposalData,
       orderId: orderId,
       index: index,
       capitalId: capitalId,
@@ -281,17 +288,19 @@ Template.orderDisposalDetail.events({
     }
     Meteor.call('orderDisposalUpdate', data, function (err) {
       if (err) {
-        throwError(err.reason);
+        return throwError(err.reason);
+      }
+      //console.log('index: ' + index);
+      if (index == -1) {
+        // 清空并隐藏订单处理部分
+        clearDisposalInfo(disposal);
+        // 此处操作了父级模板的DOM
+        $('#order-disposal-detail').fadeOut('normal', function () {
+          $(this).addClass('hide-me');
+        });
       } else {
-        //console.log('index: ' + index);
-        if (index == -1) {
-          // 清空并隐藏订单处理部分
-          clearDisposalInfo(disposal);
-          // 此处操作了父级模板的DOM
-          $('#order-disposal-detail').fadeOut('normal', function () {
-            $(this).addClass('hide-me');
-          });
-        }
+        var hot = getGoodsListHot(index + 1);
+        hot && hot.render();
       }
     });
   },
@@ -511,9 +520,9 @@ function getDisposalInfo(target) {
     }
   };
   // 存在delivery.type说明delivery内容有效，分析并添加具体内容
-  if (info.delivery.type) {
-    info.delivery.product = getGoodsList(t.find('.delivery .grid'));
-  }
+  //if (info.delivery.type) {
+  //  info.delivery.product = getGoodsList(t.find('.delivery .grid'));
+  //}
 
   var accountType = t.find('[name=accountType]').val();
   console.log('disposal account type: ' + accountType);
@@ -545,14 +554,17 @@ function getDisposalInfo(target) {
   return info;
 }
 
-function getGoodsList(target) {
-  // todo
-  //console.log('clicked, data is: ' + JSON.stringify(hot.getData()));
-  return ['test only'];
-  return hot.getData();
+// 从订单处理的商品列表中返回数据列表
+function getGoodsList(index) {
+  console.log('index: ' + index);
+  if (!orderDisposalDetailGoodsLists.hasOwnProperty(index)) {
+    return [];
+  }
+  var hot = orderDisposalDetailGoodsLists[index].hot;
+  return hot.getData() || [];
 }
 
-function clearGoodsList(target) {
+function clearGoodsList(index) {
   // todo
 }
 

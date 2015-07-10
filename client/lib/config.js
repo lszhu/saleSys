@@ -18,3 +18,6 @@ Accounts.ui.config({
 
 // 配置用户登录组件界面为中文
 accountsUIBootstrap3.setLanguage('zh');
+
+// 客户端加载订单详情时用于存放货物清单信息
+orderDisposalDetailGoodsLists = [];
