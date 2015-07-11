@@ -53,7 +53,7 @@ Template.goodsList.onRendered(function () {
   up_container.appendChild(container);
   Handsontable.hooks.add('afterRender', function () {
     $('th > .relative > .colHeader.cornerHeader').text('+');
-    console.log('render again');
+    //console.log('render again');
   });
   Handsontable.hooks.add('modifyColWidth', function () {
     $('th > .relative > .colHeader.cornerHeader').text('+');

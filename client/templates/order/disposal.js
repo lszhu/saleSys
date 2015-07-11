@@ -167,7 +167,7 @@ Template.orderDisposalDetail.helpers({
     return '收入' + data.money.type == attr ? 'selected' : '';
   },
   absolute: function (v) {
-    return Math.abs(v);
+    return isNaN(v) ? '' : Math.abs(v);
   },
   hasError: function (field) {
     var data = Template.currentData();
@@ -211,6 +211,12 @@ Template.orderDisposalDetail.events({
   'click .open-goods-list': function (e, t) {
     e.preventDefault();
 
+    // 首先必须确认已选择货物操作类型
+    var sel = $(e.target).parent().children('select');
+    if (!sel || !sel.val()) {
+      return throwError('请先指定货物操作类型论');
+    }
+
     var data = Template.currentData();
     var index = data && data.index;
     var hot = getGoodsListHot(index + 1);
@@ -233,7 +239,10 @@ Template.orderDisposalDetail.events({
   'change [name=capitalValue]': function (e) {
     var t = $(e.target);
     var value = t.val();
-    if (value < 0) {
+    console.log('value: ' + value);
+    if (isNaN(value)) {
+      t.val('');
+    } else if (value < 0) {
       t.val(-value);
     }
   },
@@ -293,7 +302,10 @@ Template.orderDisposalDetail.events({
       //console.log('index: ' + index);
       if (index == -1) {
         // 清空并隐藏订单处理部分
-        clearDisposalInfo(disposal);
+        clearDisposalInfo(disposal, index + 1);
+        $(disposal).find('.goods-list > .grid').addClass('hidden');
+        $(disposal).find('.open-goods-list > .fa')
+            .removeClass('fa-caret-up').addClass('fa-caret-down');
         // 此处操作了父级模板的DOM
         $('#order-disposal-detail').fadeOut('normal', function () {
           $(this).addClass('hide-me');
@@ -328,7 +340,13 @@ Template.orderDisposalDetail.events({
     var lastOne = $('.order-disposal-item > .panel.panel-default')
         .last().hasClass('hide-me');
     Meteor.call('orderDisposalRemove', orderId, index, function (err) {
-      return err ? throwError(err.reason) : shiftHiddenItem(index, lastOne);
+      if (err) {
+        return throwError(err.reason);
+      }
+      clearOrderDisposalGoodsLists(index + 1);
+      updateGoodsListForRemoval(index + 1);
+      shiftHiddenItem(index, lastOne);
+      console.log('remove goods table id: ' + index);
     });
   }
 });
@@ -340,6 +358,10 @@ Template.orderDisposal.onCreated(function () {
   if (!data.order || !data.order._id) {
     Router.go('/order');
   }
+});
+
+Template.orderDisposal.onDestroyed(function () {
+  clearOrderDisposalGoodsLists();
 });
 
 Template.orderDisposal.onRendered(function () {
@@ -418,6 +440,7 @@ Template.orderDisposal.events({
     var $disposal = $(disposal);
     if (!$disposal.hasClass('hide-me')) {
       disposalInfo = getDisposalInfo(disposal);
+      disposalInfo.delivery.product = trimGoodsList(getGoodsList(0));
       console.log('upload disposal data: ' + JSON.stringify(disposalInfo));
       disposalInfo.index = $disposal.data('index');
     }
@@ -442,7 +465,10 @@ Template.orderDisposal.events({
           return;
         }
         // 清空并隐藏订单处理部分
-        clearDisposalInfo(disposal);
+        clearDisposalInfo(disposal, -1);
+        $(disposal).find('.goods-list > .grid').addClass('hidden');
+        $(disposal).find('.open-goods-list > .fa')
+            .removeClass('fa-caret-up').addClass('fa-caret-down');
         $disposal.fadeOut('normal', function () {
           $disposal.addClass('hide-me');
         });
@@ -484,7 +510,7 @@ Template.orderDisposal.events({
   }
 });
 
-function clearDisposalInfo(target) {
+function clearDisposalInfo(target, index) {
   var t = target ? $(target) : $('#order-disposal-detail');
   //t = $('#order-disposal-detail');
   var d = new Date();
@@ -495,7 +521,7 @@ function clearDisposalInfo(target) {
   t.find('[name=disposalComment]').val('');
   t.find('[name=goodsType]').val('');
   t.find('[name=goodsComment]').val('');
-  clearGoodsList(t.find('.delivery .grid'));
+  clearGoodsList(index + 1);
   t.find('[name=capitalType]').val('');
   t.find('[name=accountType]').val('');
   t.find('[name=capitalComment]').val('');
@@ -565,7 +591,11 @@ function getGoodsList(index) {
 }
 
 function clearGoodsList(index) {
-  // todo
+  if (!orderDisposalDetailGoodsLists.hasOwnProperty(index)) {
+    return [];
+  }
+  var hot = orderDisposalDetailGoodsLists[index].hot;
+  hot.loadData([[], []]);
 }
 
 function getOrderInfo(target) {
