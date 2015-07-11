@@ -521,12 +521,14 @@ function clearDisposalInfo(target, index) {
   t.find('[name=disposalComment]').val('');
   t.find('[name=goodsType]').val('');
   t.find('[name=goodsComment]').val('');
-  clearGoodsList(index + 1);
   t.find('[name=capitalType]').val('');
   t.find('[name=accountType]').val('');
   t.find('[name=capitalComment]').val('');
   t.find('[name=capitalValue]').val('');
   //t.find('[name=currency]').val('');
+  if (index == -1) {
+    clearGoodsList(index + 1);
+  }
 }
 
 function getDisposalInfo(target) {
@@ -633,16 +635,21 @@ function shiftHiddenItem(index, lastOne) {
     return;
   }
   var items = $('.order-disposal-item > .panel.panel-default');
+  var carets = $('.order-disposal-item .open-detail > .fa');
   for (var i = index + 1, len = items.length; i < len; i++) {
     if (items.eq(i) && items.eq(i).hasClass('hide-me')) {
       items.eq(i - 1).addClass('hide-me').hide();
+      carets.eq(i - 1).addClass('fa-caret-down').removeClass('fa-caret-up');
     } else {
       items.eq(i - 1).removeClass('hide-me').show();
+      carets.eq(i - 1).removeClass('fa-caret-down').addClass('fa-caret-up');
     }
   }
   if (lastOne) {
     items.last().addClass('hide-me').hide();
+    carets.eq(i - 1).addClass('fa-caret-down').removeClass('fa-caret-up');
   } else {
     items.last().removeClass('hide-me').show();
+    carets.eq(i - 1).removeClass('fa-caret-down').addClass('fa-caret-up');
   }
 }

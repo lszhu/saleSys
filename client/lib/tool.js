@@ -50,10 +50,13 @@ updateGoodsListForRemoval = function (index) {
     return;
   }
   var grid = $('.goods-list > .grid');
-  var len = grid && grid.length - 1;
-  for (var i = index -1; i < len; i++) {
+  var len = grid && grid.length;
+  for (var i = index; i < len; i++) {
     console.log('从新显示%d号处理的货物清单', i);
-    grid.eq(i).children().detach();
-    grid.eq(i).append(orderDisposalDetailGoodsLists[i + 1].container)
+    grid.eq(i - 1).children().detach();
+    grid.eq(i - 1).append(orderDisposalDetailGoodsLists[i].container);
+    orderDisposalDetailGoodsLists[i].hot.loadData(
+        orderDisposalDetailGoodsLists[i].data
+    );
   }
 };
