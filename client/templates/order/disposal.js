@@ -1,4 +1,13 @@
 Template.orderDisposalItem.helpers({
+  disposalSummary: function() {
+    var data = Template.currentData();
+    console.log('disposal: ', JSON.stringify(data));
+    var disposal = _.extend(data.disposal, {
+      delivery: data.delivery,
+      capital: data.capital
+    });
+    return createMessageContent(disposal);
+  },
   formatDate: formatDate,
   formatTime: formatTime
 });

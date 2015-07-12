@@ -279,8 +279,8 @@
           {{ formatDate disposal.timestamp }}
         </span>
         <span class="input-group-addon">{{ disposal.type }}</span>
-        <input type="text" name="code" class="form-control"
-               placeholder="处理内容概述">
+        <input type="text" name="disposalSummary" class="form-control" readonly
+               placeholder="处理内容概述" value="{{ disposalSummary }}">
         <span class="input-group-addon btn btn-primary open-detail">
           详情
           <i class="fa fa-caret-down"></i>
