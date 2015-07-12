@@ -636,7 +636,13 @@ function shiftHiddenItem(index, lastOne) {
   }
   var items = $('.order-disposal-item > .panel.panel-default');
   var carets = $('.order-disposal-item .open-detail > .fa');
-  for (var i = index + 1, len = items.length; i < len; i++) {
+  var len = items.length;
+  // 如果删除的是最后一个，则无需进行任何操作
+  if (index >= len) {
+    console.log('删除最后一个处理条目');
+    return;
+  }
+  for (var i = index + 1; i < len; i++) {
     if (items.eq(i) && items.eq(i).hasClass('hide-me')) {
       items.eq(i - 1).addClass('hide-me').hide();
       carets.eq(i - 1).addClass('fa-caret-down').removeClass('fa-caret-up');

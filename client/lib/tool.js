@@ -29,7 +29,10 @@ getGoodsListHot = function (index) {
 clearOrderDisposalGoodsLists = function (index) {
   var n = parseInt(index);
   // 传递的参数为空值时清空所有数据
-  if (isNaN(n) && index == '') {
+  if (isNaN(n)) {
+    for (var i = 0, len = orderDisposalDetailGoodsLists.length; i < len; i++) {
+      delete orderDisposalDetailGoodsLists[i];
+    }
     orderDisposalDetailGoodsLists = [];
   }
   // 不能删除第一个成员，它对应添加新订单处理的商品列表
