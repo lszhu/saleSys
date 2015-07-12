@@ -339,7 +339,7 @@ users = {
   grade: Number,
   // 隶属销售分部，如果该属性值为空，表示不限于特定分部
   stationId: String,
-  // 禁用状态，'1'表示禁用
+  // 禁用状态，'1'表示禁用，‘0'表示未禁用
   disabled: String,
   // 该账号对应的权限
   permission: Object,

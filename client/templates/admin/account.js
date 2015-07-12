@@ -168,7 +168,7 @@ Template.account.events({
 
   'click .remove-account': function (e, t) {
     e.preventDefault();
-    if (!confirm('你确实要删除该销售分部的信息吗？')) {
+    if (!confirm('你确实要删除该账号吗？')) {
       return;
     }
     // 获取对应数据库条目Id

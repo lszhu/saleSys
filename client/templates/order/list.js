@@ -131,7 +131,7 @@ Template.orderManagement.events({
     order = _.extend(order, {
       status: '进行', deadline: '', managerId: userId, disposal: {}
     });
-    console.log('order: ' + JSON.stringify(order));
+    //console.log('order: ' + JSON.stringify(order));
     //var overlap = form.find('[name=overlap]').val();
     //console.log('overlap is: ' + overlap);
     //var data = {order: order, overlap: overlap};

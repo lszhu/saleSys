@@ -15,10 +15,11 @@ Template.header.helpers({
   menuInfo: function () {
     return {
       message: {
-        name: '消息',
+        name: '工具',
         operation: [
-          {name: '创建', template: 'createMessage'},
-          {name: '查询', template: 'queryMessage'}
+          {name: '消息管理', template: 'messageApp'},
+          {name: '出入库管理', template: 'delivery'},
+          {name: '资金收支管理', template: 'capitalApp'}
         ]
       },
       base: {

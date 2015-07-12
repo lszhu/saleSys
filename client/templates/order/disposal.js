@@ -1,7 +1,7 @@
 Template.orderDisposalItem.helpers({
   disposalSummary: function() {
     var data = Template.currentData();
-    console.log('disposal: ', JSON.stringify(data));
+    //console.log('disposal: ', JSON.stringify(data));
     var disposal = _.extend(data.disposal, {
       delivery: data.delivery,
       capital: data.capital
@@ -296,7 +296,7 @@ Template.orderDisposalDetail.events({
       partnerId: order.customer,
       stationId: order.stationId
     };
-    console.log('disposal data: ' + JSON.stringify(data));
+    //console.log('disposal data: ' + JSON.stringify(data));
     var errors = validateOrderDisposal(data.disposal);
     console.log('index: ' + index);
     signalOrderDisposalError(index + 1, errors);
@@ -450,7 +450,7 @@ Template.orderDisposal.events({
     if (!$disposal.hasClass('hide-me')) {
       disposalInfo = getDisposalInfo(disposal);
       disposalInfo.delivery.product = trimGoodsList(getGoodsList(0));
-      console.log('upload disposal data: ' + JSON.stringify(disposalInfo));
+      //console.log('upload disposal data: ' + JSON.stringify(disposalInfo));
       disposalInfo.index = $disposal.data('index');
     }
 
