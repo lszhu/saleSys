@@ -1,38 +1,42 @@
 // 发布消息
-Meteor.publish('messages', function(filterKey, options) {
+Meteor.publish('messages', function (filterKey, options) {
   check(filterKey, String);
   check(options, Object);
 
   var selector = {};
+  //var userId = Meteor.userId();
+  var userId = this.userId;
+  // 如果不是管理员用户，则只发布当前用户发出或收到的消息
+  var user = Meteor.users.findOne(userId);
+  console.log('当前用户级别：' + user && user.grade);
+  if (user && user.grade != 3) {
+    selector.$or = [{creatorId: userId}, {receiverId: userId}];
+  }
   if (filterKey) {
     var key = new RegExp(filterKey, 'i');
-    // 从销售分部collection中找到名称匹配关键字的销售分部对应_id
-    var station = Stations.find({name: key}).fetch();
-    //console.log('station: ' + JSON.stringify(station));
-    station = station.map(function (e) {
-      return e._id;
-    });
-    selector = {
-      $or: [
-        {code: key}, {name: key}, {sex: key}, {title: key}, {phone: key},
-        {email: key}, {'salary.value': parseFloat(filterKey)},
-        {'salary.currency': key}, {stationId: {$in: station}}, {memo: key}
-      ]
-    };
+    if (selector.$or) {
+      selector.$and = [
+        {$or: selector.$or},
+        {$or: [{headline: key}, {content: key}]}
+      ];
+    } else {
+      selector.$or = [{headline: key}, {content: key}];
+    }
   }
+  console.log('message find selector: ' + JSON.stringify(selector));
   return Messages.find(selector, options);
 });
 
 // 发布资金收支记录
-Meteor.publish('capitals', function(query, options) {
+Meteor.publish('capitals', function (query, options) {
   check(query, {orderId: String});
-  check(options. Object);
+  check(options.Object);
 
   return Capitals.find(query, options);
 });
 
 // 发布库存变更信息
-Meteor.publish('deliveries', function(query, options) {
+Meteor.publish('deliveries', function (query, options) {
   check(query, {orderId: String});
   check(options, Object);
 

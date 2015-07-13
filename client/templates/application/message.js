@@ -2,14 +2,14 @@ Template.receiverSelection.helpers({
   receiverList: function() {
     var currentData = Template.currentData();
     return currentData ? currentData.getReceivers() : [];
-    return [
-      {name: 'aaa', receivers: [
-        {_id: 'tafsa', name: 'gssdf'}, {_id: 'asdf', name: 'juasdk'}
-      ]},
-      {name: 'bbb', receivers: [
-        {_id: 'jas', name: 'h234'}, {_id: '2esd', name: 'sdfi23'}
-      ]}
-    ];
+    //return [
+    //  {name: 'aaa', receivers: [
+    //    {_id: 'tafsa', name: 'gssdf'}, {_id: 'asdf', name: 'juasdk'}
+    //  ]},
+    //  {name: 'bbb', receivers: [
+    //    {_id: 'jas', name: 'h234'}, {_id: '2esd', name: 'sdfi23'}
+    //  ]}
+    //];
   }
 });
 
@@ -27,6 +27,9 @@ Template.receiverSelection.onCreated(function() {
       currentData._receivers = [];
       throwError('无法获取用户信息');
     } else {
+      // 保存到Session中，用于其他地方的使用
+      Session.set('receiverList', _.indexBy(result, '_id'));
+      // 更新数据
       currentData._receivers = classifyReceivers(result);
     }
     currentData._receiversListeners.changed();
@@ -48,12 +51,26 @@ Template.addMessage.helpers({
 
 });
 
-Template.messageList.helpers({
-  formatDate: formatDate
+Template.messageListItem.helpers({
+  formatDate: formatDate,
+  priorityName: function(p) {
+    var name = ['最低', '普通', '较高', '最高'];
+    return name[p];
+  },
+  source: function(s) {
+    return s ? '手工' : '自动';
+  },
+  creator: getNameFromId,
+  receiver: getNameFromId
 });
 
 Template.message.onCreated(function() {
   Session.set('messageSubmitErrors', {});
+  Session.set('receiverList', []);
+});
+
+Template.message.onDestroyed(function() {
+  Session.set('receiverList', null);
 });
 
 Template.message.onRendered(function () {
@@ -106,27 +123,9 @@ Template.message.events({
     }
   },
 
-  'click .update-message': function (e) {
-    e.preventDefault();
-    // 清空可能遗留的错误信息
-    Session.set('messageSubmitErrors', {});
-    // 获取对应数据库条目Id
-    var _id = $(e.currentTarget).attr('href');
-    var form = $('#add-message');
-    //console.log('_id: ' + _id);
-    // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
-    form.find('[name=overlap]').val(_id);
-    // 显示编辑框
-    if (form.hasClass('hidden')) {
-      form.removeClass('hidden');
-      form.slideDown('fast');
-    }
-    fillForm(_id);
-  },
-
   'click .remove-message': function (e) {
     e.preventDefault();
-    if (!confirm('你确实要删除该客户的信息吗？')) {
+    if (!confirm('你确实要删除信息吗？')) {
       return;
     }
     // 获取对应数据库条目Id
@@ -142,34 +141,25 @@ Template.message.events({
 
     var form = $(e.target);
     var message = {
-      code: form.find('[name=code]').val(),
-      name: form.find('[name=name]').val(),
-      company: form.find('[name=company]').val(),
-      title: form.find('[name=title]').val(),
-      phone: form.find('[name=phone]').val(),
-      email: form.find('[name=email]').val(),
-      address: form.find('[name=address]').val(),
-      memo: form.find('[name=memo]').val()
+      type: form.find('[name=type]').val(),
+      priority: form.find('[name=priority]').val(),
+      receiverId: form.find('[name=receiver]').val(),
+      headline: form.find('[name=headline]').val(),
+      content: form.find('[name=content]').val()
     };
     console.log('message: ' + JSON.stringify(message));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
-    var data = {message: message, overlap: overlap};
-    // 对一些特别情况需要用户进行确认
-    if (!confirmMessageInfo(data)) {
-      return;
-    }
     // 对输入信息进行校验
-    var errors = validateMessage(data);
+    var errors = validateMessage(message);
     if (errors.err) {
       //console.log('errors: ' + JSON.stringify(errors));
       Session.set('messageSubmitErrors', errors);
-      if (errors.err) {
-        throwError(getErrorMessage(errors));
-      }
-      return;
+      return throwError(getErrorMessage(errors));
     }
-    Meteor.call('messageInsert', data, function (err) {
+    // 手工创建的消息
+    message.manual = true;
+    Meteor.call('messageInsert', message, function (err) {
       if (err) {
         return throwError(err.reason);
       }
@@ -189,51 +179,15 @@ Template.message.events({
 
 function clearForm(target) {
   var form = $(target);
-  form.find('[name=code]').val('');
-  form.find('[name=name]').val('');
-  form.find('[name=company]').val('');
-  form.find('[name=title]').val('');
-  form.find('[name=phone]').val('');
-  form.find('[name=email]').val('');
-  form.find('[name=address]').val('');
-  form.find('[name=memo]').val('');
-  // 清空隐藏文本框中保存的数据库条目Id，即清空覆盖标识
-  form.find('[name=overlap]').val('');
+  form.find('[name=type]').val('');
+  form.find('[name=priority]').val(3);
+  form.find('[name=receiver]').val('');
+  form.find('[name=headline]').val('');
+  form.find('[name=content]').val('');
 }
 
-function fillForm(_id) {
-  var data = Messages.findOne(_id);
-  //console.log('data: ' + JSON.stringify(data));
-  var form = $('#add-message');
-  form.find('[name=code]').val(data.code);
-  form.find('[name=name]').val(data.name);
-  form.find('[name=company]').val(data.company);
-  form.find('[name=title]').val(data.title);
-  form.find('[name=phone]').val(data.phone);
-  form.find('[name=email]').val(data.email);
-  form.find('[name=address]').val(data.address);
-  form.find('[name=memo]').val(data.memo);
-}
-
-function confirmMessageInfo(data) {
-  var message = data.message;
-  if (data.overlap) {
-    return true;
-  }
-  if (message.name && Messages.findOne({name: message.name})) {
-    if (!confirm('系统中已存在同名客户，还有继续添加此客户吗？')) {
-      return false;
-    }
-  }
-  if (message.phone && Messages.findOne({phone: message.phone})) {
-    if (!confirm('系统中已存在客户使用此电话号码，还有继续添加此客户吗？')) {
-      return false;
-    }
-  }
-  if ( message.email && Messages.findOne({email: message.email})) {
-    if (!confirm('系统中已存在客户使用此电子邮箱，还有继续添加此客户吗？')) {
-      return false;
-    }
-  }
-  return true;
+function getNameFromId(userId) {
+  var receiverList = Session.get('receiverList');
+  var user = receiverList[userId];
+  return user && user.name;
 }

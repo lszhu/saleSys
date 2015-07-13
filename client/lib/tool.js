@@ -70,15 +70,12 @@ classifyReceivers = function (receivers) {
     return [];
   }
   var stations = Stations.find().fetch();
-  //stations = stations.map(function(e) {
-  //  return {_id: e._id, name: e.name, receivers: []};
-  //});
   stations = _.indexBy(stations, '_id');
-  console.log('stations: ' + JSON.stringify(stations));
+  //console.log('stations: ' + JSON.stringify(stations));
   receivers = _.groupBy(receivers, function (e) {
     return e.stationId;
   });
-  console.log('receivers: ' + JSON.stringify(receivers));
+  //console.log('receivers: ' + JSON.stringify(receivers));
   var data = [];
   for (var i in receivers) {
     if (!receivers.hasOwnProperty(i)) {
@@ -86,6 +83,6 @@ classifyReceivers = function (receivers) {
     }
     data.push({name: stations[i].name, receivers: receivers[i]});
   }
-  console.log('end receivers: ' + JSON.stringify(data));
+  //console.log('end receivers: ' + JSON.stringify(data));
   return data;
 };

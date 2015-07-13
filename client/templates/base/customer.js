@@ -116,10 +116,7 @@ Template.customer.events({
     if (errors.err) {
       //console.log('errors: ' + JSON.stringify(errors));
       Session.set('customerSubmitErrors', errors);
-      if (errors.err) {
-        throwError(getErrorMessage(errors));
-      }
-      return;
+      return throwError(getErrorMessage(errors));
     }
     Meteor.call('customerInsert', data, function (err) {
       if (err) {
