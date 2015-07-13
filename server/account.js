@@ -91,9 +91,9 @@ Meteor.methods({
   getUserInfo: function () {
     var users = Meteor.users.find(
         {disabled: {$in: ['0', '', 0, undefined, null]}},
-        {sort: {stationId: 1, 'profile.name': 1}}
+        {fields: {profile: 1, stationId: 1}}
     ).fetch();
-    users.map(function (e) {
+    users = users.map(function (e) {
       return {_id: e._id, name: e.profile.name, stationId: e.stationId};
     });
     return users;

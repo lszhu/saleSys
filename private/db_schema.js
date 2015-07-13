@@ -15,6 +15,7 @@ message = {
   // 消息内容
   content: String,
   // 优先级，范围：0 - 3，数字越大优先级越高，0优先级最低，3最高
+  // 自动生成消息为1级，手工创建消息默认为2级
   priority: Number,
   // 接收者是否已经阅读标记，false表示还未阅读
   read: Boolean,

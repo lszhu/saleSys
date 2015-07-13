@@ -37,87 +37,58 @@
 
 <template name="addMessage">
   <div>
-    <strong>编辑销售部门信息</strong>
+    <strong>编辑新创建的消息</strong>
 
     <form class="add-message">
+
       <div class="col-xs-4 attach">
-        <div class="input-group {{ hasError 'code'}}">
-          <span class="input-group-addon" id="message-code-label">编号</span>
-          <input type="text" name="code" class="form-control" placeholder="编号"
-                 aria-describedby="message-code-label">
-        </div>
-      </div>
-      <div class="col-xs-4 attach">
-        <div class="input-group {{ hasError 'name'}}">
-          <span class="input-group-addon" id="message-name-label">姓名</span>
-          <input type="text" name="name" class="form-control" placeholder="姓名"
-                 aria-describedby="message-name-label">
-        </div>
-      </div>
-      <div class="col-xs-4 attach">
-        <div class="input-group {{ hasError 'sex'}}">
-          <span class="input-group-addon" id="message-sex-label">性别</span>
-          <select name="sex" class="form-control"
-                  aria-describedby="message-sex-label">
-            <option></option>
-            <option>男</option>
-            <option>女</option>
+        <div class="input-group {{ hasError 'type'}}">
+          <span class="input-group-addon" id="message-type-label">类型</span>
+          <select name="type" class="form-control"
+                  aria-describedby="message-type-label">
+            {{#each types }}
+              <option>{{name}}</option>
+            {{/each }}
           </select>
         </div>
       </div>
       <div class="col-xs-4 attach">
-        {{> stationSelect localTitle = '部门' }}
-      </div>
-      <div class="col-xs-4 attach">
-        <div class="input-group {{ hasError 'phone'}}">
-          <span class="input-group-addon" id="message-phone-label">电话</span>
-          <input type="text" name="phone" class="form-control"
-                 placeholder="电话" aria-describedby="message-address-label"/>
+        <div class="input-group {{ hasError 'priority'}}">
+          <span class="input-group-addon" id="message-priority-label">优先级</span>
+          <select name="priority" class="form-control"
+                  aria-describedby="message-priority-label">
+            <option value="0">最低</option>
+            <option value="1">普通</option>
+            <option value="2" selected>较高</option>
+            <option value="3">最高</option>
+          </select>
         </div>
       </div>
       <div class="col-xs-4 attach">
-        <div class="input-group {{ hasError 'email'}}">
-          <span class="input-group-addon" id="message-email-label">邮箱</span>
-          <input type="text" name="email" class="form-control"
-                 placeholder="邮箱" aria-describedby="message-email-label"/>
+        <div class="input-group {{ hasError 'receiverId'}}">
+          <span class="input-group-addon" id="message-receiver-label">接收者</span>
+          {{!-- 必须保证receiverSelection模板的数据不为空 --}}
+          {{> receiverSelection receivers = ''}}
         </div>
       </div>
-      <div class="col-xs-4 attach">
-        <div class="input-group {{ hasError 'title'}}">
-          <span class="input-group-addon" id="message-title-label">职务</span>
-          <input type="text" name="title" class="form-control"
-                 placeholder="职务" aria-describedby="message-title-label"/>
+      <div class="col-xs-8 attach">
+        <div class="input-group {{ hasError 'headline'}}">
+          <span class="input-group-addon" id="message-headline-label">标题</span>
+          <input type="text" name="headline" class="form-control"
+                 placeholder="消息标题" aria-describedby="message-headline-label"/>
         </div>
-      </div>
-      <div class="col-xs-4 attach">
-        <div class="input-group {{ hasError 'salary'}}">
-        <span class="input-group-addon"
-              id="message-salary-value-label">工资</span>
-          <input type="text" name="salaryValue" class="form-control"
-                 placeholder="工资数额"
-                 aria-describedby="message-salary-value-label"/>
-        </div>
-      </div>
-      <div class="col-xs-4 attach">
-        {{> currencySelect }}
       </div>
       <div class="col-xs-12 attach">
-        <div class="input-group {{ hasError 'memo'}}">
-          <span class="input-group-addon" id="message-memo-label">备注</span>
-          <input type="text" name="memo" class="form-control"
-                 placeholder="备注" aria-describedby="message-memo-label"/>
+        <div class="input-group {{ hasError 'content'}}">
+          <span class="input-group-addon" id="message-content-label">内容</span>
+          <input type="text" name="content" class="form-control"
+                 placeholder="消息内容" aria-describedby="message-content-label"/>
         </div>
-      </div>
-      {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
-      <div class="input-group hidden">
-        <span class="input-group-addon" id="message-id-label">Id</span>
-        <input type="text" name="overlap" class="form-control"
-               placeholder="空" aria-describedby="message-id-label">
       </div>
       <div class="col-xs-12"></div>
       <div class="col-sm-4 col-sm-offset-4">
         <button type="submit" class="btn btn-primary btn-block">
-          提交新信息
+          发送消息
         </button>
       </div>
     </form>
@@ -128,16 +99,14 @@
   <table class="table table-striped table-bordered min60">
     <thead>
     <tr>
-      <th>编号</th>
-      <th>姓名</th>
-      <th>性别</th>
-      <th>部门</th>
-      <th>职务</th>
-      <th>电话</th>
-      <th>邮箱</th>
-      <th>工资</th>
-      <th>备注</th>
-      <th class="danger text-center width60">变更</th>
+      <th>日期</th>
+      <th>接收者</th>
+      <th>发送者</th>
+      <th>标题</th>
+      <th>内容</th>
+      <th class="width60 text-center">状态</th>
+      <th class="width60 text-center">优先级</th>
+      <th class="width60 text-center">来源</th>
     </tr>
     </thead>
     <tbody>
@@ -150,22 +119,32 @@
 
 <template name="messageListItem">
   <tr>
-    <td>{{code}}</td>
-    <td>{{name}}</td>
-    <td>{{sex}}</td>
-    <td>{{stationName}}</td>
-    <td>{{title}}</td>
-    <td>{{phone}}</td>
-    <td>{{email}}</td>
-    <td>{{salary.currency}}{{salary.value}}</td>
-    <td>{{memo}}</td>
-    <td class="text-center">
-      <a href="{{_id}}" class="update-message" title="修改">
-        <i class="fa fa-pencil-square-o fa-lg"></i>
-      </a>
-      <a href="{{_id}}" class="remove-message" title="删除">
-        <i class="fa fa-times fa-lg danger"></i>
-      </a>
+    <td>{{ formatDate timestamp}}</td>
+    <td>{{ receiver }}</td>
+    <td>{{ creator }}</td>
+    <td>{{ headline }}</td>
+    <td>查看内容</td>
+    <td>
+      {{#if read }}
+        <i class="fa fa-check"></i>
+      {{else }}
+        <i class="fa fa-minus"></i>
+      {{/if }}
     </td>
+    <td>{{ priorityName priority }}</td>
+    <td>{{ source manual }}</td>
   </tr>
+</template>
+
+<template name="receiverSelection">
+  <select name="receiver" class="form-control"
+          aria-describedby="message-receiver-label">
+    {{#each receiverList }}
+      <optgroup label="{{name}}">
+        {{#each receivers }}
+          <option value="{{_id}}">{{name}}</option>
+        {{/each }}
+      </optgroup>
+    {{/each }}
+  </select>
 </template>

@@ -1,7 +1,55 @@
+Template.receiverSelection.helpers({
+  receiverList: function() {
+    var currentData = Template.currentData();
+    return currentData ? currentData.getReceivers() : [];
+    return [
+      {name: 'aaa', receivers: [
+        {_id: 'tafsa', name: 'gssdf'}, {_id: 'asdf', name: 'juasdk'}
+      ]},
+      {name: 'bbb', receivers: [
+        {_id: 'jas', name: 'h234'}, {_id: '2esd', name: 'sdfi23'}
+      ]}
+    ];
+  }
+});
+
+Template.receiverSelection.onCreated(function() {
+  // 必须保证当前模板上下文数据不是未定义
+  var currentData = Template.currentData();
+  currentData._receivers = [];
+  currentData._receiversListeners = new Tracker.Dependency();
+  currentData.getReceivers = function() {
+    currentData._receiversListeners.depend();
+    return currentData._receivers;
+  };
+  Meteor.call('getUserInfo', function(err, result) {
+    if (err) {
+      currentData._receivers = [];
+      throwError('无法获取用户信息');
+    } else {
+      currentData._receivers = classifyReceivers(result);
+    }
+    currentData._receiversListeners.changed();
+  });
+});
+
 Template.addMessage.helpers({
   hasError: function (field) {
     return !!Session.get('messageSubmitErrors')[field] ? 'has-error' : '';
+  },
+
+  types: function() {
+    return [
+      {name: ''}, {name: '备货'}, {name: '发货'}, {name: '收货'},
+      {name: '换货'}, {name: '退货'}, {name: '收款'}, {name: '付款'},
+      {name: '退款'}, {name: '维修'}, {name: '报废'}, {name: '其它'}
+    ];
   }
+
+});
+
+Template.messageList.helpers({
+  formatDate: formatDate
 });
 
 Template.message.onCreated(function() {
