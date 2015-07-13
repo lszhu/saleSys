@@ -18,7 +18,7 @@ Template.header.helpers({
         name: '工具',
         operation: [
           {name: '消息管理', template: 'messageApp'},
-          {name: '出入库管理', template: 'delivery'},
+          {name: '出入库管理', template: 'deliveryApp'},
           {name: '资金收支管理', template: 'capitalApp'}
         ]
       },
@@ -36,7 +36,7 @@ Template.header.helpers({
         operation: [
           {name: '订单管理', template: 'orderManagement'},
           //{name: '查询与变更', template: 'queryOrder'},
-          {name: '订单处理', template: 'disposeOrder'}
+          {name: '订单处理', template: 'orderDisposal'}
         ]
       },
       report: {

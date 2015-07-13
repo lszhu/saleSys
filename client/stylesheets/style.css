@@ -354,13 +354,9 @@ h2.login {
     padding: 0;
 }
 
-.message-list .show-content {
+.message-list .read-content .fa-check {
     cursor: pointer;
-}
-.message-list .show-content:hover {
-    cursor: pointer;
-    color: white;
-    background-color: steelblue;
+    color: limegreen;
 }
 
 /*

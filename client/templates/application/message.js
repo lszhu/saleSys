@@ -1,5 +1,5 @@
 Template.receiverSelection.helpers({
-  receiverList: function() {
+  receiverList: function () {
     var currentData = Template.currentData();
     return currentData ? currentData.getReceivers() : [];
     //return [
@@ -13,16 +13,16 @@ Template.receiverSelection.helpers({
   }
 });
 
-Template.receiverSelection.onCreated(function() {
+Template.receiverSelection.onCreated(function () {
   // 必须保证当前模板上下文数据不是未定义
   var currentData = Template.currentData();
   currentData._receivers = [];
   currentData._receiversListeners = new Tracker.Dependency();
-  currentData.getReceivers = function() {
+  currentData.getReceivers = function () {
     currentData._receiversListeners.depend();
     return currentData._receivers;
   };
-  Meteor.call('getUserInfo', function(err, result) {
+  Meteor.call('getUserInfo', function (err, result) {
     if (err) {
       currentData._receivers = [];
       throwError('无法获取用户信息');
@@ -41,7 +41,7 @@ Template.addMessage.helpers({
     return !!Session.get('messageSubmitErrors')[field] ? 'has-error' : '';
   },
 
-  types: function() {
+  types: function () {
     return [
       {name: ''}, {name: '备货'}, {name: '发货'}, {name: '收货'},
       {name: '换货'}, {name: '退货'}, {name: '收款'}, {name: '付款'},
@@ -53,23 +53,23 @@ Template.addMessage.helpers({
 
 Template.messageListItem.helpers({
   formatDate: formatDate,
-  priorityName: function(p) {
+  priorityName: function (p) {
     var name = ['最低', '普通', '较高', '最高'];
     return name[p];
   },
-  source: function(s) {
+  source: function (s) {
     return s ? '手工' : '自动';
   },
   creator: getNameFromId,
   receiver: getNameFromId
 });
 
-Template.message.onCreated(function() {
+Template.message.onCreated(function () {
   Session.set('messageSubmitErrors', {});
   Session.set('receiverList', []);
 });
 
-Template.message.onDestroyed(function() {
+Template.message.onDestroyed(function () {
   Session.set('receiverList', null);
 });
 
@@ -107,19 +107,14 @@ Template.message.events({
     // 清空可能遗留的错误信息
     Session.set('messageSubmitErrors', {});
     var target = $('#add-message');
-    // 如果设置了覆盖标识（overlap）则清空，否则只是简单的显示/隐藏切换编辑框
-    if (target.find('[name=overlap]').val()) {
-      target.find('[name=overlap]').val('');
+    if (target.hasClass('hidden')) {
+      target.removeClass('hidden');
+      target.slideDown('fast');
     } else {
-      if (target.hasClass('hidden')) {
-        target.removeClass('hidden');
-        target.slideDown('fast');
-      } else {
-        target.slideUp('fast', function () {
-          clearForm(target);
-          target.addClass('hidden');
-        });
-      }
+      target.slideUp('fast', function () {
+        clearForm(target);
+        target.addClass('hidden');
+      });
     }
   },
 
@@ -136,7 +131,7 @@ Template.message.events({
     $('#add-message').find('[name=overlap]').val('');
   },
 
-  'submit .add-message': function (e) {
+  'submit form.add-message': function (e) {
     e.preventDefault();
 
     var form = $(e.target);
@@ -148,10 +143,9 @@ Template.message.events({
       content: form.find('[name=content]').val()
     };
     console.log('message: ' + JSON.stringify(message));
-    var overlap = form.find('[name=overlap]').val();
-    console.log('overlap is: ' + overlap);
     // 对输入信息进行校验
     var errors = validateMessage(message);
+    console.log('errors in message submit: ' + JSON.stringify(errors));
     if (errors.err) {
       //console.log('errors: ' + JSON.stringify(errors));
       Session.set('messageSubmitErrors', errors);
@@ -174,13 +168,24 @@ Template.message.events({
         form.addClass('hidden');
       });
     });
+  },
+
+  'click .read-content': function(e) {
+    e.preventDefault();
+
+    var messageId = $(e.currentTarget).data('messageId');
+    Meteor.call('readMessage', messageId, function(err) {
+      if (err) {
+        throwError(err.reason);
+      }
+    });
   }
 });
 
 function clearForm(target) {
   var form = $(target);
   form.find('[name=type]').val('');
-  form.find('[name=priority]').val(3);
+  form.find('[name=priority]').val(2);
   form.find('[name=receiver]').val('');
   form.find('[name=headline]').val('');
   form.find('[name=content]').val('');

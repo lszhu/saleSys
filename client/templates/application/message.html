@@ -124,21 +124,22 @@
   <tr>
     <td>{{ formatDate timestamp}}</td>
     <td>{{ headline }}</td>
-    <td class="text-center show-content">
-      查看 <i class="fa fa-caret-up"></i>
-    </td>
+    <!--<td class="text-center show-content">-->
+      <!--查看 <i class="fa fa-caret-up"></i>-->
+    <!--</td>-->
+    <td> {{ content }}</td>
     <td>{{ creator creatorId }}</td>
     <td>{{ receiver receiverId }}</td>
-    <td class="text-center">
+    <td class="text-center read-content width60" data-message-id="{{ _id }}">
       {{#if read }}
         <i class="fa fa-check" title="已查看"></i>
       {{else }}
-        <i class="fa fa-minus" title="尚未查看"></i>
+        <i class="fa fa-minus text-success" title="尚未查看"></i>
       {{/if }}
     </td>
-    <td class="text-center">{{ priorityName priority }}</td>
-    <td class="text-center">{{ type }}</td>
-    <td class="text-center">{{ source manual }}</td>
+    <td class="text-center width60">{{ priorityName priority }}</td>
+    <td class="text-center width60">{{ type }}</td>
+    <td class="text-center width60">{{ source manual }}</td>
   </tr>
 </template>
 
