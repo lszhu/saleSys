@@ -354,6 +354,15 @@ h2.login {
     padding: 0;
 }
 
+.message-list .show-content {
+    cursor: pointer;
+}
+.message-list .show-content:hover {
+    cursor: pointer;
+    color: white;
+    background-color: steelblue;
+}
+
 /*
 .order-disposal-detail > .attach.goods-list-container {
     padding: 10px;
