@@ -117,7 +117,7 @@ Template.delivery.events({
       //console.log('errors: ' + JSON.stringify(errors));
       Session.set('deliverySubmitErrors', errors);
       if (errors.err) {
-        throwError(getErrorDelivery(errors));
+        throwError(getErrorMessage(errors));
       }
       return;
     }

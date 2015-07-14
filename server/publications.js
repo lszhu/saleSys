@@ -30,17 +30,33 @@ Meteor.publish('messages', function (query, options) {
   return Messages.find(selector, options);
 });
 
-// 发布资金收支记录
-Meteor.publish('capitals', function (query, options) {
+// 发布特定订单关联的资金收支记录
+Meteor.publish('capitalsByOrder', function (query, options) {
   check(query, {orderId: String});
   check(options.Object);
 
   return Capitals.find(query, options);
 });
 
+// 发布资金收支记录
+Meteor.publish('capitals', function (query, options) {
+  check(query, String);
+  check(options.Object);
+
+  return Capitals.find(query, options);
+});
+
+// 发布特定订单关联的库存变更信息
+Meteor.publish('deliveriesByOrder', function (query, options) {
+  check(query, {orderId: String});
+  check(options, Object);
+
+  return Deliveries.find(query, options);
+});
+
 // 发布库存变更信息
 Meteor.publish('deliveries', function (query, options) {
-  check(query, {orderId: String});
+  check(query, String);
   check(options, Object);
 
   return Deliveries.find(query, options);
