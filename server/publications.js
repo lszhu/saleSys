@@ -1,6 +1,6 @@
 // 发布消息
-Meteor.publish('messages', function (filterKey, options) {
-  check(filterKey, String);
+Meteor.publish('messages', function (query, options) {
+  check(query, Object);
   check(options, Object);
 
   var selector = {};
@@ -8,10 +8,11 @@ Meteor.publish('messages', function (filterKey, options) {
   var userId = this.userId;
   // 如果不是管理员用户，则只发布当前用户发出或收到的消息
   var user = Meteor.users.findOne(userId);
-  console.log('当前用户级别：' + user && user.grade);
+  //console.log('当前用户级别：' + user && user.grade);
   if (user && user.grade != 3) {
     selector.$or = [{creatorId: userId}, {receiverId: userId}];
   }
+  var filterKey = query.filterKey;
   if (filterKey) {
     var key = new RegExp(filterKey, 'i');
     if (selector.$or) {
@@ -23,6 +24,8 @@ Meteor.publish('messages', function (filterKey, options) {
       selector.$or = [{headline: key}, {content: key}];
     }
   }
+  query = _.omit(query, 'filterKey');
+  selector = _.extend(selector, query);
   console.log('message find selector: ' + JSON.stringify(selector));
   return Messages.find(selector, options);
 });

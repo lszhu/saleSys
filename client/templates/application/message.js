@@ -174,7 +174,7 @@ Template.message.events({
     e.preventDefault();
 
     var messageId = $(e.currentTarget).data('messageId');
-    Meteor.call('readMessage', messageId, function(err) {
+    Meteor.call('setMessageRead', messageId, function(err) {
       if (err) {
         throwError(err.reason);
       }

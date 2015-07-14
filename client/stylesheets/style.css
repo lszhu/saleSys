@@ -354,6 +354,10 @@ h2.login {
     padding: 0;
 }
 
+.message-list .read-content {
+    cursor: pointer;
+}
+
 .message-list .read-content .fa-check {
     cursor: pointer;
     color: limegreen;
