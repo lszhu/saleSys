@@ -379,15 +379,14 @@ h2.login {
 
 .message-note-list span {
     max-width: 500px;
-    display: block;
-    color: darkblue;
+    /*display: block;*/
+    color: midnightblue;
     overflow: hidden;
-    position: static;
     text-overflow: ellipsis;
-    float: none;
     word-break: break-all;
     word-wrap: break-word;
 }
+
 .message-note-list > .hide-content > .content {
     display: none;
 }

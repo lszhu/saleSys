@@ -11,7 +11,9 @@
       {{#each notifications}}
         <li class="list-group-item hide-content notification">
           <div class="headline">
-            <span><strong>{{ creatorId }}：&nbsp;{{ headline }}</strong></span>
+            <span>
+              <strong>{{ getNameFromId creatorId }}：&nbsp;{{ headline }}</strong>
+            </span>
           </div>
           <div class="content">{{ content }}</div>
         </li>

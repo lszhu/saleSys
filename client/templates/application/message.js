@@ -66,11 +66,11 @@ Template.messageListItem.helpers({
 
 Template.message.onCreated(function () {
   Session.set('messageSubmitErrors', {});
-  Session.set('receiverList', []);
+  //Session.set('receiverList', []);
 });
 
 Template.message.onDestroyed(function () {
-  Session.set('receiverList', null);
+  //Session.set('receiverList', null);
 });
 
 Template.message.onRendered(function () {
@@ -112,7 +112,7 @@ Template.message.events({
       target.slideDown('fast');
     } else {
       target.slideUp('fast', function () {
-        clearForm(target);
+        //clearForm(target);
         target.addClass('hidden');
       });
     }
@@ -189,10 +189,4 @@ function clearForm(target) {
   form.find('[name=receiver]').val('');
   form.find('[name=headline]').val('');
   form.find('[name=content]').val('');
-}
-
-function getNameFromId(userId) {
-  var receiverList = Session.get('receiverList');
-  var user = receiverList[userId];
-  return user && user.name;
 }

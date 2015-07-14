@@ -86,3 +86,9 @@ classifyReceivers = function (receivers) {
   //console.log('end receivers: ' + JSON.stringify(data));
   return data;
 };
+
+getNameFromId = function (userId) {
+  var receiverList = Session.get('receiverList');
+  var user = receiverList[userId];
+  return user && user.name;
+};
