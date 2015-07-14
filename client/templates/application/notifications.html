@@ -6,21 +6,18 @@
     {{/if}}
     <b class="caret"></b>
   </a>
-  <ul class="notification dropdown-menu">
+  <ul class="dropdown-menu list-group message-note-list">
     {{#if notificationCount}}
       {{#each notifications}}
-        {{> notificationItem}}
+        <li class="list-group-item hide-content notification">
+          <div class="headline">
+            <span><strong>{{ creatorId }}：&nbsp;{{ headline }}</strong></span>
+          </div>
+          <div class="content">{{ content }}</div>
+        </li>
       {{/each}}
     {{else}}
-      <li><span>没有未查看的消息</span></li>
+      <li><span>没有新的消息</span></li>
     {{/if}}
   </ul>
-</template>
-
-<template name="notificationItem">
-  <li>
-    <a href="{{notificationPostPath}}">
-      <strong>{{commenterName}}</strong> commented on your post
-    </a>
-  </li>
 </template>

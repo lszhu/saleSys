@@ -1,20 +1,24 @@
 Template.notifications.helpers({
   notifications: function() {
-    return Messages.find({receiverId: Meteor.userId(), read: false});
+    return Messages.find({receiverId: Meteor.userId(), read: false},
+        {sort: {timestamp: -1}});
   },
   notificationCount: function(){
   	return Messages.find({receiverId: Meteor.userId(), read: false}).count();
   }
 });
 
-Template.notificationItem.helpers({
-  notificationPostPath: function() {
-    return Router.routes.postPage.path({_id: this.postId});
-  }
-})
+Template.notifications.events({
+  'click li.notification': function(e) {
+    e.preventDefault();
+    e.stopPropagation();
 
-Template.notificationItem.events({
-  'click a': function() {
-    Messages.update(this._id, {$set: {read: true}});
+    var target = $(e.currentTarget);
+    if (target.hasClass('hide-content')) {
+      target.removeClass('hide-content');
+    } else {
+      Meteor.call('setMessageRead', this._id);
+      //Messages.update(this._id, {$set: {read: true}});
+    }
   }
-})
+});

@@ -363,6 +363,35 @@ h2.login {
     color: limegreen;
 }
 
+.message-note-list {
+    padding: 0;
+    margin: 0;
+}
+
+.message-note-list li {
+    max-width: 510px;
+    cursor: pointer;
+}
+.message-note-list li:hover {
+    /*color: white;*/
+    background-color: lightyellow;
+}
+
+.message-note-list span {
+    max-width: 500px;
+    display: block;
+    color: darkblue;
+    overflow: hidden;
+    position: static;
+    text-overflow: ellipsis;
+    float: none;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.message-note-list > .hide-content > .content {
+    display: none;
+}
+
 /*
 .order-disposal-detail > .attach.goods-list-container {
     padding: 10px;
