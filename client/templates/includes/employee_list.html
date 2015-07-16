@@ -1,0 +1,14 @@
+<!-- 必须在使用本模板时设置localTitle及customers变量 -->
+<template name="employeeSelect">
+  <div class="input-group">
+    <span class="input-group-addon">
+      {{localTitle}}
+    </span>
+    <select name="employeeId" class="form-control">
+      <option value=""></option>
+      {{#each employees}}
+        <option value="{{_id}}">{{name}}（{{code}}）</option>
+      {{/each}}
+    </select>
+  </div>
+</template>
