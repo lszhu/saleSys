@@ -212,8 +212,12 @@ delivery = {
     {
       // 对应产品型号Id，为product集合的文档条目的数据库内部的ObjectId
       productId: String,
+      // 产品名称
+      name: String,
       // 产品数量
       amount: Number,
+      // 产品单价
+      price: Number,
       // 产品总销售/采购价
       value: Number,
       // 对应货币类型

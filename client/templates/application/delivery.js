@@ -1,11 +1,58 @@
-Template.addDelivery.helpers({
+Template.editDelivery.helpers({
   hasError: function (field) {
     return !!Session.get('deliverySubmitErrors')[field] ? 'has-error' : '';
+  },
+  deliveryTypes: function () {
+    return [
+      {name: ''}, {name: '销售'}, {name: '采购'}, {name: '维修'},
+      {name: '日常开销'}, {name: '员工预支'}, {name: '工资'}
+    ];
+  },
+  defaultCurrency: defaultCurrency
+});
+
+Template.editDelivery.events({
+  'change [name=type]': function (e, t) {
+    e.preventDefault();
+
+    var value = $(e.currentTarget).val();
+    if (value == '员工预支' || value == '工资') {
+      $(t.find('.partner-employee')).removeClass('hidden');
+      $(t.find('.partner-customer')).addClass('hidden');
+    } else {
+      $(t.find('.partner-employee')).addClass('hidden');
+      $(t.find('.partner-customer')).removeClass('hidden');
+    }
+  },
+
+  // 资金金额不能为负数，如果输入负数，自动转为其绝对值
+  'change [name=value]': function (e) {
+    var t = $(e.target);
+    var value = t.val();
+    console.log('value: ' + value);
+    if (isNaN(value)) {
+      t.val('');
+    } else if (value < 0) {
+      t.val(-value);
+    }
   }
 });
 
-Template.delivery.onCreated(function() {
+Template.deliveryListItem.helpers({
+  stationName: function (id) {
+    var station = Stations.findOne(id);
+    return station && station.name || '未知';
+  },
+  operatorName: function(id) {
+    var users = Session.get('receiverList');
+    return users && users[id] && users[id].name || '未知';
+  },
+  formatDate: formatDate
+});
+
+Template.delivery.onCreated(function () {
   Session.set('deliverySubmitErrors', {});
+  //clearOrderDisposalGoodsLists();
 });
 
 Template.delivery.onRendered(function () {
@@ -39,18 +86,23 @@ Template.delivery.events({
 
   'click .edit-delivery': function (e) {
     e.preventDefault();
+
     // 清空可能遗留的错误信息
     Session.set('deliverySubmitErrors', {});
     var target = $('#add-delivery');
+    var grid = $('.add-delivery > .goods-list > .grid');
+    if (grid.hasClass('hidden')) {
+      grid.removeClass('hidden');
+    }
     // 如果设置了覆盖标识（overlap）则清空，否则只是简单的显示/隐藏切换编辑框
     if (target.find('[name=overlap]').val()) {
       target.find('[name=overlap]').val('');
     } else {
       if (target.hasClass('hidden')) {
         target.removeClass('hidden');
-        target.slideDown('fast');
+        target.fadeIn('fast');
       } else {
-        target.slideUp('fast', function () {
+        target.fadeOut('fast', function () {
           clearForm(target);
           target.addClass('hidden');
         });
@@ -65,7 +117,7 @@ Template.delivery.events({
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
     var form = $('#add-delivery');
-    //console.log('_id: ' + _id);
+    console.log('_id: ' + _id);
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
     form.find('[name=overlap]').val(_id);
     // 显示编辑框
@@ -78,7 +130,7 @@ Template.delivery.events({
 
   'click .remove-delivery': function (e) {
     e.preventDefault();
-    if (!confirm('你确实要删除该客户的信息吗？')) {
+    if (!confirm('你确实要删除该资金收支信息吗？')) {
       return;
     }
     // 获取对应数据库条目Id
@@ -94,41 +146,62 @@ Template.delivery.events({
 
     var form = $(e.target);
     var delivery = {
-      code: form.find('[name=code]').val(),
-      name: form.find('[name=name]').val(),
-      company: form.find('[name=company]').val(),
-      title: form.find('[name=title]').val(),
-      phone: form.find('[name=phone]').val(),
-      email: form.find('[name=email]').val(),
-      address: form.find('[name=address]').val(),
-      memo: form.find('[name=memo]').val()
+      type: form.find('[name=type]').val(),
+      stationId: form.find('[name=stationId]').val(),
+      money: {
+        type: '现金',
+        value: parseFloat(form.find('[name=value]').val()) || 0,
+        currency: form.find('[name=currency]').val()
+      },
+      comment: form.find('[name=comment]').val(),
+      orderId: form.find('[name=orderId]').val(),
+      operatorId: Meteor.userId()
     };
+    var inOut = form.find('[name=inOut]').val();
+    if (inOut == '支出') {
+      delivery.money.value = -delivery.money.value;
+    } else if (inOut == '收入支票') {
+      delivery.money.type = '支票';
+    }
+    // 检查对象（partnerId）中保存的是Id还是实际名称
+    delivery.partnerId = getPartner(delivery.type, e.target);
     console.log('delivery: ' + JSON.stringify(delivery));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
-    var data = {delivery: delivery, overlap: overlap};
-    // 对一些特别情况需要用户进行确认
-    if (!confirmDeliveryInfo(data)) {
-      return;
-    }
+    //var data = {delivery: delivery, overlap: overlap};
     // 对输入信息进行校验
-    var errors = validateDelivery(data);
+    var errors = validateDelivery(delivery);
     if (errors.err) {
       //console.log('errors: ' + JSON.stringify(errors));
       Session.set('deliverySubmitErrors', errors);
-      if (errors.err) {
-        throwError(getErrorMessage(errors));
-      }
+      throwError(getErrorMessage(errors));
       return;
     }
-    Meteor.call('deliveryInsert', data, function (err) {
+    if (overlap) {
+      // overlap本身保存的就是集合文档的Id
+      Meteor.call('deliveryUpdate', overlap, delivery, function (err) {
+        if (err) {
+          return throwError(err.reason);
+        }
+        // 清除可能遗留的错误信息
+        Session.set('deliverySubmitErrors', {});
+        // 完成同时隐藏编辑表单
+        var form = $('#add-delivery');
+        // 清除表单的内容
+        clearForm(form);
+        form.slideUp('fast', function () {
+          form.addClass('hidden');
+        });
+      });
+      return;
+    }
+    Meteor.call('deliveryInsert', delivery, function (err) {
       if (err) {
         return throwError(err.reason);
       }
-
       // 清除可能遗留的错误信息
       Session.set('deliverySubmitErrors', {});
-      // 如果是更新用户信息，则完成同时隐藏编辑表单
+      // 完成同时隐藏编辑表单
       var form = $('#add-delivery');
       // 清除表单的内容
       clearForm(form);
@@ -141,51 +214,59 @@ Template.delivery.events({
 
 function clearForm(target) {
   var form = $(target);
-  form.find('[name=code]').val('');
-  form.find('[name=name]').val('');
-  form.find('[name=company]').val('');
-  form.find('[name=title]').val('');
-  form.find('[name=phone]').val('');
-  form.find('[name=email]').val('');
-  form.find('[name=address]').val('');
-  form.find('[name=memo]').val('');
+  form.find('[name=type]').val('');
+  form.find('[name=inOut]').val('');
+  //form.find('[name=stationId]').val('');
+  form.find('[name=orderId]').val('');
+  form.find('[name=employeeId]').val('');
+  form.find('[name=customerNameOrId]').val('');
+  form.find('[name=value]').val('');
+  //form.find('[name=currency]').val('');
+  form.find('[name=comment]').val('');
   // 清空隐藏文本框中保存的数据库条目Id，即清空覆盖标识
   form.find('[name=overlap]').val('');
 }
 
 function fillForm(_id) {
   var data = Deliveries.findOne(_id);
-  //console.log('data: ' + JSON.stringify(data));
+  console.log('data: ' + JSON.stringify(data));
+  if (!data || !data.money) {
+    return;
+  }
+  var money = data.money;
   var form = $('#add-delivery');
-  form.find('[name=code]').val(data.code);
-  form.find('[name=name]').val(data.name);
-  form.find('[name=company]').val(data.company);
-  form.find('[name=title]').val(data.title);
-  form.find('[name=phone]').val(data.phone);
-  form.find('[name=email]').val(data.email);
-  form.find('[name=address]').val(data.address);
-  form.find('[name=memo]').val(data.memo);
+  form.find('[name=type]').val(data.type);
+  form.find('[name=orderId]').val(data.orderId);
+  form.find('[name=stationId]').val(data.stationId);
+  form.find('[name=value]').val(Math.abs(money.value));
+  form.find('[name=comment]').val(data.comment);
+  form.find('[name=currency]').val(data.money.currency);
+  var inOut = '收入现金';
+  if (money.value < 0) {
+    inOut = '支出';
+  } else if (money.type == '支票') {
+    inOut = '收入支票';
+  }
+  form.find('[name=inOut]').val(inOut);
+
+  if (data.type == '员工预支' || data.type == '工资') {
+    form.find('.partner-employee').removeClass('hidden');
+    form.find('.partner-customer').addClass('hidden');
+    return form.find('[name=employeeId]').val(data.partnerId);
+  }
+  form.find('.partner-employee').addClass('hidden');
+  form.find('.partner-customer').removeClass('hidden');
 }
 
-function confirmDeliveryInfo(data) {
-  var delivery = data.delivery;
-  if (data.overlap) {
-    return true;
+function getPartner(type, dom) {
+  if (type == '员工预支' || type == '工资') {
+    return $(dom).find('.partner-employee select').val();
   }
-  if (delivery.name && Deliveries.findOne({name: delivery.name})) {
-    if (!confirm('系统中已存在同名客户，还有继续添加此客户吗？')) {
-      return false;
-    }
+  var target = $(dom).find('.partner-customer input');
+  var customer = Customers.findOne(target.data('customerId'));
+  if (customer && customer.name == target.val()) {
+    return target.data('customerId');
+  } else {
+    return target.val();
   }
-  if (delivery.phone && Deliveries.findOne({phone: delivery.phone})) {
-    if (!confirm('系统中已存在客户使用此电话号码，还有继续添加此客户吗？')) {
-      return false;
-    }
-  }
-  if ( delivery.email && Deliveries.findOne({email: delivery.email})) {
-    if (!confirm('系统中已存在客户使用此电子邮箱，还有继续添加此客户吗？')) {
-      return false;
-    }
-  }
-  return true;
 }

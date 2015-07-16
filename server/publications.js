@@ -75,10 +75,30 @@ Meteor.publish('deliveriesByOrder', function (query, options) {
 });
 
 // 发布库存变更信息
-Meteor.publish('deliveries', function (query, options) {
-  check(query, String);
+Meteor.publish('deliveries', function (filterKey, options) {
+  check(filterKey, String);
   check(options, Object);
 
+  var query = {};
+  if (filterKey) {
+    var key = new RegExp(filterKey, 'i');
+    /*
+    // 从客户名单集合中找到名称匹配关键字的客户的_id
+    var customer = Customers.find({name: key}).fetch();
+    customer = customer.map(function (e) {
+      return e._id;
+    });
+    // 从固定客户集合collections中找到名称匹配关键字的条目对应_id
+    var employee = Employees.find({name: key}).fetch();
+    //console.log('station: ' + JSON.stringify(station));
+    employee = employee.map(function (e) {
+      return e._id;
+    });
+    customer = customer.concat(employee);
+    */
+    // 从员工集合employees中找出匹配关键字的条目对应_id
+    query.$or = [{type: key}, {comment: key}];
+  }
   return Deliveries.find(query, options);
 });
 
