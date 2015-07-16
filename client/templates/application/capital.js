@@ -170,7 +170,7 @@ Template.capital.events({
         currency: form.find('[name=currency]').val()
       },
       comment: form.find('[name=comment]').val(),
-      orderId: '',
+      orderId: form.find('[name=orderId]').val(),
       operatorId: Meteor.userId()
     };
     var inOut = form.find('[name=inOut]').val();
@@ -233,6 +233,7 @@ function clearForm(target) {
   form.find('[name=type]').val('');
   form.find('[name=inOut]').val('');
   //form.find('[name=stationId]').val('');
+  form.find('[name=orderId]').val('');
   form.find('[name=employeeId]').val('');
   form.find('[name=customerNameOrId]').val('');
   form.find('[name=value]').val('');
@@ -251,6 +252,7 @@ function fillForm(_id) {
   var money = data.money;
   var form = $('#add-capital');
   form.find('[name=type]').val(data.type);
+  form.find('[name=orderId]').val(data.orderId);
   form.find('[name=stationId]').val(data.stationId);
   form.find('[name=value]').val(Math.abs(money.value));
   form.find('[name=comment]').val(data.comment);

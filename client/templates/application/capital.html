@@ -92,6 +92,13 @@
                  placeholder="备注" aria-describedby="capital-memo-label"/>
         </div>
       </div>
+      {{! 下面的input保存对应订单的数据库Id，为空表示不关联任何订单 }}
+      <div class="col-xs-4 attach hidden">
+        <div class="input-group">
+          <span class="input-group-addon">订单Id</span>
+          <input type="text" name="orderId" class="form-control">
+        </div>
+      </div>
       {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
       <div class="input-group hidden">
         <span class="input-group-addon" id="capital-id-label">Id</span>
