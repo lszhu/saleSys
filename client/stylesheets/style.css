@@ -391,6 +391,18 @@ h2.login {
     display: none;
 }
 
+.show-delivery-detail {
+    cursor: pointer;
+}
+.show-delivery-detail:hover {
+    color: white;
+    background-color: steelblue;
+}
+
+.modal {
+    overflow: auto;
+}
+
 /*
 .order-disposal-detail > .attach.goods-list-container {
     padding: 10px;

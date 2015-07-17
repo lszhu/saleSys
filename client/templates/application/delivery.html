@@ -104,6 +104,10 @@
     </tr>
     </thead>
     <tbody>
+    <tr class="goods-list-detail hidden">
+      <td colspan="7">{{> goodsList index = 0 }}</td>
+    </tr>
+
     {{#each deliveries }}
       {{> deliveryListItem }}
     {{/each}}
@@ -117,7 +121,9 @@
     <td>{{type}}</td>
     <td>{{stationName stationId}}</td>
     <td>{{operatorName operatorId}}</td>
-    <td>显示</td>
+    <td class="show-delivery-detail" data-delivery-id="{{_id}}">
+      显示 <i class="fa fa-list-alt"></i>
+    </td>
     <td>{{comment}}</td>
     <td class="text-center">
       <a href="{{_id}}" class="update-delivery" title="修改">

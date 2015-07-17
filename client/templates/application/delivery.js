@@ -50,6 +50,9 @@ Template.deliveryListItem.helpers({
   formatDate: formatDate
 });
 
+Template.deliveryListItem.events({
+});
+
 Template.delivery.onCreated(function () {
   Session.set('deliverySubmitErrors', {});
   //clearOrderDisposalGoodsLists();
@@ -65,6 +68,28 @@ Template.delivery.onRendered(function () {
 });
 
 Template.delivery.events({
+  'click td.show-delivery-detail': function(e) {
+    e.preventDefault();
+
+    var target = $('tr.goods-list-detail');
+    if (target[0] == $(e.currentTarget).parent().next()[0]) {
+      if (target.hasClass('hidden')) {
+        target.removeClass('hidden');
+      } else {
+        target.addClass('hidden');
+      }
+    } else {
+      target.removeClass('hidden')
+          .insertAfter($(e.currentTarget).parent())
+          .find('.goods-list > .grid')
+          .removeClass('hidden');
+    }
+    // 设置货物清单数据到表格数据源
+    var hot = getGoodsListHot(1);
+    hot.loadData(this.product);
+    console.log('delivery: ' + JSON.stringify(this.product));
+  },
+
   'keypress .delivery-keyword': function (e) {
     // 绑定回车键
     if (e.keyCode == '13') {
