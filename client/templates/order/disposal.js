@@ -88,6 +88,16 @@ Template.editOrder.onCreated(function () {
   }
 });
 
+Template.editOrder.onRendered(function() {
+  $('.edit-order input[name=deadline]').datepicker({
+    format: "yyyy-mm-dd",
+    language: "zh-CN",
+    todayBtn: true,
+    orientation: 'top left',
+    autoclose: true
+  });
+});
+
 Template.editOrder.events({
   'change .edit-order select[name=stationId]': function (e) {
     var managers = Meteor.users.find({stationId: $(e.target).val()}).fetch();
@@ -203,6 +213,16 @@ Template.orderDisposalDetail.helpers({
 
 Template.orderDisposalDetail.onCreated(function () {
   Session.set('orderDisposalDetailSubmitErrors', []);
+});
+
+Template.orderDisposalDetail.onRendered(function() {
+  $('.order-disposal-detail input[name=timestamp]').datepicker({
+    format: "yyyy-mm-dd",
+    language: "zh-CN",
+    todayBtn: true,
+    orientation: 'top left',
+    autoclose: true
+  });
 });
 
 Template.orderDisposalDetail.events({

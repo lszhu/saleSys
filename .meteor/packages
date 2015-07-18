@@ -16,3 +16,4 @@ sanjo:jasmine
 velocity:html-reporter
 fixtures
 awsp:handsontable
+rajit:bootstrap3-datepicker

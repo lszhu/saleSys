@@ -399,10 +399,6 @@ h2.login {
     background-color: steelblue;
 }
 
-.modal {
-    overflow: auto;
-}
-
 /*
 .order-disposal-detail > .attach.goods-list-container {
     padding: 10px;
