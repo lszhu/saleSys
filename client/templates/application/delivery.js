@@ -141,6 +141,7 @@ Template.delivery.events({
     Session.set('deliverySubmitErrors', {});
     // 获取对应数据库条目Id
     var _id = $(e.currentTarget).attr('href');
+    console.log('deliveryId: ' + _id);
     var form = $('#add-delivery');
     console.log('_id: ' + _id);
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
@@ -148,14 +149,19 @@ Template.delivery.events({
     // 显示编辑框
     if (form.hasClass('hidden')) {
       form.removeClass('hidden');
-      form.slideDown('fast');
+      form.fadeIn('fast');
+    }
+    // 显示商品列表
+    var grid = $('.add-delivery > .goods-list > .grid');
+    if (grid.hasClass('hidden')) {
+      grid.removeClass('hidden');
     }
     fillForm(_id);
   },
 
   'click .remove-delivery': function (e) {
     e.preventDefault();
-    if (!confirm('你确实要删除该资金收支信息吗？')) {
+    if (!confirm('你确实要删除该货物出入库信息吗？')) {
       return;
     }
     // 获取对应数据库条目Id
@@ -169,15 +175,12 @@ Template.delivery.events({
   'submit .add-delivery': function (e) {
     e.preventDefault();
 
+    var hot = getGoodsListHot(0);
     var form = $(e.target);
     var delivery = {
       type: form.find('[name=type]').val(),
       stationId: form.find('[name=stationId]').val(),
-      money: {
-        type: '现金',
-        value: parseFloat(form.find('[name=value]').val()) || 0,
-        currency: form.find('[name=currency]').val()
-      },
+      product: hot.getData(),
       comment: form.find('[name=comment]').val(),
       orderId: form.find('[name=orderId]').val(),
       operatorId: Meteor.userId()
@@ -188,8 +191,6 @@ Template.delivery.events({
     } else if (inOut == '收入支票') {
       delivery.money.type = '支票';
     }
-    // 检查对象（partnerId）中保存的是Id还是实际名称
-    delivery.partnerId = getPartner(delivery.type, e.target);
     console.log('delivery: ' + JSON.stringify(delivery));
     var overlap = form.find('[name=overlap]').val();
     console.log('overlap is: ' + overlap);
@@ -255,32 +256,18 @@ function clearForm(target) {
 function fillForm(_id) {
   var data = Deliveries.findOne(_id);
   console.log('data: ' + JSON.stringify(data));
-  if (!data || !data.money) {
+  if (!data) {
     return;
   }
-  var money = data.money;
   var form = $('#add-delivery');
   form.find('[name=type]').val(data.type);
   form.find('[name=orderId]').val(data.orderId);
   form.find('[name=stationId]').val(data.stationId);
-  form.find('[name=value]').val(Math.abs(money.value));
   form.find('[name=comment]').val(data.comment);
-  form.find('[name=currency]').val(data.money.currency);
-  var inOut = '收入现金';
-  if (money.value < 0) {
-    inOut = '支出';
-  } else if (money.type == '支票') {
-    inOut = '收入支票';
-  }
-  form.find('[name=inOut]').val(inOut);
-
-  if (data.type == '员工预支' || data.type == '工资') {
-    form.find('.partner-employee').removeClass('hidden');
-    form.find('.partner-customer').addClass('hidden');
-    return form.find('[name=employeeId]').val(data.partnerId);
-  }
-  form.find('.partner-employee').addClass('hidden');
-  form.find('.partner-customer').removeClass('hidden');
+  $('.goodsList > .grid').removeClass('hidden');
+  var hot = getGoodsListHot(0);
+  hot.loadData(data.product);
+  orderDisposalDetailGoodsLists[0].data = data.product;
 }
 
 function getPartner(type, dom) {
