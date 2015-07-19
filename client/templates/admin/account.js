@@ -179,6 +179,13 @@ Template.account.events({
     t.$('#add-account').find('[name=overlap]').val('');
   },
 
+  'click .add-account .permit': function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    alert('暂时不支持权限设置');
+  },
+
   'submit .add-account': function (e) {
     e.preventDefault();
 

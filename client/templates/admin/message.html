@@ -1,0 +1,171 @@
+<template name="monitor">
+  <div>
+    <h2>自动通知用户列表
+      <button class="btn btn-primary edit-monitor">增加自动通知用户</button>
+    </h2>
+    <div id="add-monitor" class="hidden">
+      <div>
+        {{> addMonitor }}
+      </div>
+      <div class="col-sm-12"><br></div>
+    </div>
+    <div class="input-group col-sm-6 attach">
+      <span class="input-group-addon" id="monitor-code-label">搜索</span>
+      <input type="text" name="keyword" class="form-control monitor-keyword"
+             placeholder="搜索关键词" aria-describedby="monitor-code-label">
+      <span class="btn btn-primary input-group-addon filter-monitor">
+        查询
+      </span>
+    </div>
+    {{> monitorList }}
+
+    <div class="col-xs-4">
+      <a class="btn btn-default disabled" href="#">当前共显示 {{itemCount}}
+        条信息</a>
+    </div>
+    {{#if nextPath}}
+      <div class="col-xs-4 col-xs-offset-4">
+        <a class="btn btn-default btn-block" href="{{nextPath}}">显示更多</a>
+      </div>
+    {{else}}
+      {{#unless ready}}
+        {{> loading}}
+      {{/unless}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="addMonitor">
+  <div>
+    <strong>编辑销售部门信息</strong>
+
+    <form class="add-monitor">
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'code'}}">
+          <span class="input-group-addon" id="monitor-code-label">编号</span>
+          <input type="text" name="code" class="form-control" placeholder="编号"
+                 aria-describedby="monitor-code-label">
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'name'}}">
+          <span class="input-group-addon" id="monitor-name-label">姓名</span>
+          <input type="text" name="name" class="form-control" placeholder="姓名"
+                 aria-describedby="monitor-name-label">
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'sex'}}">
+          <span class="input-group-addon" id="monitor-sex-label">性别</span>
+          <select name="sex" class="form-control"
+                  aria-describedby="monitor-sex-label">
+            <option></option>
+            <option>男</option>
+            <option>女</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        {{> stationSelect localTitle = '部门' }}
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'phone'}}">
+          <span class="input-group-addon" id="monitor-phone-label">电话</span>
+          <input type="text" name="phone" class="form-control"
+                 placeholder="电话" aria-describedby="monitor-phone-label"/>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'email'}}">
+          <span class="input-group-addon" id="monitor-email-label">邮箱</span>
+          <input type="text" name="email" class="form-control"
+                 placeholder="邮箱" aria-describedby="monitor-email-label"/>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'title'}}">
+          <span class="input-group-addon" id="monitor-title-label">职务</span>
+          <input type="text" name="title" class="form-control"
+                 placeholder="职务" aria-describedby="monitor-title-label"/>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'salary'}}">
+        <span class="input-group-addon"
+              id="monitor-salary-value-label">工资</span>
+          <input type="text" name="salaryValue" class="form-control"
+                 placeholder="工资数额"
+                 aria-describedby="monitor-salary-value-label"/>
+        </div>
+      </div>
+      <div class="col-xs-4 attach">
+        {{> currencySelect }}
+      </div>
+      <div class="col-xs-12 attach">
+        <div class="input-group {{ hasError 'memo'}}">
+          <span class="input-group-addon" id="monitor-memo-label">备注</span>
+          <input type="text" name="memo" class="form-control"
+                 placeholder="备注" aria-describedby="monitor-memo-label"/>
+        </div>
+      </div>
+      {{! 下面的input保存数据库条目的Id，为空表示新增，保存了Id表示覆盖 }}
+      <div class="input-group hidden">
+        <span class="input-group-addon" id="monitor-id-label">Id</span>
+        <input type="text" name="overlap" class="form-control"
+               placeholder="空" aria-describedby="monitor-id-label">
+      </div>
+      <div class="col-xs-12"></div>
+      <div class="col-sm-4 col-sm-offset-4">
+        <button type="submit" class="btn btn-primary btn-block">
+          提交新信息
+        </button>
+      </div>
+    </form>
+  </div>
+</template>
+
+<template name="monitorList">
+  <table class="table table-striped table-bordered min60">
+    <thead>
+    <tr>
+      <th>编号</th>
+      <th>姓名</th>
+      <th>性别</th>
+      <th>部门</th>
+      <th>职务</th>
+      <th>电话</th>
+      <th>邮箱</th>
+      <th>工资</th>
+      <th>备注</th>
+      <th class="danger text-center width60">变更</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each monitors }}
+      {{> monitorListItem }}
+    {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="monitorListItem">
+  <tr>
+    <td>{{code}}</td>
+    <td>{{name}}</td>
+    <td>{{sex}}</td>
+    <td>{{stationName}}</td>
+    <td>{{title}}</td>
+    <td>{{phone}}</td>
+    <td>{{email}}</td>
+    <td>{{salary.currency}}{{salary.value}}</td>
+    <td>{{memo}}</td>
+    <td class="text-center">
+      <a href="{{_id}}" class="update-monitor" title="修改">
+        <i class="fa fa-pencil-square-o fa-lg"></i>
+      </a>
+      <a href="{{_id}}" class="remove-monitor" title="删除">
+        <i class="fa fa-times fa-lg danger"></i>
+      </a>
+    </td>
+  </tr>
+</template>
