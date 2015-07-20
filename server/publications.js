@@ -1,3 +1,31 @@
+// 发布监控账号信息
+Meteor.publish('monitors', function(filterKey, options) {
+  check(filterKey, String);
+  check(options, Object);
+
+  if (!filterKey) {
+    return Monitors.find({}, options);
+  }
+
+  var key = new RegExp(filterKey);
+  // 由过滤关键字找到匹配的部门id
+  var station = Stations.find({name: key}).fetch().map(function(e) {
+    return e._id;
+  });
+  var query = {};
+  if (station.length) {
+    query = {$or: [{'profile.name': key}, {stationId: {$in: station}}]};
+  } else {
+    query = {'profile.name': key};
+  }
+  // 由匹配的部门名称找到所有的账号的id，以及直接匹配用户名称的账号id
+  var users = Meteor.users.find(query, options).fetch().map(function(e) {
+    return e._id;
+  });
+  query = {$or: [{sender: {$in: users}}, {receiver: {$in: users}}]};
+  return Monitors.find(query, options);
+});
+
 // 发布消息
 Meteor.publish('messages', function (query, options) {
   check(query, Object);

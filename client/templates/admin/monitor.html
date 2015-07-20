@@ -1,0 +1,112 @@
+<template name="monitor">
+  <div>
+    <h2>自动通知用户列表
+      <button class="btn btn-primary edit-monitor">增加自动通知用户</button>
+    </h2>
+    <div id="add-monitor" class="hidden">
+      <div>
+        {{> addMonitor }}
+      </div>
+      <div class="col-sm-12"><br></div>
+    </div>
+    <div class="input-group col-sm-6 attach">
+      <span class="input-group-addon" id="monitor-code-label">搜索</span>
+      <input type="text" name="keyword" class="form-control monitor-keyword"
+             placeholder="搜索关键词" aria-describedby="monitor-code-label">
+      <span class="btn btn-primary input-group-addon filter-monitor">
+        查询
+      </span>
+    </div>
+    {{> monitorList }}
+
+    <div class="col-xs-4">
+      <a class="btn btn-default disabled" href="#">当前共显示 {{itemCount}}
+        条信息</a>
+    </div>
+    {{#if nextPath}}
+      <div class="col-xs-4 col-xs-offset-4">
+        <a class="btn btn-default btn-block" href="{{nextPath}}">显示更多</a>
+      </div>
+    {{else}}
+      {{#unless ready}}
+        {{> loading}}
+      {{/unless}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="addMonitor">
+  <div>
+    <h4><strong>编辑销售部门信息</strong></h4>
+
+    <form class="add-monitor">
+      <div class="col-xs-12 attach">
+        <label class="control-label">消息创建者</label>
+      </div>
+      <div class="col-xs-4 attach sender-station">
+        {{> stationSelect localTitle = '部门' }}
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'senderId' }}">
+          <span class="input-group-addon">创建者</span>
+          <select name="senderId" class="form-control">
+            {{#each senderUserList }}
+              <option value="{{ _id }}">{{ name }}</option>
+            {{/each }}
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-12 attach">
+        <label class="control-label">消息接收者</label>
+      </div>
+      <div class="col-xs-4 attach receiver-station">
+        {{> stationSelect localTitle = '部门' }}
+      </div>
+      <div class="col-xs-4 attach">
+        <div class="input-group {{ hasError 'receiverId' }}">
+          <span class="input-group-addon">接收者</span>
+          <select name="receiverId" class="form-control">
+            {{#each receiverUserList }}
+              <option value="{{ _id }}">{{ name }}</option>
+            {{/each }}
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-12"></div>
+      <div class="col-sm-4 col-sm-offset-4">
+        <button type="submit" class="btn btn-primary btn-block">
+          提交新信息
+        </button>
+      </div>
+    </form>
+  </div>
+</template>
+
+<template name="monitorList">
+  <table class="table table-striped table-bordered min60">
+    <thead>
+    <tr>
+      <th>消息创建者</th>
+      <th>消息接收者</th>
+      <th class="danger text-center width60">变更</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each monitors }}
+      {{> monitorListItem }}
+    {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="monitorListItem">
+  <tr>
+    <td>{{sender}}</td>
+    <td>{{receiver}}</td>
+    <td class="text-center">
+      <a href="{{_id}}" class="remove-monitor" title="删除">
+        <i class="fa fa-times fa-lg danger"></i>
+      </a>
+    </td>
+  </tr>
+</template>

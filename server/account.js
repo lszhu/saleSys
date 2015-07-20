@@ -79,6 +79,9 @@ Meteor.methods({
     if (objectId == Meteor.userId()) {
       throw new Meteor.Error('invalid-account-remove', '不能删除当前账号');
     }
+    if (!isAdministrator()) {
+      throw new Meteor.Error('invalid-account-remove', '当前用户无权删除用户');
+    }
     Meteor.users.remove(objectId);
   },
 
@@ -129,3 +132,4 @@ Accounts.onLoginFailure(function (l) {
     Meteor.users.update(l.user._id, {$set: {disabled: '1', retry: 0}});
   }
 });
+

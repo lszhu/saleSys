@@ -56,7 +56,7 @@ Template.header.helpers({
         operation: [
           {name: '用户管理', template: 'accountAdmin'},
           {name: '权限管理', template: 'privilegeAdmin'},
-          {name: '消息设置', template: 'messageAdmin'},
+          {name: '自动消息设置', template: 'monitorAdmin'},
           {name: '业务部管理', template: 'stationAdmin'}
         ]
       }

@@ -348,6 +348,8 @@ users = {
   disabled: String,
   // 该账号对应的权限
   permission: Object,
+  // 监控者列表，监控该用户的所有监控者
+  monitors: Array,
   // 连续错误密码尝试次数，超过规定次数后会清零，并将该账号禁用
   retry: Number,
   // 账号创建时间，命名与系统内部一致
