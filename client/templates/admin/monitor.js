@@ -1,11 +1,11 @@
 Template.monitorListItem.helpers({
-  sender: function() {
+  sender: function () {
     var data = Template.currentData();
     if (!data || !data.senderId) {
       return '未知';
     }
     var sender = Meteor.users.findOne(data.senderId);
-    console.log('sender: ' + JSON.stringify(sender));
+    //console.log('sender: ' + JSON.stringify(sender));
     if (!sender) {
       return '未知';
     }
@@ -15,7 +15,7 @@ Template.monitorListItem.helpers({
     return station + ' - ' + sender;
   },
 
-  receiver: function() {
+  receiver: function () {
     console.log('receiver: ' + Template.currentData());
     var data = Template.currentData();
     if (!data || !data.receiverId) {
@@ -33,66 +33,71 @@ Template.monitorListItem.helpers({
 });
 
 Template.monitorList.helpers({
-  monitors: function() {
+  monitors: function () {
     return Monitors.find();
   }
 });
 
 Template.addMonitor.helpers({
-  hasError: function(field) {
+  hasError: function (field) {
     return !!Session.get('monitorSubmitErrors')[field] ? 'has-error' : '';
   },
-  senderUserList: function() {
-    return Template.parentData().getSenderUserList();
+  senderUserList: function () {
+    return monitorTable.getSenderUserList();
   },
-  receiverUserList: function() {
-    return Template.parentData().getReceiverUserList();
+  receiverUserList: function () {
+    return monitorTable.getReceiverUserList();
   }
 });
 
-Template.monitor.onCreated(function() {
+Template.monitor.onCreated(function () {
   Session.set('monitorSubmitErrors', {});
   // 必须保证当前模板上下文数据不是未定义
-  var currentData = Template.currentData();
+  //var currentData = Template.currentData();
   //console.log('currentData: ' + currentData);
-  currentData._senderUserList = [];
-  currentData._senderUserListListeners = new Tracker.Dependency();
-  currentData.getSenderUserList = function () {
-    currentData._senderUserListListeners.depend();
-    return currentData._senderUserList;
+  monitorTable = {};
+  monitorTable._senderUserList = [];
+  monitorTable._senderUserListListeners = new Tracker.Dependency();
+  monitorTable.getSenderUserList = function () {
+    monitorTable._senderUserListListeners.depend();
+    return monitorTable._senderUserList;
   };
-  currentData._receiverUserList = [];
-  currentData._receiverUserListListeners = new Tracker.Dependency();
-  currentData.getReceiverUserList = function () {
-    currentData._receiverUserListListeners.depend();
-    return currentData._receiverUserList;
+  monitorTable._receiverUserList = [];
+  monitorTable._receiverUserListListeners = new Tracker.Dependency();
+  monitorTable.getReceiverUserList = function () {
+    monitorTable._receiverUserListListeners.depend();
+    return monitorTable._receiverUserList;
   };
   Meteor.call('getUserInfo', function (err, result) {
     if (err) {
-      currentData._receivers = [];
+      monitorTable._receivers = [];
       throwError('无法获取用户信息');
     } else {
       // 更新数据
-      currentData._totalUserList = result;
+      monitorTable._totalUserList = result;
       var stationId = defaultStationId();
       //console.log('defaultStationId: ' + stationId);
-      currentData._senderUserList = result.filter(function (e) {
+      monitorTable._senderUserList = result.filter(function (e) {
         return e.stationId == stationId;
       });
-      currentData._receiverUserList = currentData._senderUserList;
+      monitorTable._receiverUserList = monitorTable._senderUserList;
     }
     //console.log('totalUserList: ' + JSON.stringify(currentData._totalUserList));
-    currentData._senderUserListListeners.changed();
-    currentData._receiverUserListListeners.changed();
+    monitorTable._senderUserListListeners.changed();
+    monitorTable._receiverUserListListeners.changed();
   });
 });
 
-Template.monitor.onRendered(function() {
+Template.monitor.onRendered(function () {
   var key = this.data.filterKey;
   //console.log('key: ' + key);
   this.$('.monitor-keyword').val(key);
   var target = $('#add-monitor');
   target.hide();
+});
+
+Template.monitor.onDestroyed(function() {
+  monitorTable = null;
 });
 
 Template.monitor.events({
@@ -128,45 +133,48 @@ Template.monitor.events({
         target.removeClass('hidden');
         target.slideDown('fast');
       } else {
-        target.slideUp('fast', function() {
+        target.slideUp('fast', function () {
           target.addClass('hidden');
         });
       }
     }
   },
 
-  'change .sender-station [name=stationId]': function(e) {
+  'change .sender-station [name=stationId]': function (e) {
     e.preventDefault();
 
     var stationId = $(e.currentTarget).val();
-    var data = Template.currentData();
-    data._senderUserList = data._totalUserList.filter(function(e) {
-      return e.stationId == stationId;
-    });
+    //var data = Template.currentData();
+    monitorTable._senderUserList = monitorTable._totalUserList
+        .filter(function (e) {
+          return e.stationId == stationId;
+        });
     //console.log('userList: ' + JSON.stringify(data._userList));
-    data._senderUserListListeners.changed();
+    monitorTable._senderUserListListeners.changed();
   },
 
-  'change .receiver-station [name=stationId]': function(e) {
+  'change .receiver-station [name=stationId]': function (e) {
     e.preventDefault();
 
     var stationId = $(e.currentTarget).val();
-    var data = Template.currentData();
-    data._receiverUserList = data._totalUserList.filter(function(e) {
-      return e.stationId == stationId;
-    });
+    //var data = Template.currentData();
+    monitorTable._receiverUserList = monitorTable._totalUserList
+        .filter(function (e) {
+          return e.stationId == stationId;
+        });
     //console.log('userList: ' + JSON.stringify(data._userList));
-    data._receiverUserListListeners.changed();
+    monitorTable._receiverUserListListeners.changed();
   },
 
   'click .remove-monitor': function (e) {
     e.preventDefault();
+    e.stopPropagation();
     if (!confirm('你确实要删除该员工的信息吗？')) {
       return;
     }
     // 获取对应数据库条目Id
     var target = $(e.currentTarget);
-    var _id = target.href();
+    var _id = target.attr('href');
     //console.log('_id: ' + _id);
     Meteor.call('removeMonitor', _id);
     // 清空覆盖（overlap）标识，用户点了'变更'后，又马上删除该条目就需要如下处理
@@ -175,6 +183,7 @@ Template.monitor.events({
 
   'submit .add-monitor': function (e) {
     e.preventDefault();
+    e.stopPropagation();
 
     var form = $(e.target);
     var monitor = {
@@ -187,7 +196,7 @@ Template.monitor.events({
       throwError(getErrorMessage(errors));
       return;
     }
-    Meteor.call('addMonitor', monitor, function(err) {
+    Meteor.call('addMonitor', monitor, function (err) {
       if (err) {
         return throwError(err.reason);
       }
