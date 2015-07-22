@@ -12,6 +12,7 @@ Meteor.publish('monitors', function(filterKey, options) {
   var station = Stations.find({name: key}).fetch().map(function(e) {
     return e._id;
   });
+  console.log('station selected: ' + JSON.stringify(station));
   var query = {};
   if (station.length) {
     query = {$or: [{'profile.name': key}, {stationId: {$in: station}}]};
@@ -22,7 +23,8 @@ Meteor.publish('monitors', function(filterKey, options) {
   var users = Meteor.users.find(query, options).fetch().map(function(e) {
     return e._id;
   });
-  query = {$or: [{sender: {$in: users}}, {receiver: {$in: users}}]};
+  console.log('users selected: ' + JSON.stringify(users));
+  query = {$or: [{senderId: {$in: users}}, {receiverId: {$in: users}}]};
   return Monitors.find(query, options);
 });
 
