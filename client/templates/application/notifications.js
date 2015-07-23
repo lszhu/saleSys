@@ -1,7 +1,7 @@
 Template.notifications.helpers({
   notifications: function() {
     return Messages.find({receiverId: Meteor.userId(), read: false},
-        {sort: {timestamp: -1}});
+        {sort: {timestamp: -1}, limit: 10});
   },
   notificationCount: function(){
   	return Messages.find({receiverId: Meteor.userId(), read: false}).count();
