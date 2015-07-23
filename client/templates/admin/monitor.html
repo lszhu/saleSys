@@ -41,7 +41,7 @@
 
     <form class="add-monitor">
       <div class="col-xs-12 attach">
-        <label class="control-label">消息创建者</label>
+        <label class="control-label">被监控者（消息创建者）</label>
       </div>
       <div class="col-xs-4 attach sender-station">
         {{> stationSelect localTitle = '部门' }}
@@ -57,7 +57,7 @@
         </div>
       </div>
       <div class="col-xs-12 attach">
-        <label class="control-label">消息接收者</label>
+        <label class="control-label">监控者（消息接收者）</label>
       </div>
       <div class="col-xs-4 attach receiver-station">
         {{> stationSelect localTitle = '部门' }}
@@ -86,9 +86,9 @@
   <table class="table table-striped table-bordered min60">
     <thead>
     <tr>
-      <th>消息创建者</th>
-      <th>消息接收者</th>
-      <th class="danger text-center width60">变更</th>
+      <th>被监控者</th>
+      <th>监控者</th>
+      <th class="danger text-center width60">删除</th>
     </tr>
     </thead>
     <tbody>

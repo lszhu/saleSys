@@ -216,6 +216,7 @@ Template.orderDisposalDetail.onCreated(function () {
 });
 
 Template.orderDisposalDetail.onRendered(function() {
+  // 初始化日期选择插件
   $('.order-disposal-detail input[name=timestamp]').datepicker({
     format: "yyyy-mm-dd",
     language: "zh-CN",
