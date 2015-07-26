@@ -1,0 +1,21 @@
+<template name="privilege">
+  <div>
+    <h2>用户权限管理</h2>
+
+    <h4><strong>指定用户账号</strong></h4>
+    <div class="col-xs-4 attach sender-station">
+      {{> stationSelect localTitle = '所属部门' }}
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group {{ hasError 'senderId' }}">
+        <span class="input-group-addon">账号名称</span>
+        <select name="senderId" class="form-control">
+          {{#each senderUserList }}
+            <option value="{{ _id }}">{{ name }}</option>
+          {{/each }}
+        </select>
+      </div>
+      <div class="col-xs-12"></div>
+    </div>
+  </div>
+</template>
