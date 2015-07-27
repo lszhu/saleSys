@@ -42,7 +42,7 @@ Template.header.helpers({
       report: {
         name: '报表',
         operation: [
-          {name: '库存汇总表', template: 'report'},
+          {name: '库存汇总表', template: 'storeTable'},
           {name: '不良品分析', template: 'report'},
           {name: '进出货记录', template: 'report'},
           {name: '订单汇总表', template: 'report'},
