@@ -36,7 +36,7 @@ Template.goodsList.onCreated(function () {
     fixedColumnsLeft: 6,
     manualColumnResize: true,
     manualRowResize: true,
-    afterChange: handsOnTableAfterChange(data)
+    afterChange: handsOnTableAfterChange
   });
 
   orderDisposalDetailGoodsLists[index + 1] = {
@@ -62,12 +62,11 @@ Template.goodsList.onRendered(function () {
 
 });
 
-Template.goodsList.helpers({
-});
+Template.goodsList.helpers({});
 
 Template.goodsList.events({
   // 用于给表格末尾添加新空行
-  'click .goods-list': function(e) {
+  'click .goods-list': function (e) {
     e.preventDefault();
 
     var data = Template.currentData();
@@ -82,31 +81,30 @@ Template.goodsList.events({
   }
 });
 
-function handsOnTableAfterChange(dataSource) {
-  return function (changes, source) {
-    if (!changes || !changes.length) {
-      return;
+function handsOnTableAfterChange(changes, source) {
+  if (!changes || !changes.length) {
+    return;
+  }
+  //var data = dataSource;
+  var data = this.getData();
+  //console.log('changes: ' + JSON.stringify(changes));
+  console.log('source: ' + source);
+  var len = changes.length;
+  for (var i = 0; i < len; i++) {
+    var row = changes[i][0];
+    //console.log('row: ' + row);
+    var col = changes[i][1];
+    //console.log('col: ' + col);
+    var newValue = changes[i][3];
+    if (col == 2) {
+      data[row][4] = newValue * data[row][3];
     }
-    var data = dataSource;
-    //console.log('changes: ' + JSON.stringify(changes));
-    console.log('source: ' + source);
-    var len = changes.length;
-    for (var i = 0; i < len; i++) {
-      var row = changes[i][0];
-      //console.log('row: ' + row);
-      var col = changes[i][1];
-      //console.log('col: ' + col);
-      var newValue = changes[i][3];
-      if (col == 2) {
-        data[row][4] = newValue * data[row][3];
-      }
-      if (col == 3) {
-        data[row][4] = newValue * data[row][2];
-      }
-      if (col == 4 && data[row][2] != 0) {
-        data[row][3] = newValue / data[row][2];
-      }
+    if (col == 3) {
+      data[row][4] = newValue * data[row][2];
     }
-    this.loadData(data);
-  };
+    if (col == 4 && data[row][2] != 0) {
+      data[row][3] = newValue / data[row][2];
+    }
+  }
+  this.loadData(data);
 }

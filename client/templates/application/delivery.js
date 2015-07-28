@@ -146,6 +146,11 @@ Template.delivery.events({
     console.log('_id: ' + _id);
     // 保存到隐藏的文本框，表示本次操作会强行覆盖对应的数据库条目
     form.find('[name=overlap]').val(_id);
+    // 如果列表中正显示当前条目货物清单，则隐藏
+    var target = $('tr.goods-list-detail');
+    if (target[0] == $(e.currentTarget).parents('tr').next()[0]) {
+      target.addClass('hidden');
+    }
     // 显示编辑框
     if (form.hasClass('hidden')) {
       form.removeClass('hidden');
@@ -176,6 +181,7 @@ Template.delivery.events({
     e.preventDefault();
 
     var hot = getGoodsListHot(0);
+    console.log('product: ' + JSON.stringify(hot.getData()));
     var form = $(e.target);
     var delivery = {
       type: form.find('[name=type]').val(),
