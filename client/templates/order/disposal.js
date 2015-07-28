@@ -92,7 +92,7 @@ Template.editOrder.onRendered(function() {
   $('.edit-order input[name=deadline]').datepicker({
     format: "yyyy-mm-dd",
     language: "zh-CN",
-    todayBtn: true,
+    //todayBtn: true,
     orientation: 'top left',
     autoclose: true
   });
