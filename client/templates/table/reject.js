@@ -52,17 +52,16 @@ Template.rejectGrid.onCreated(function () {
     data: data,
     rowHeaders: true,
     colHeaders: [
-      '编号', '名称', '采购数量',
-      '采购金额', '出货数量', '出货金额', '库存数量'
+      '编号', '名称', '出货数量', '换货数量','不良率', '报废数量', '报废率'
     ],
     //colWidths: [100, 100, 100, 100, 100, 100, 100],
     columns: [
       {}, {},
       {type: 'numeric'},
-      {},
       {type: 'numeric'},
-      {},
-      {type: 'numeric'}
+      {type: 'numeric', format: '0.00%'},
+      {type: 'numeric'},
+      {type: 'numeric', format: '0.00%'}
     ],
     stretchH: 'all',
     fixedColumnsLeft: 6,

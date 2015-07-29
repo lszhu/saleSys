@@ -1,5 +1,5 @@
 Meteor.methods({
-  storeTable: function (options) {
+  rejectTable: function (options) {
     check(options, {
       deadline: String,
       stationId: String,
@@ -31,7 +31,8 @@ function convergence(data) {
     return [];
   }
   // 保存无产品编号的汇总数据
-  var empty = [0, {}, 0, {}];
+  // [编号, 名称, 出货数量, 换货数量, 不良率, 报废数量, 报废率]
+  var empty = ['无编号', '', 0, 0, 0, 0, 0];
   // 保存产品汇总信息，已对应产品编号为索引
   var converged = {};
 
@@ -52,19 +53,15 @@ function convergence(data) {
       continue;
     }
     tmp = converged[j];
-    tmp[3] = concatCurrency(tmp[3]);
-    tmp[5] = concatCurrency(tmp[5]);
-    tmp[6] = tmp[2] - tmp[4];
+    tmp[6] = tmp[5] / tmp[2];
+    tmp[4] = tmp[3] / tmp[2];
     tmp[0] = j;
     result.push(tmp);
   }
   //console.log('empty: ' + JSON.stringify(empty));
-  if (empty[0] || empty[2]) {
-    empty[1] = concatCurrency(empty[1]);
-    empty[3] = concatCurrency(empty[3]);
-    empty[6] = empty[2] - empty[4];
-    empty.unshift('');
-    empty.unshift('无编号');
+  if (empty[2] > 0 && (empty[3] || empty[5])) {
+    empty[6] = empty[5] / empty[2];
+    empty[4] = empty[3] / empty[2];
     result.push(empty);
   }
   return result;
@@ -77,54 +74,34 @@ function addUpDelivery(empty, converged, product, type) {
     return;
   }
 
-  var tmp, cur, sum, delta;
+  var tmp, sum, delta;
   var len = product.length;
 
   if (type == '出库') {
-    delta = 2;
-  } else if (type == '入库') {
     delta = 0;
-  } else if (type != '报废') {
+  } else if (type == '换货') {
+    delta = 1;
+  } else if (type == '报废') {
+    delta = 3;
+  } else {
     return;
   }
 
   for (var j = 0; j < len; j++) {
     tmp = product[j];
-    cur = tmp[5];
-    if (!cur) {
-      // 未指定货币种类时，默认采用CNY（人民币）
-      cur = 'CNY';
-    }
     // 无产品编号的情况
     if (!tmp[0]) {
-      if (type == '报废') {
-        empty[2] += parseFloat(tmp[2]) ? +tmp[2] : 0;
-        continue;
-      }
-      empty[0 + delta] += parseFloat(tmp[2]) ? +tmp[2] : 0;
-      if (!empty[1 + delta][cur]) {
-        empty[1 + delta][cur] = 0;
-      }
-      empty[1 + delta][cur] += parseFloat(tmp[4]) ? +tmp[4] : 0;
-      continue;
+      empty[2 + delta] += parseFloat(tmp[2]) ? +tmp[2] : 0;
     }
     // 首次统计一个产品编号的产品时先要初始化
     if (!converged[tmp[0]]) {
-      converged[tmp[0]] = ['', '', 0, {}, 0, {}];
+      converged[tmp[0]] = ['', '', 0, 0, 0, 0, 0];
     }
     sum = converged[tmp[0]];
     if (tmp[1]) {
       sum[1] = tmp[1];
     }
-    if (type == '报废') {
-      sum[4] += parseFloat(tmp[2]) ? +tmp[2] : 0;
-      continue;
-    }
     sum[2 + delta] += parseFloat(tmp[2]) ? +tmp[2] : 0;
-    if (!sum[3 + delta][cur]) {
-      sum[3 + delta][cur] = 0;
-    }
-    sum[3 + delta][cur] += parseFloat(tmp[4]) ? +tmp[4] : 0;
   }
   //console.log('converged: ' + JSON.stringify(converged));
 }
