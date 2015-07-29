@@ -6,8 +6,6 @@ if (Meteor.isServer) {
     //var Comments = new Mongo.Collection('comments');
     console.log('\n\nPreparing test data...');
 
-    // 添加测试用的订单信息
-    orderTestDataAdd();
     // 添加测试用的系统登录账号
     accountTestDataAdd();
     // 添加测试使用的销售分部（station）数据库条目
@@ -20,6 +18,8 @@ if (Meteor.isServer) {
     customerTestDataAdd();
     // 添加测试用的产品型号信息
     productTestDataAdd();
+    // 添加测试用的订单信息
+    orderTestDataAdd();
 
     if (Posts.find().count() === 0) {
       console.log('inserting test data to database');

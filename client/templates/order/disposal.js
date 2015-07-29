@@ -143,7 +143,8 @@ Template.orderDisposalDetail.helpers({
         {name: '退款'}, {name: '维修'}, {name: '报废'}
       ],
       goodsTypes: [
-        {name: ''}, {name: '出库'}, {name: '入库'}, {name: '其它'}
+        {name: ''}, {name: '出库'}, {name: '入库'},
+        {name: '报废'}, {name: '其它'}
       ],
       accountTypes: [
         {name: ''}, {name: '收入现金'}, {name: '收入支票'}, {name: '支出'}

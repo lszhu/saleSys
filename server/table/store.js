@@ -72,25 +72,35 @@ function convergence(data) {
 
 // 根据出库还是入库分别累加产品数量和资金，并保存到empty或converged
 function addUpDelivery(empty, converged, product, type) {
-  if (!empty || !converged) {
+  if (!empty || !converged || !product ||
+      product.constructor.name != 'Array' || !product.length) {
     return;
   }
-  var delta = 0;
+
+  var tmp, cur, sum, delta;
+  var len = product.length;
+
   if (type == '出库') {
-    //console.log('出库');
     delta = 2;
-  } else if (type != '入库') {
+  } else if (type == '入库') {
+    delta = 0;
+  } else if (type != '报废') {
     return;
   }
-  var tmp, cur, sum;
-  for (var j = 0, len = product.length; j < len; j++) {
+
+  for (var j = 0; j < len; j++) {
     tmp = product[j];
     cur = tmp[5];
     if (!cur) {
-      continue;
+      // 未指定货币种类时，默认采用CNY（人民币）
+      cur = 'CNY';
     }
     // 无产品编号的情况
     if (!tmp[0]) {
+      if (type == '报废') {
+        empty[2] += parseFloat(tmp[2]) ? +tmp[2] : 0;
+        continue;
+      }
       empty[0 + delta] += parseFloat(tmp[2]) ? +tmp[2] : 0;
       if (!empty[1 + delta][cur]) {
         empty[1 + delta][cur] = 0;
@@ -105,6 +115,10 @@ function addUpDelivery(empty, converged, product, type) {
     sum = converged[tmp[0]];
     if (tmp[1]) {
       sum[1] = tmp[1];
+    }
+    if (type == '报废') {
+      sum[4] += parseFloat(tmp[2]) ? +tmp[2] : 0;
+      continue;
     }
     sum[2 + delta] += parseFloat(tmp[2]) ? +tmp[2] : 0;
     if (!sum[3 + delta][cur]) {
