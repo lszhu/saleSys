@@ -1,0 +1,35 @@
+<template name="rejectTable">
+  <h2>库存汇总表</h2>
+  <h4>制表条件设置：</h4>
+
+  <form class="createGrid">
+    <div class="col-xs-4 attach deadline">
+      <div class="input-group {{ hasError 'deadline'}}">
+        <span class="input-group-addon" id="order-deadline-label">期限</span>
+        <input type="text" name="deadline" class="form-control"
+               value="{{ today }}" placeholder="交货截止日期"
+               aria-describedby="order-deadline-label"/>
+      </div>
+    </div>
+    <div class="col-xs-4 attach {{ hasError 'stationId' }}">
+      {{> stationSelect localTitle = '部门' }}
+    </div>
+
+    <div class="input-group col-sm-4 attach">
+      <span class="input-group-addon" id="employee-code-label">过滤</span>
+      <input type="text" name="keyword" class="form-control employee-keyword"
+             placeholder="过滤关键词" aria-describedby="employee-code-label">
+    </div>
+    <div class="col-sm-4 col-sm-offset-4">
+      <button type="submit" class="btn btn-primary btn-block">
+        生成汇总表
+      </button>
+    </div>
+  </form>
+  {{> rejectGrid }}
+
+</template>
+
+<template name="rejectGrid">
+  <div class="col-xs-12 hidden grid"></div>
+</template>
