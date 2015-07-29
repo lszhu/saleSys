@@ -333,7 +333,7 @@ Template.orderDisposalDetail.events({
       //console.log('index: ' + index);
       if (index == -1) {
         // 清空并隐藏订单处理部分
-        clearDisposalInfo(disposal, index + 1);
+        clearDisposalInfo(disposal, index);
         $(disposal).find('.goods-list > .grid').addClass('hidden');
         $(disposal).find('.open-goods-list > .fa')
             .removeClass('fa-caret-up').addClass('fa-caret-down');

@@ -6,10 +6,10 @@ if (Meteor.isServer) {
     //var Comments = new Mongo.Collection('comments');
     console.log('\n\nPreparing test data...');
 
-    // 添加测试用的系统登录账号
-    accountTestDataAdd();
     // 添加测试使用的销售分部（station）数据库条目
     stationTestDataAdd();
+    // 添加测试用的系统登录账号
+    accountTestDataAdd();
     // 添加世界常见货币信息
     currencyTestDataAdd();
     // 添加测试用的内部员工信息
@@ -21,6 +21,7 @@ if (Meteor.isServer) {
     // 添加测试用的订单信息
     orderTestDataAdd();
 
+    /*
     if (Posts.find().count() === 0) {
       console.log('inserting test data to database');
       var now = new Date().getTime();
@@ -93,6 +94,7 @@ if (Meteor.isServer) {
         });
       }
     }
+    */
 
     Meteor.setTimeout(function() {
       console.log('test data is ready!');

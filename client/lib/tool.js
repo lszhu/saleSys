@@ -26,6 +26,7 @@ getGoodsListHot = function (index) {
   return data.hot;
 };
 
+// 清空整个保存各次订单处理的多个商品列表
 clearOrderDisposalGoodsLists = function (index) {
   var n = parseInt(index);
   // 传递的参数为空值时清空所有数据
@@ -48,6 +49,7 @@ clearOrderDisposalGoodsLists = function (index) {
   //}
 };
 
+// 当删除某个订单处理后，对订单处理的承载的DOM进行调整以便正确显示
 updateGoodsListForRemoval = function (index) {
   if (index <= 0) {
     return;
@@ -89,6 +91,6 @@ classifyReceivers = function (receivers) {
 
 getNameFromId = function (userId) {
   var receiverList = Session.get('receiverList');
-  var user = receiverList[userId];
-  return user && user.name;
+  var user = receiverList && receiverList[userId];
+  return user && user.name ? user.name : '未知';
 };
