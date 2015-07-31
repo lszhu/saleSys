@@ -5,7 +5,8 @@ Template.editCapital.helpers({
   capitalTypes: function () {
     return [
       {name: ''}, {name: '销售'}, {name: '采购'}, {name: '维修'},
-      {name: '日常开销'}, {name: '员工预支'}, {name: '工资'}
+      {name: '包装'}, {name: '物流'}, {name: '日常开销'}, {name: '员工借贷'},
+      {name: '工资'}, {name: '货币兑换'}, {name: '其他'}
     ];
   },
   defaultCurrency: defaultCurrency
@@ -178,6 +179,9 @@ Template.capital.events({
       capital.money.value = -capital.money.value;
     } else if (inOut == '收入支票') {
       capital.money.type = '支票';
+    } else if (inOut != '收入现金') {
+      Session.set('capitalSubmitErrors', {inOut: '未指定收支类型'});
+      return throwError('未指定收支类型');
     }
     // 检查对象（partnerId）中保存的是Id还是实际名称
     capital.partnerId = getPartner(capital.type, e.target);

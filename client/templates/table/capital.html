@@ -1,0 +1,32 @@
+<template name="capitalTable">
+  <h2>资金汇总表</h2>
+  <h4>制表条件设置：</h4>
+
+  <form class="createGrid">
+    <div class="col-xs-8 attach deadline">
+      <div class="input-group {{ hasError 'deadline'}}">
+        <span class="input-group-addon">汇总期间</span>
+        <input type="text" name="start" class="form-control"
+               value="{{ yearAgo }}" placeholder="起始日期">
+        <span class="input-group-addon"> - </span>
+        <input type="text" name="deadline" class="form-control"
+               value="{{ today }}" placeholder="截止日期">
+      </div>
+    </div>
+    <div class="col-xs-4 attach {{ hasError 'stationId' }}">
+      {{> stationSelect localTitle = '部门' }}
+    </div>
+
+    <div class="col-sm-4 col-sm-offset-4">
+      <button type="submit" class="btn btn-primary btn-block">
+        生成汇总表
+      </button>
+    </div>
+  </form>
+  {{> capitalGrid }}
+
+</template>
+
+<template name="capitalGrid">
+  <div class="col-xs-12 hidden grid"></div>
+</template>

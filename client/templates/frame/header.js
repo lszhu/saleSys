@@ -44,9 +44,9 @@ Template.header.helpers({
         operation: [
           {name: '库存汇总表', template: 'storeTable'},
           {name: '不良品分析', template: 'rejectTable'},
-          {name: '订单汇总表', template: 'report'},
-          {name: '资金汇总表', template: 'report'},
-          {name: '成本核算表', template: 'report'}
+          {name: '订单汇总表', template: 'orderTable'},
+          {name: '资金汇总表', template: 'capitalTable'},
+          {name: '成本核算表', template: 'costTable'}
         ]
       },
       admin: {
