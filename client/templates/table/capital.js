@@ -41,6 +41,7 @@ Template.capitalTable.events({
       }
       var sum = summarize(result);
       result = result.concat(sum);
+      result.push([]);
       hot.loadData(result);
       target.removeClass('hidden');
       hot.render();
@@ -97,7 +98,7 @@ function summarize(data) {
     tmp[1] += data[i][3];
   }
   var result = [];
-  console.log('sum: ' + JSON.stringify(sum));
+  //console.log('sum: ' + JSON.stringify(sum));
   for (i in sum) {
     if (!sum.hasOwnProperty(i)) {
       continue;
@@ -110,6 +111,6 @@ function summarize(data) {
     tmp.unshift('<汇总>', i);
     result.push(tmp);
   }
-  console.log('result: ' + JSON.stringify(result));
+  //console.log('result: ' + JSON.stringify(result));
   return result;
 }

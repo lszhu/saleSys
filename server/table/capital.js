@@ -14,9 +14,9 @@ Meteor.methods({
     if (options.stationId) {
       query.stationId = options.stationId;
     }
-    console.log('query: ' + JSON.stringify(query));
+    //console.log('query: ' + JSON.stringify(query));
     var capital = Capitals.find(query).fetch();
-    console.log('capital: ' + JSON.stringify(capital));
+    //console.log('capital: ' + JSON.stringify(capital));
     //var data = convergence(capital);
     //console.log('storeTable data: ' + JSON.stringify(data));
     return convergence(capital);
@@ -55,7 +55,7 @@ function convergence(data) {
       sum[1] += money.value;
     }
   }
-  console.log('converged data: ' + JSON.stringify(converged));
+  //console.log('converged data: ' + JSON.stringify(converged));
   // 将converged由对象转换为数组，并插入索引属性（产品编号）到数组第一个元素
   var result = [];
   for (i in converged) {

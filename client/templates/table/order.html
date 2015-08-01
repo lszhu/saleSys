@@ -1,0 +1,63 @@
+<template name="orderTable">
+  <h2>订单汇总表</h2>
+  <h4>制表条件设置：</h4>
+
+  <form class="createGrid">
+    <div class="col-xs-4 attach {{ hasError 'stationId' }}">
+      {{> stationSelect localTitle = '部门' }}
+    </div>
+
+    <div class="col-xs-4 attach">
+      <div class="input-group {{ hasError 'type'}}">
+        <span class="input-group-addon" id="order-type-label">类型</span>
+        <select name="type" class="form-control"
+                aria-describedby="order-type-label">
+          <option></option>
+          <option value="零售">零售（零散客户)</option>
+          <option value="销售">销售（特定客户）</option>
+          <option value="采购">采购</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group {{ hasError 'status'}}">
+        <span class="input-group-addon" id="order-status-label">状态</span>
+        <select name="status" class="form-control"
+                aria-describedby="order-status-label">
+          <option></option>
+          <option>进行</option>
+          <option>完成</option>
+          <option>终止</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-4 attach">
+      <div class="input-group">
+        <span class="input-group-addon" id="employee-code-label">过滤</span>
+        <input type="text" name="keyword" class="form-control employee-keyword"
+               placeholder="过滤关键词" aria-describedby="employee-code-label">
+      </div>
+    </div>
+    <div class="col-xs-8 attach deadline">
+      <div class="input-group {{ hasError 'deadline'}}">
+        <span class="input-group-addon">汇总期间</span>
+        <input type="text" name="start" class="form-control"
+               value="{{ yearAgo }}" placeholder="起始日期">
+        <span class="input-group-addon"> - </span>
+        <input type="text" name="deadline" class="form-control"
+               value="{{ today }}" placeholder="截止日期">
+      </div>
+    </div>
+    <div class="col-sm-4 col-sm-offset-4">
+      <button type="submit" class="btn btn-primary btn-block">
+        生成汇总表
+      </button>
+    </div>
+  </form>
+  {{> orderGrid }}
+
+</template>
+
+<template name="orderGrid">
+  <div class="col-xs-12 hidden grid"></div>
+</template>
