@@ -26,9 +26,12 @@ Template.orderTable.events({
     e.preventDefault();
     var form = $('form.createGrid');
     var query = {
+      stationId: form.find('[name=stationId]').val(),
+      type: form.find('[name=type]').val(),
+      status: form.find('[name=status]').val(),
+      filterKey: form.find('[name=keyword]').val(),
       start: form.find('[name=start]').val(),
-      deadline: form.find('[name=deadline]').val(),
-      stationId: form.find('[name=stationId]').val()
+      deadline: form.find('[name=deadline]').val()
     };
     query.start = query.start ? query.start : '';
     query.deadline = query.deadline ? query.deadline : '';
@@ -57,7 +60,7 @@ Template.orderGrid.onCreated(function () {
     data: data,
     rowHeaders: true,
     colHeaders: [
-      '类型', '币种', '支出', '收入', '净收入','收益率'
+      '单号', '部门', '采购支出', '其它支出', '收入', '净收入','收益率'
     ],
     //colWidths: [100, 100, 100, 100, 100, 100, 100],
     columns: [

@@ -12,7 +12,7 @@
         <span class="input-group-addon" id="order-type-label">类型</span>
         <select name="type" class="form-control"
                 aria-describedby="order-type-label">
-          <option></option>
+          <option value="">不限</option>
           <option value="零售">零售（零散客户)</option>
           <option value="销售">销售（特定客户）</option>
           <option value="采购">采购</option>
@@ -24,7 +24,7 @@
         <span class="input-group-addon" id="order-status-label">状态</span>
         <select name="status" class="form-control"
                 aria-describedby="order-status-label">
-          <option></option>
+          <option value="">不限</option>
           <option>进行</option>
           <option>完成</option>
           <option>终止</option>
@@ -40,10 +40,10 @@
     </div>
     <div class="col-xs-8 attach deadline">
       <div class="input-group {{ hasError 'deadline'}}">
-        <span class="input-group-addon">汇总期间</span>
+        <span class="input-group-addon">期间</span>
         <input type="text" name="start" class="form-control"
                value="{{ yearAgo }}" placeholder="起始日期">
-        <span class="input-group-addon"> - </span>
+        <span class="input-group-addon"> -- </span>
         <input type="text" name="deadline" class="form-control"
                value="{{ today }}" placeholder="截止日期">
       </div>

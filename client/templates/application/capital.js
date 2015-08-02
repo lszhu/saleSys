@@ -6,7 +6,7 @@ Template.editCapital.helpers({
     return [
       {name: ''}, {name: '销售'}, {name: '采购'}, {name: '维修'},
       {name: '包装'}, {name: '物流'}, {name: '日常开销'}, {name: '员工借贷'},
-      {name: '工资'}, {name: '货币兑换'}, {name: '其他'}
+      {name: '工资'}, {name: '货币兑换'}, {name: '缴税'}, {name: '其他'}
     ];
   },
   defaultCurrency: defaultCurrency
@@ -17,7 +17,7 @@ Template.editCapital.events({
     e.preventDefault();
 
     var value = $(e.currentTarget).val();
-    if (value == '员工预支' || value == '工资') {
+    if (value == '员工借贷' || value == '工资') {
       $(t.find('.partner-employee')).removeClass('hidden');
       $(t.find('.partner-customer')).addClass('hidden');
     } else {
