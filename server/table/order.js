@@ -13,9 +13,12 @@ Meteor.methods({
       start = yearAgo();
     }
     var deadline = parseDeadline(options.deadline);
-    var query = {timestamp: {$gt: start, $lt: deadline}};
+    // 时间的限制为订单处理发生的时间而不是订单建立的时间
+    var disposalQuery = {timestamp: {$gt: start, $lt: deadline}};
+    var query = {};
     if (options.stationId) {
       query.stationId = options.stationId;
+      disposalQuery.stationId = options.stationId;
     }
     if (options.type) {
       query.type = options.type;
@@ -27,10 +30,11 @@ Meteor.methods({
       query.comment = new RegExp(options.filterKey, 'i');
     }
     var orders = Orders.find(query).fetch();
-    console.log('orders: ' + JSON.stringify(orders));
+    //console.log('orders: ' + JSON.stringify(orders));
     var delivery = Deliveries.find(query).fetch();
+    var capital = Capitals.find(query).fetch();
     //console.log('delivery: ' + JSON.stringify(delivery));
-    var data = convergence(delivery);
+    var data = convergence(delivery, capital);
     //console.log('storeTable data: ' + JSON.stringify(data));
     // 过滤出产品编号或名称包含关键字的项目
     if (options.filterKey) {

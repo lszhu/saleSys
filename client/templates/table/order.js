@@ -68,6 +68,7 @@ Template.orderGrid.onCreated(function () {
       {type: 'numeric', format: '0.00'},
       {type: 'numeric', format: '0.00'},
       {type: 'numeric', format: '0.00'},
+      {type: 'numeric', format: '0.00'},
       {type: 'numeric', format: '0.00%'}
     ],
     stretchH: 'all',
