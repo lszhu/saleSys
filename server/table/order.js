@@ -14,7 +14,10 @@ Meteor.methods({
     }
     var deadline = parseDeadline(options.deadline);
     // 时间的限制为订单处理发生的时间而不是订单建立的时间
-    var disposalQuery = {timestamp: {$gt: start, $lt: deadline}};
+    var disposalQuery = {
+      orderId: {$ne: ''},
+      timestamp: {$gt: start, $lt: deadline}
+    };
     var query = {};
     if (options.stationId) {
       query.stationId = options.stationId;
@@ -47,6 +50,25 @@ Meteor.methods({
     return data;
   }
 });
+
+function convergeAll(delivery, capital) {
+  if (!capital || capital.constructor.name != 'Array' || !capital.length) {
+    return {};
+  }
+  // 以订单Id为索引属性保存各个订单的汇总信息
+  // 每个订单的信息为[采购支出，其它支出，收入]
+  var sum = {};
+  var orderId, money;
+  var len = capital.length;
+  for (var i = 0; i < len; i++) {
+    orderId = capital[i].orderId;
+    money = capital[i].money;
+    if (!sum.hasOwnProperty(orderId)) {
+      sum[orderId] = [0, 0, 0];
+    }
+
+  }
+}
 
 function convergence(data) {
   if (!data || data.constructor.name != 'Array') {

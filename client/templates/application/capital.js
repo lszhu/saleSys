@@ -5,7 +5,7 @@ Template.editCapital.helpers({
   capitalTypes: function () {
     return [
       {name: ''}, {name: '销售'}, {name: '采购'}, {name: '维修'},
-      {name: '包装'}, {name: '物流'}, {name: '日常开销'}, {name: '员工借贷'},
+      {name: '生产'}, {name: '物流'}, {name: '日常开销'}, {name: '员工借贷'},
       {name: '工资'}, {name: '货币兑换'}, {name: '缴税'}, {name: '其他'}
     ];
   },
