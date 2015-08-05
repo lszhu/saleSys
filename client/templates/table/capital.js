@@ -13,6 +13,12 @@ Template.capitalTable.helpers({
 });
 
 Template.capitalTable.onRendered(function() {
+  $('.deadline input[name=start]').datepicker({
+    format: "yyyy-mm-dd",
+    language: "zh-CN",
+    orientation: 'top left',
+    autoclose: true
+  });
   $('.deadline input[name=deadline]').datepicker({
     format: "yyyy-mm-dd",
     language: "zh-CN",
