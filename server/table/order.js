@@ -35,10 +35,7 @@ Meteor.methods({
     }
     var orders = Orders.find(query).fetch();
     //console.log('orders: ' + JSON.stringify(orders));
-    var delivery = Deliveries.find(query).fetch();
     var capital = Capitals.find(disposalQuery).fetch();
-    //console.log('delivery: ' + JSON.stringify(delivery));
-    //var data = convergence(delivery, capital);
     var data = objToArray(convergeAll(capital), orders);
     //data.push([]);
     return data;
@@ -84,15 +81,19 @@ function objToArray(sum, orders) {
   }
   // 将stations由数组转为以_id值为索引属性的对象
   var order = indexOrders(orders);
-  console.log('station: ' + JSON.stringify(order));
-  var tmp, inOrder;
+  //console.log('station: ' + JSON.stringify(order));
+  var i, j, tmp, inOrder;
   var data = [];
-  for (var i in sum) {
+  for (i in sum) {
     if (!sum.hasOwnProperty(i)) {
       continue;
     }
+    // 订单不满足过滤条件的情况
+    if (!order.hasOwnProperty(i)) {
+      continue;
+    }
     inOrder = sum[i];
-    for (var j in inOrder) {
+    for (j in inOrder) {
       if (!inOrder.hasOwnProperty(j)) {
         continue;
       }
