@@ -60,11 +60,12 @@ Template.orderGrid.onCreated(function () {
     data: data,
     rowHeaders: true,
     colHeaders: [
-      '单号', '部门', '采购支出', '其它支出', '收入', '净收入','收益率'
+      '单号', '部门','币种', '采购支出', '其它支出', '收入', '净收入','收益率'
     ],
     //colWidths: [100, 100, 100, 100, 100, 100, 100],
     columns: [
       {}, {},
+      {type: 'numeric', format: '0.00'},
       {type: 'numeric', format: '0.00'},
       {type: 'numeric', format: '0.00'},
       {type: 'numeric', format: '0.00'},
@@ -85,21 +86,24 @@ Template.orderGrid.onCreated(function () {
 Template.orderGrid.onRendered(function() {
   var container = orderDisposalDetailGoodsLists[0].container;
   $(container).appendTo($('.grid'));
+  orderDisposalDetailGoodsLists[0].hot.render();
 });
 
 function summarize(data) {
   if (!data || data.constructor.name != 'Array') {
     return [[]];
   }
+
   var sum = {};
   var tmp, i, len;
   for (i = 0, len = data.length; i < len; i++) {
-    if (!sum.hasOwnProperty(data[i][1])) {
-      sum[data[i][1]] = [0, 0];
+    if (!sum.hasOwnProperty(data[i][2])) {
+      sum[data[i][2]] = [0, 0, 0];
     }
-    tmp = sum[data[i][1]];
-    tmp[0] += data[i][2];
-    tmp[1] += data[i][3];
+    tmp = sum[data[i][2]];
+    tmp[0] += data[i][3];
+    tmp[1] += data[i][4];
+    tmp[2] += data[i][5];
   }
   var result = [];
   //console.log('sum: ' + JSON.stringify(sum));
@@ -108,11 +112,12 @@ function summarize(data) {
       continue;
     }
     tmp = sum[i];
-    tmp[2] = tmp[1] - tmp[0];
-    if (Math.abs(tmp[0]) > 0) {
-      tmp[3] = tmp[2] / tmp[0];
+    tmp[3] = tmp[2] - tmp[1] - tmp[0];
+    tmp[4] = tmp[3] / (tmp[1] + tmp[0]);
+    if (isNaN(tmp[4]) || tmp[4] == Infinity) {
+      tmp[4] = '';
     }
-    tmp.unshift('<汇总>', i);
+    tmp.unshift('<汇总>', '', i);
     result.push(tmp);
   }
   //console.log('result: ' + JSON.stringify(result));
