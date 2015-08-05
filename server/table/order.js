@@ -19,6 +19,7 @@ Meteor.methods({
       type: {$nin: ['员工借贷', '货币兑换']},
       timestamp: {$gt: start, $lt: deadline}
     };
+    console.log('disposalQuery: ' + JSON.stringify(disposalQuery));
     var query = {};
     if (options.stationId) {
       query.stationId = options.stationId;
@@ -34,8 +35,8 @@ Meteor.methods({
       query.comment = new RegExp(options.filterKey, 'i');
     }
     var orders = Orders.find(query).fetch();
-    //console.log('orders: ' + JSON.stringify(orders));
     var capital = Capitals.find(disposalQuery).fetch();
+    console.log('capitals: ' + JSON.stringify(capital.length));
     var data = objToArray(convergeAll(capital), orders);
     //data.push([]);
     return data;
