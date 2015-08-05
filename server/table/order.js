@@ -55,6 +55,9 @@ function convergeAll(capital) {
   for (var i = 0; i < len; i++) {
     orderId = capital[i].orderId;
     money = capital[i].money;
+    if (!money) {
+      continue;
+    }
     type = capital[i].type;
     if (!sum.hasOwnProperty(orderId)) {
       sum[orderId] = {};

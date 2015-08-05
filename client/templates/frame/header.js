@@ -45,6 +45,7 @@ Template.header.helpers({
           {name: '库存汇总表', template: 'storeTable'},
           {name: '不良品分析', template: 'rejectTable'},
           {name: '订单汇总表', template: 'orderTable'},
+          {name: '付款进度表', template: 'paymentTable'},
           {name: '资金汇总表', template: 'capitalTable'}
         ]
       },
