@@ -90,35 +90,55 @@ Template.paymentGrid.onRendered(function() {
   orderDisposalDetailGoodsLists[0].hot.render();
 });
 
+// 对应每种货币，销售订单和采购订单分别汇总为一条汇总记录
 function summarize(data) {
   if (!data || data.constructor.name != 'Array') {
     return [[]];
   }
 
-  var sum = {};
+  var sumSale = {};
+  var sumBuy = {};
   var tmp, i, len;
   for (i = 0, len = data.length; i < len; i++) {
-    if (!sum.hasOwnProperty(data[i][2])) {
-      sum[data[i][2]] = [0, 0, 0];
+    if (data[i][3]) {
+      if (!sumBuy.hasOwnProperty(data[i][2])) {
+        sumBuy[data[i][2]] = [0, null, 0];
+      }
+      tmp = sumBuy[data[i][2]];
+      tmp[0] += data[i][3];
+      tmp[2] += data[i][5];
+    } else if (data[i][4]) {
+      if (!sumSale.hasOwnProperty(data[i][2])) {
+        sumSale[data[i][2]] = [null, 0, 0];
+      }
+      tmp = sumSale[data[i][2]];
+      tmp[1] += data[i][4];
+      tmp[2] += data[i][5];
     }
-    tmp = sum[data[i][2]];
-    tmp[0] += data[i][3];
-    tmp[1] += data[i][4];
-    tmp[2] += data[i][5];
   }
   var result = [];
-  //console.log('sum: ' + JSON.stringify(sum));
-  for (i in sum) {
-    if (!sum.hasOwnProperty(i)) {
+  for (i in sumBuy) {
+    if (!sumBuy.hasOwnProperty(i)) {
       continue;
     }
-    tmp = sum[i];
-    tmp[3] = tmp[2] - tmp[1] - tmp[0];
-    tmp[4] = tmp[3] / (tmp[1] + tmp[0]);
-    if (isNaN(tmp[4]) || tmp[4] == Infinity) {
-      tmp[4] = '';
+    tmp = sumBuy[i];
+    tmp[3] = tmp[0] - tmp[2];
+    if (Math.abs(tmp[0])) {
+      tmp[4] = tmp[2] / tmp[0];
     }
-    tmp.unshift('<汇总>', '', i);
+    tmp.unshift('<采购汇总>', '', i);
+    result.push(tmp);
+  }
+  for (i in sumSale) {
+    if (!sumSale.hasOwnProperty(i)) {
+      continue;
+    }
+    tmp = sumSale[i];
+    tmp[3] = tmp[1] - tmp[2];
+    if (Math.abs(tmp[1])) {
+      tmp[4] = tmp[2] / tmp[1];
+    }
+    tmp.unshift('<销售汇总>', '', i);
     result.push(tmp);
   }
   //console.log('result: ' + JSON.stringify(result));
