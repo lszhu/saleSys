@@ -6,12 +6,12 @@ Accounts.config({
 });
 
 // 用户账号登录界面配置（对应{{> loginButtons}}）
-
+/* 暂未使用
 Accounts.ui.config({
   // 除密码栏外，登录登录需提供的信息仅包括用户名
   passwordSignupFields: 'USERNAME_ONLY'
 });
-
+*/
 
 /////////////////////////////////////////////////
 // 以下为添加的第三方代码组件的配置
