@@ -11,6 +11,11 @@ Template.header.helpers({
     return active && 'active';
   },
 
+  username: function() {
+    var user = Meteor.user();
+    return user && user.profile.name ? user.profile.name : '未授权';
+  },
+
   // 为模板注入生成菜单需要的信息
   menuInfo: function () {
     return {
