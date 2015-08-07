@@ -66,3 +66,21 @@ Template.header.helpers({
     };
   }
 });
+
+Template.header.events({
+  'click .logout': function(e) {
+    e.preventDefault();
+
+    if (!confirm('你确定要退出系统吗？')) {
+      return;
+    }
+    Meteor.logout(function(err) {
+      if (err) {
+        console.log('logout error: ' + err.reason);
+        alert('退出时发生异常，请稍后再试');
+        return;
+      }
+      Router.go('/login');
+    });
+  }
+});

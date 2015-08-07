@@ -6,6 +6,7 @@ Accounts.config({
 });
 
 // 用户账号登录界面配置（对应{{> loginButtons}}）
+
 Accounts.ui.config({
   // 除密码栏外，登录登录需提供的信息仅包括用户名
   passwordSignupFields: 'USERNAME_ONLY'
@@ -16,8 +17,8 @@ Accounts.ui.config({
 // 以下为添加的第三方代码组件的配置
 ////////////////////////////////////////////////
 
-// 配置用户登录组件界面为中文
-accountsUIBootstrap3.setLanguage('zh');
+// 配置用户登录组件界面为中文（暂不使用该模块）
+// accountsUIBootstrap3.setLanguage('zh');
 
 // 客户端加载订单详情时用于存放货物清单信息
 orderDisposalDetailGoodsLists = [];
