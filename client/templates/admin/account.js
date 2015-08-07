@@ -85,9 +85,8 @@ Template.account.helpers({
   //},
   isAdmin: function () {
     var grade = Meteor.users.findOne(Meteor.userId());
-    console.log('account grade: ' + grade.grade);
+    //console.log('account grade: ' + grade && grade.grade);
     return grade && grade.grade == 3;
-    //return account[0].grade == 3;
   }
 });
 

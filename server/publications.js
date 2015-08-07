@@ -139,6 +139,16 @@ Meteor.publish('orders', function (query, options) {
   check(options, Object);
 
   var selector = {};
+  var user = Meteor.users.findOne(this.userId);
+  if (!user) {
+    return [];
+  }
+
+  // 验证用户权限
+  if (user.grade != '3') {
+    selector.stationId = user.stationId;
+  }
+
   var _id = query._id;
   var filterKey = query.filterKey;
   if (_id) {
