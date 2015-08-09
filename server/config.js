@@ -4,3 +4,12 @@ Accounts.config({
   // 同时不再提供Accounts.ui的创建账号的链接
   forbidClientAccountCreation: true
 });
+
+// 配置文件上传功能支持包
+Meteor.startup(function() {
+  UploadServer.init({
+    tmpDir: process.env.PWD + '/.upload/tmp',
+    uploadDir: process.env.PWD + '/.uploads/',
+    checkCreateDirectories: true   //create the directories for you
+  });
+});
