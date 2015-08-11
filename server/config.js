@@ -7,9 +7,13 @@ Accounts.config({
 
 // 配置文件上传功能支持包
 Meteor.startup(function() {
+  var setting = Meteor.settings;
+  console.log('voucher dir: ' + JSON.stringify(setting));
+  var voucherDir = setting && setting.voucherDir;
+  voucherDir = voucherDir || {storeDir: '/upload', tmpDir: '/upload/tmp'};
   UploadServer.init({
-    tmpDir: process.env.PWD + '/.upload/tmp',
-    uploadDir: process.env.PWD + '/.uploads/',
+    tmpDir: voucherDir.tmpDir,
+    uploadDir: voucherDir.storeDir,
     checkCreateDirectories: true   //create the directories for you
   });
 });

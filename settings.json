@@ -1,0 +1,10 @@
+{
+  "initAccount": {
+    "username": "admin",
+    "password": "admin"
+  },
+  "voucherDir": {
+    "storeDir": "/upload",
+    "tmpDir": "/upload/tmp"
+  }
+}
