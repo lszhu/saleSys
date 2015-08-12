@@ -186,6 +186,12 @@ Template.orderDisposalDetail.helpers({
     }
     return '收入' + data.money.type == attr ? 'selected' : '';
   },
+  getOrderInfo: function() {
+    console.log('order disposal: ' + JSON.stringify(Template.currentData()));
+    //console.log('data: ' + JSON.stringify(this));
+    var data = Template.currentData();
+    return data || {};
+  },
   absolute: function (v) {
     return isNaN(v) ? '' : Math.abs(v);
   },
