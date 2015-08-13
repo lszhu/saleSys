@@ -13,6 +13,11 @@ Template.voucherCombo.helpers({
     //console.log('order info: ' + JSON.stringify(data));
     return data;
   },
+  voucherList: function() {
+    var data = this.orderInfo;
+    console.log('disposal in voucherCombo: ' + JSON.stringify(data));
+    return data && data.disposal && data.disposal.voucher || [];
+  },
   customers: function() {
     return Customers.find();
   }

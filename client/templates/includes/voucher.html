@@ -10,16 +10,21 @@
         {{localTitle}}列表 <i class="fa fa-caret-down"></i>
       </span>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
-        {{#each customers}}
+        {{#each voucherList}}
           <li>
-            <a style="display: inline-block" href="{{_id}}">
-              {{name}}（{{code}}）
+            <a style="display: inline-block" href="">
+              {{this}}
             </a>
             <div class="voucher-item" title="删除">
               <i class="fa fa-trash-o"></i>
             </div>
           </li>
         {{/each}}
+        <li class="text-center">
+          <a style="display: inline-block; width: 100%;" href="">
+            &lt; 删除所有凭证 &gt;
+          </a>
+        </li>
       </ul>
       <span class="input-group-addon btn btn-default tools" title="附加单据">
         <i class="fa fa-plus"></i>
