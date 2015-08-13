@@ -1,4 +1,4 @@
-<!-- 必须在使用本模板时设置localTitle及customers变量 -->
+<!-- 必须在使用本模板时设置localTitle及orderInfo变量 -->
 <template name="voucherCombo">
   <div class="voucher-combo">
     <div class="input-group" role="presentation">
@@ -27,15 +27,17 @@
     </div>
   </div>
 
-  <div class="modal fade addVoucher" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal fade addVoucher" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title text-center" id="myModalLabel">上传凭证</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title text-center">上传凭证</h4>
         </div>
         <div class="modal-body">
-          <div>{{> upload_bootstrap formData=orderInfo }}</div>
+          <div>{{> upload_bootstrap formData=uploadInfo }}</div>
         </div>
         <div class="modal-footer">
         </div>
