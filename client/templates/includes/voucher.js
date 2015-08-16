@@ -24,6 +24,14 @@ Template.voucherCombo.helpers({
 });
 
 Template.voucherCombo.events({
+  'click .voucher-combo .fa-trash-o': function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    var path = $(e.target).data('path');
+    console.log('path: ' + path);
+
+  },
   'click .voucher-combo .tools': function(e, t) {
     e.preventDefault();
 

@@ -355,7 +355,7 @@ Template.orderDisposalDetail.events({
   },
 
   // 删除订单的当前处理内容
-  'click .fa-trash-o': function (e, t) {
+  'click .tools > .fa-trash-o': function (e, t) {
     e.preventDefault();
 
     var data = Template.currentData();
