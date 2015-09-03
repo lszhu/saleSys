@@ -88,6 +88,8 @@ Template.header.events({
         alert('退出时发生异常，请稍后再试');
         return;
       }
+      // 将cookie中的登录状态清除
+      document.cookie = '';
       Router.go('/login');
     });
   }
