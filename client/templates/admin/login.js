@@ -47,5 +47,7 @@ Template.login.events({
 
 // 设置账号登陆后的默认环境参数
 function setUserEnv() {
-  console.log('设置用户使用环境...');
+  //console.log('设置用户使用环境...');
+  // 当前为登录状态，记录到会话cookie中
+  document.cookie = 'loggedIn';
 }
