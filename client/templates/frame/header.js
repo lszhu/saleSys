@@ -11,6 +11,10 @@ Template.header.helpers({
     return active && 'active';
   },
 
+  loggedIn: function() {
+    return !!Meteor.user();
+  },
+
   username: function() {
     var user = Meteor.user();
     return user && user.profile.name ? user.profile.name : '未授权';
@@ -71,6 +75,10 @@ Template.header.events({
   'click .logout': function(e) {
     e.preventDefault();
 
+    // 如果当前未登录则直接返回
+    if (!Meteor.user()) {
+      return;
+    }
     if (!confirm('你确定要退出系统吗？')) {
       return;
     }

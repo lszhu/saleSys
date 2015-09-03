@@ -45,7 +45,10 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
           <a class="logout" href="/" title="退出">
-            {{username}} <i class="fa fa-lg fa-sign-out"></i>
+            {{username}}
+            {{#if loggedIn}}
+                <i class="fa fa-lg fa-sign-out"></i>
+            {{/if }}
           </a>
         </li>
         {{!--
