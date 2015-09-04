@@ -16,6 +16,8 @@ Template.layout.onCreated(function () {
   // 检查是否含有会话cookie且值为loggedIn，如果正确设定了，则表示之前已正常登录
   if (document.cookie != 'loggedIn') {
     console.log('loginStatus: ' + document.cookie);
+    // 将cookie设置为为登录状态
+    document.cookie = 'loggedOut';
     Meteor.logout();
     return;
   }

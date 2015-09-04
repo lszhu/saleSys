@@ -74,6 +74,7 @@ Template.header.helpers({
 Template.header.events({
   'click .logout': function(e) {
     e.preventDefault();
+    e.stopPropagation();
 
     // 如果当前未登录则直接返回
     if (!Meteor.user()) {
@@ -88,9 +89,10 @@ Template.header.events({
         alert('退出时发生异常，请稍后再试');
         return;
       }
-      // 将cookie中的登录状态清除
-      document.cookie = '';
-      Router.go('/login');
+      // 将cookie中的登录状态改为登出状态
+      document.cookie = 'loggedOut';
+      //Router.go('/login');
+      Meteor.setTimeout(function() {Router.go('/login');}, 0);
     });
   }
 });
