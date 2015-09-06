@@ -78,6 +78,7 @@ Template.delivery.events({
       } else {
         target.addClass('hidden');
       }
+      return;
     } else {
       target.removeClass('hidden')
           .insertAfter($(e.currentTarget).parent())
