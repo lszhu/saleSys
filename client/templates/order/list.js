@@ -67,6 +67,37 @@ Template.orderManagement.events({
     Router.go(location.pathname + keyword);
   },
 
+  'click .condition .today': function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setPeriod('today');
+  },
+  'click .condition .yesterday': function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setPeriod('yesterday');
+  },
+  'click .condition .month': function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setPeriod('month');
+  },
+  'click .condition .pre-month': function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setPeriod('pre-month');
+  },
+  'click .condition .30days': function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setPeriod('30days');
+  },
+  'click .condition .year': function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setPeriod('year');
+  },
+
   'click .edit-order': function (e) {
     e.preventDefault();
     // 清空可能遗留的错误信息
@@ -88,7 +119,6 @@ Template.orderManagement.events({
     //}
   },
 
-
   'click .update-order': function (e) {
     e.preventDefault();
     // 清空可能遗留的错误信息
@@ -104,7 +134,6 @@ Template.orderManagement.events({
     }
     fillForm(_id);
   },
-
 
   'submit .add-order': function (e) {
     e.preventDefault();
@@ -157,6 +186,16 @@ Template.orderManagement.events({
     });
   }
 });
+
+function setPeriod(span) {
+  $('.order-keyword').val('');
+  if (!span) {
+    Router.go(location.pathname);
+    return;
+  }
+  var period = '?period=' + span;
+  Router.go(location.pathname + period);
+}
 
 function clearForm(target) {
   var form = $(target);

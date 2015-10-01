@@ -134,7 +134,7 @@ Meteor.publish('deliveries', function (filterKey, options) {
 
 // 发布订单信息
 Meteor.publish('orders', function (query, options) {
-  // query可能包含filterKey和_id
+  // query可能包含filterKey和_id或period
   check(query, Object);
   check(options, Object);
 
@@ -173,6 +173,9 @@ Meteor.publish('orders', function (query, options) {
         {status: key}, {comment: key}
       ]
     };
+  } else if (query.hasOwnProperty('period')) {
+    console.log('query period: ' + query['period']);
+    selector = setTimeSpan(query['period']);
   } else if (filterKey === undefined) {
     selector = '';
   }
