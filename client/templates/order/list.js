@@ -158,7 +158,7 @@ Template.orderManagement.events({
     }
     var userId = Meteor.userId();
     order = _.extend(order, {
-      status: '进行', deadline: '', managerId: userId, disposal: {}
+      status: '进行', deadline: 0, managerId: userId, disposal: {}
     });
     //console.log('order: ' + JSON.stringify(order));
     //var overlap = form.find('[name=overlap]').val();
