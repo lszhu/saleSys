@@ -407,6 +407,16 @@ Template.orderDisposal.onRendered(function () {
 });
 
 Template.orderDisposal.helpers({
+  currentTime: function() {
+    var t = new Date();
+    var y = t.getFullYear();
+    var m = t.getMonth() + 1;
+    var d = t.getDate();
+    var h = t.getHours();
+    var mm = t.getMinutes();
+    var s = t.getSeconds();
+    return y + '年' + m + '月' + d + '日 ' + h + ':' + mm + ':' + s;
+  },
   // 为每个处理内容关联上索引号并按时间排序，同时插入对应资金收支和货物处理信息
   indexDisposal: function () {
     var data = Template.currentData();
@@ -521,8 +531,12 @@ Template.orderDisposal.events({
     }
   },
 
-  // 打印预览订单基本信息及处理记录
-  'click .order-tool .print-preview': function (e, t) {
+  // 打印预览订单基本信息及处于显示状态的处理记录
+  'click .print-preview': function (e) {
+    e.preventDefault();
+
+    // 为了兼容IE浏览器，注意一定加上个全局变量window
+    window.print();
     console.log('打印预览订单基本信息及处理记录');
   },
 

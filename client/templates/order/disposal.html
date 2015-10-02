@@ -1,16 +1,19 @@
 <template name="orderDisposal">
   <div class="order-disposal">
-    <div class="col-xs-6"><h2>订单处理详情 </h2></div>
+    <div class="col-xs-6 only-for-screen"><h2>订单处理详情 </h2></div>
+    <div class="col-xs-6 only-for-print"><h2>订单收据</h2></div>
     <div class="col-xs-6 tools">
       <div class="text-right">
-        <h2 class="order-tool">
+        <h2 class="order-tool only-for-screen">
           <i title="添加处理记录" class="add-disposal btn fa fa-comments-o"></i>
           <i title="保存处理结果" class="save-all btn fa fa-check"></i>
           <i title="订单打印预览" class="print-preview btn fa fa-search"></i>
           <i title="删除当前订单" class="remove-order btn fa fa-trash-o remove"></i>
         </h2>
+        <h4 class="only-for-print">开单日期: {{ currentTime }}</h4>
       </div>
     </div>
+    <div class="col-xs-12"></div>
 
     {{> editOrder order }}
     {{! 用于分隔内容的显示 -}}
@@ -22,7 +25,7 @@
 
     {{! 用于排版时保证一行对齐 -}}
     <div class="row"></div>
-    <div id="order-disposal-detail" class="hidden hide-me" data-index="-1">
+    <div id="order-disposal-detail" class="hidden hide-me only-for-screen" data-index="-1">
       <div class="panel panel-primary">
         <div class="panel-heading text-center">添加订单处理</div>
         <div class="panel-body">
@@ -129,10 +132,14 @@
       </div>
     </div>
     <div class="col-xs-8 attach">
-      <div class="tools text-right">
+      <div class="tools text-right only-for-screen">
         <!--<i title="添加处理记录" class="btn fa fa-lg fa-comments-o"></i>-->
         <i title="保存处理结果" class="btn fa fa-lg fa-check"></i>
+        <i title="订单打印预览" class="print-preview btn fa fa-search"></i>
         <i title="删除当前处理" class="btn fa fa-lg fa-trash-o remove"></i>
+      </div>
+      <div class="text-right only-for-print">
+        在此显示订单处理号（单据号）
       </div>
     </div>
     {{! 用于排版时保证一行对齐 -}}
@@ -267,7 +274,7 @@
 
 <template name="orderDisposalItem">
   <div class="order-disposal-item" data-index="{{index}}">
-    <div class="col-xs-12 attach">
+    <div class="col-xs-12 attach only-for-screen">
       <div class="input-group">
         <span class="input-group-addon"
               title="{{formatTime disposal.timestamp}}">

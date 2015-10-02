@@ -403,6 +403,18 @@ h2.login {
     z-index: 0;
 }
 
+.only-for-print {
+    display: none;
+}
+
+@media print {
+    .only-for-screen {
+        display: none;
+    }
+    .only-for-print {
+        display: block;
+    }
+}
 /*
 .order-disposal-detail > .attach.goods-list-container {
     padding: 10px;
