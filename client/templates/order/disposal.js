@@ -155,6 +155,16 @@ Template.orderDisposalDetail.helpers({
       ]
     };
   },
+  orderDisposalId: function() {
+    var data = Template.currentData();
+    if (!data || !data.disposal) {
+      return '单据号无效';
+    }
+    var postfix = data.index;
+    postfix = postfix < 10 ? '0' + postfix : postfix;
+    return data.disposal.timestamp.getTime()  + '' + postfix;
+    return '在此显示订单处理号（单据号）';
+  },
   isSelected: function (attr) {
     var selection = Template.parentData();
     selection = selection && selection.disposal && selection.disposal.type;
