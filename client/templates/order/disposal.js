@@ -160,10 +160,11 @@ Template.orderDisposalDetail.helpers({
     if (!data || !data.disposal) {
       return '单据号无效';
     }
-    var postfix = data.index;
-    postfix = postfix < 10 ? '0' + postfix : postfix;
-    return data.disposal.timestamp.getTime()  + '' + postfix;
-    return '在此显示订单处理号（单据号）';
+    var index = data.index;
+    var timestamp = data.disposal.timestamp;
+    var order = Orders.findOne();
+    var code = order ? order.code : '';
+    return orderDisposalId(code, timestamp, index);
   },
   isSelected: function (attr) {
     var selection = Template.parentData();
@@ -249,7 +250,9 @@ Template.orderDisposalDetail.events({
     var t = $(e.target);
     var d = t && t.val() && t.val().split('-');
     // 如果手工设定的日期，则假设时间为下午6点（通常为下班时间）
-    var time = (new Date(d[0], d[1] - 1, d[2], 18));
+    // 另外添加一个随机的毫秒数（用于区别每次不同修改）
+    var ms = Math.floor(Math.random() * 1000);
+    var time = (new Date(d[0], d[1] - 1, d[2], 18, 0, 0, ms));
     time = (time.toString() == 'Invalid Date') ? 0 : time.getTime();
     t.data('time', time);
   },
@@ -421,10 +424,15 @@ Template.orderDisposal.helpers({
     var t = new Date();
     var y = t.getFullYear();
     var m = t.getMonth() + 1;
+    m = m < 10 ? '0' + m : m;
     var d = t.getDate();
+    d = d < 10 ? '0' + d : d;
     var h = t.getHours();
+    h = h < 10 ? '0' + h : h;
     var mm = t.getMinutes();
+    mm = mm < 10 ? '0' + mm : mm;
     var s = t.getSeconds();
+    s = s < 10 ? '0' + s : s;
     return y + '年' + m + '月' + d + '日 ' + h + ':' + mm + ':' + s;
   },
   // 为每个处理内容关联上索引号并按时间排序，同时插入对应资金收支和货物处理信息
