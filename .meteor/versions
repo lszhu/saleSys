@@ -3,7 +3,7 @@ accounts-password@1.1.3
 amplify@1.0.0
 audit-argument-checks@1.0.4
 autoupdate@1.2.3
-awsp:handsontable@0.10.0
+awsp:handsontable@0.11.0
 babel-compiler@5.8.24_1
 babel-runtime@0.1.4
 base64@1.0.4
@@ -77,7 +77,7 @@ reload@1.1.4
 retry@1.0.4
 routepolicy@1.0.6
 sacha:spin@2.3.1
-sanjo:jasmine@0.20.0
+sanjo:jasmine@0.20.2
 sanjo:karma@3.0.2
 sanjo:long-running-child-process@1.1.3
 sanjo:meteor-files-helpers@1.2.0_1
@@ -91,15 +91,15 @@ srp@1.0.4
 standard-minifiers@1.0.1
 templating@1.1.4
 templating-tools@1.0.0
-tomi:upload-jquery@2.1.8
+tomi:upload-jquery@2.2.0
 tomi:upload-server@1.3.1
 tracker@1.0.9
 twbs:bootstrap@3.3.5
 ui@1.0.8
 underscore@1.0.4
 url@1.0.5
-velocity:chokidar@1.0.3_1
-velocity:core@0.10.1
+velocity:chokidar@1.2.0_1
+velocity:core@0.10.2
 velocity:html-reporter@0.9.0
 velocity:meteor-internals@1.1.0_7
 velocity:meteor-stubs@1.1.0
