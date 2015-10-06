@@ -35,6 +35,10 @@ uploadVoucher = function() {
       storeDir = path.join(storeDir, voucherInfo.subPath);
       var data = _.omit(voucherInfo, 'subPath');
       data.path = filename && filename.path;
+      // 去掉前导斜杠
+      if (data.path[0] == '/') {
+        data.path = data.path.slice(1);
+      }
       console.log('data: ' + JSON.stringify(data));
 
       // 将上传的文件移动到响应目录中
