@@ -1,6 +1,6 @@
 uploadVoucher = function() {
   var setting = Meteor.settings;
-  //var path = Npm.require('path');
+  var path = Npm.require('path');
   //var store = process.cwd();
   //console.log('root dir: ' + store);
   //console.log('concat path: ' + path.join(store, '临时'));
@@ -27,8 +27,9 @@ uploadVoucher = function() {
       m = m < 10 ? '0' + m : m;
       var s = t.getSeconds();
       s = s < 10 ? '0' + s : s;
-      var random = randAlpha(4);
-      return formData.subPath + d + h + m + s + random;
+      var random = randAlpha(3);
+      var ext = path.extname(fileInfo.name);
+      return formData.subPath + d + h + m + s + random + ext;
     },
     /*
     getDirectory: function(fileInfo, formData) {
