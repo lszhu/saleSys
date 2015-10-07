@@ -45,6 +45,17 @@ Template.voucherCombo.events({
 
     console.log('clear all vouchers');
   },
+  'click .display-voucher': function(e, t) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    var filename = e.currentTarget.innerText;
+    var order = Orders.findOne();
+    var filePath = subPath(order && order.timestamp);
+    var target = t.$('#display-voucher img');
+    $(target).attr('src', '/server/voucher?name=/' + filePath + '/' + filename);
+    $(t.$('#display-voucher')).modal('show');
+  },
   'click .voucher-combo .tools': function(e, t) {
     e.preventDefault();
 
