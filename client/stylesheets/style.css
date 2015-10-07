@@ -407,6 +407,10 @@ h2.login {
     display: none;
 }
 
+img {
+    max-width: 100%;
+}
+
 @media print {
     .only-for-screen {
         display: none;

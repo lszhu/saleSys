@@ -47,7 +47,7 @@ Template.voucherCombo.events({
   },
   'click .display-voucher': function(e, t) {
     e.preventDefault();
-    e.stopPropagation();
+    //e.stopPropagation();
 
     var filename = e.currentTarget.innerText;
     var order = Orders.findOne();
