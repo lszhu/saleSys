@@ -28,12 +28,21 @@ Template.voucherCombo.events({
     e.preventDefault();
     e.stopPropagation();
 
+    var data = Template.currentData().orderInfo;
+    //console.log('order info is: ', data);
     var path = $(e.target).data('path');
     console.log('path: ' + path);
-
+    var data = {
+      orderId: data.orderId,
+      index: data.index,
+      path: path
+    };
+    Meteor.call('orderVoucherRemove', data);
   },
   'click .clear-voucher': function(e) {
     e.preventDefault();
+    e.stopPropagation();
+
     console.log('clear all vouchers');
   },
   'click .voucher-combo .tools': function(e, t) {
@@ -44,13 +53,3 @@ Template.voucherCombo.events({
   }
 });
 
-// 由日期参数返回年月字符串（yyyymm），否则返回'error'
-function subPath(t) {
-  if (!t) {
-    return 'error';
-  }
-  var y = t.getFullYear() + '';
-  var m = t.getMonth() + 1;
-  m = m > 9 ? m : '0' + m;
-  return y + m;
-}
