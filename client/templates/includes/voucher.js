@@ -32,6 +32,10 @@ Template.voucherCombo.events({
     console.log('path: ' + path);
 
   },
+  'click .clear-voucher': function(e) {
+    e.preventDefault();
+    console.log('clear all vouchers');
+  },
   'click .voucher-combo .tools': function(e, t) {
     e.preventDefault();
 

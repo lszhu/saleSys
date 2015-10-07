@@ -19,17 +19,10 @@ uploadVoucher = function() {
     },
     getFileName: function(fileInfo, formData) {
       var t = new Date();
-      var d = t.getDate();
-      d = d < 10 ? '0' + d : d;
-      var h = t.getHours();
-      h = h < 10 ? '0' + h : h;
-      var m = t.getMinutes();
-      m = m < 10 ? '0' + m : m;
-      var s = t.getSeconds();
-      s = s < 10 ? '0' + s : s;
-      var random = randAlpha(3);
+      var d = t.getTime().toString().slice(-8);
+      var random = randSymbol(4, 'digit');
       var ext = path.extname(fileInfo.name);
-      return formData.subPath + d + h + m + s + random + ext;
+      return random + d + ext;
     },
     /*
     getDirectory: function(fileInfo, formData) {
