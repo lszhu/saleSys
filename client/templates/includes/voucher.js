@@ -52,8 +52,9 @@ Template.voucherCombo.events({
     var filename = e.currentTarget.innerText;
     var order = Orders.findOne();
     var filePath = subPath(order && order.timestamp);
+    var query = '?name=/' + filePath + '/' + filename + '&hash=' + order._id;
     var target = t.$('#display-voucher img');
-    $(target).attr('src', '/server/voucher?name=/' + filePath + '/' + filename);
+    $(target).attr('src', '/server/voucher' + query);
     $(t.$('#display-voucher')).modal('show');
   },
   'click .voucher-combo .tools': function(e, t) {
