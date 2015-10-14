@@ -1,9 +1,11 @@
 // 系统账号配置
+/* 由服务端进行控制
 Accounts.config({
   // 禁止直接从客户端调用createUser创建登录账号
   // 同时不再提供Accounts.ui的创建账号的链接
   forbidClientAccountCreation: true
 });
+*/
 
 // 用户账号登录界面配置（对应{{> loginButtons}}）
 /* 暂未使用
