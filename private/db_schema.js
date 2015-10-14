@@ -359,6 +359,8 @@ users = {
   permission: Object,
   // 连续错误密码尝试次数，超过规定次数后会清零，并将该账号禁用
   retry: Number,
+  // 对账号的描述
+  comment: String,
   // 账号创建时间，命名与系统内部一致
   createdAt: Date
 };
