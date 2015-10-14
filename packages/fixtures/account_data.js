@@ -5,7 +5,7 @@ accountTestDataAdd = function () {
       username: 'user01',
       nickname: '张三',
       password: 'aaaaaa',
-      grade: '3',
+      grade: 3,
       email: 'zhangsan@asdf.com',
       comment: '代管仓库'
     },
@@ -13,7 +13,7 @@ accountTestDataAdd = function () {
       username: 'user02',
       nickname: '李四',
       password: 'aaaaaa',
-      grade: '2',
+      grade: 2,
       email: 'lisi@asdf.com',
       comment: ''
     },
@@ -21,7 +21,7 @@ accountTestDataAdd = function () {
       username: 'user03',
       nickname: '王五',
       password: 'aaaaaa',
-      grade: '1',
+      grade: 1,
       email: 'wangwu@asdf.com',
       comment: ''
     },
@@ -29,7 +29,7 @@ accountTestDataAdd = function () {
       username: 'user04',
       nickname: '赵梅',
       password: 'bbbbbb',
-      grade: '0',
+      grade: 0,
       email: 'zhaomei@asdf.com',
       comment: ''
     },
@@ -37,7 +37,7 @@ accountTestDataAdd = function () {
       username: 'user05',
       nickname: '李兰',
       password: 'bbbbbb',
-      grade: '3',
+      grade: 3,
       email: 'qianlan@asdf.com',
       comment: '负责文书'
     },
@@ -45,7 +45,7 @@ accountTestDataAdd = function () {
       username: 'user06',
       nickname: '周黄河',
       password: 'aaaaaa',
-      grade: '2',
+      grade: 2,
       email: 'zhouhuanghe@asdf.com',
       comment: ''
     },
@@ -53,7 +53,7 @@ accountTestDataAdd = function () {
       username: 'user07',
       nickname: '陈秋菊',
       password: 'bbbbbb',
-      grade: '1',
+      grade: 1,
       email: 'chenqiuju@asdf.com',
       comment: ''
     },
@@ -61,7 +61,7 @@ accountTestDataAdd = function () {
       username: 'user08',
       nickname: '刘自在',
       password: 'aaaaaa',
-      grade: '0',
+      grade: 0,
       email: 'liuzizai@asdf.com',
       comment: '负责东北片区'
     },
@@ -69,7 +69,7 @@ accountTestDataAdd = function () {
       username: 'user09',
       nickname: '张长江',
       password: 'aaaaaa',
-      grade: '1',
+      grade: 1,
       email: 'zhangchangjiang@asdf.com',
       disabled: true,
       comment: '同时负责送货'

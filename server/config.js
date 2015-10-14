@@ -24,8 +24,11 @@ initAccount(Meteor.settings.initAccount);
 // 如果未指定对应参数或属性，则默认为'admin'
 function initAccount(acc) {
   // 如果系统中已存在系统管理员级别的账号则直接返回
-  if (Meteor.users.find({grade: 3}).count()) {
-
+  if (Meteor.users.findOne({grade: 3})) {
+    console.log('Administrator account exists');
+    return;
+  } else {
+    console.log('Trying to create a administrator account');
   }
   var a = acc ? acc : {username: 'admin', password: 'admin'};
   a.username = a.username ? a.username : 'admin';
@@ -39,7 +42,7 @@ function initAccount(acc) {
   // 将用户设置为系统管理员
   Meteor.users.update({username: a.username}, {$set: {grade: 3}});
   var user = Meteor.users.findOne({username: a.username});
-  console.log('root: ' + JSON.stringify(user));
+  //console.log('root: ' + JSON.stringify(user));
   if (!user || user.grade != 3) {
     console.log('Can not create initial account, restart please!');
   }
