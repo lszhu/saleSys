@@ -13,12 +13,12 @@ Accounts.config({
 // 程序启动时的初始化操作
 Meteor.startup(function() {
   // 初始化系统管理账号
-  //initAccount(Meteor.settings.initAccount);
+  initAccount(Meteor.settings.initAccount);
   // 配置文件上传功能支持包
   uploadVoucher();
 });
 
-initAccount(Meteor.settings.initAccount);
+//initAccount(Meteor.settings.initAccount);
 
 // 根据传入参数，形如{username: 'admin', password: 'admin'}在数据库中建立账号
 // 如果未指定对应参数或属性，则默认为'admin'
@@ -40,7 +40,8 @@ function initAccount(acc) {
   a.profile = {name: a.username};
   Accounts.createUser(a);
   // 将用户设置为系统管理员
-  Meteor.users.update({username: a.username}, {$set: {grade: 3}});
+  Meteor.users.update({username: a.username},
+      {$set: {grade: 3, comment: '初始化自动生成'}});
   var user = Meteor.users.findOne({username: a.username});
   //console.log('root: ' + JSON.stringify(user));
   if (!user || user.grade != 3) {
