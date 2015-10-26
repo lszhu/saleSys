@@ -79,11 +79,13 @@ classifyReceivers = function (receivers) {
   });
   //console.log('receivers: ' + JSON.stringify(receivers));
   var data = [];
+  var name;
   for (var i in receivers) {
     if (!receivers.hasOwnProperty(i)) {
       return;
     }
-    data.push({name: stations[i].name, receivers: receivers[i]});
+    name = stations[i] ? station[i].name : '不属于任何部门';
+    data.push({name: name, receivers: receivers[i]});
   }
   //console.log('end receivers: ' + JSON.stringify(data));
   return data;
