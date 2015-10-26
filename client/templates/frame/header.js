@@ -90,7 +90,7 @@ Template.header.events({
         return;
       }
       // 将cookie中的登录状态改为登出状态
-      document.cookie = 'loggedOut';
+      document.cookie = 'loginStatus=Out';
       //Router.go('/login');
       Meteor.setTimeout(function() {Router.go('/login');}, 0);
     });

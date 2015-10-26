@@ -49,5 +49,5 @@ Template.login.events({
 function setUserEnv() {
   //console.log('设置用户使用环境...');
   // 当前为登录状态，记录到会话cookie中
-  document.cookie = 'loggedIn';
+  document.cookie = 'loginStatus=In';
 }
