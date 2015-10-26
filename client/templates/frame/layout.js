@@ -13,6 +13,7 @@ Template.layout.onRendered(function () {
 });
 
 Template.layout.onCreated(function () {
+  /* 这个方法不适合苹果系统
   // 检查是否含有会话cookie且值为loggedIn，如果正确设定了，则表示之前已正常登录
   if (document.cookie != 'loggedIn') {
     console.log('loginStatus: ' + document.cookie);
@@ -21,6 +22,7 @@ Template.layout.onCreated(function () {
     Meteor.logout();
     return;
   }
+  */
 
   Meteor.call('getUserInfo', function (err, result) {
     if (err) {
@@ -30,4 +32,15 @@ Template.layout.onCreated(function () {
       Session.set('receiverList', _.indexBy(result, '_id'));
     }
   });
+});
+
+Template.layout.onRendered(function() {
+  console.log('layout rendered');
+   // 检查是否含有会话cookie且值为loggedIn，如果正确设定了，则表示之前已正常登录
+  if (document.cookie != 'loggedIn') {
+    console.log('loginStatus: ' + document.cookie);
+    // 将cookie设置为为登录状态
+    document.cookie = 'loggedOut';
+    Meteor.logout();
+  }
 });
