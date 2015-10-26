@@ -84,7 +84,7 @@ classifyReceivers = function (receivers) {
     if (!receivers.hasOwnProperty(i)) {
       return;
     }
-    name = stations[i] ? station[i].name : '不属于任何部门';
+    name = stations[i] ? stations[i].name : '不属于任何部门';
     data.push({name: name, receivers: receivers[i]});
   }
   //console.log('end receivers: ' + JSON.stringify(data));
