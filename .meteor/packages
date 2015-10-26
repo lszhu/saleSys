@@ -10,7 +10,6 @@ sacha:spin
 accounts-password
 audit-argument-checks
 fortawesome:fontawesome
-sanjo:jasmine
 fixtures
 awsp:handsontable
 rajit:bootstrap3-datepicker
@@ -31,4 +30,3 @@ random
 ejson
 spacebars
 check
-velocity:html-reporter
